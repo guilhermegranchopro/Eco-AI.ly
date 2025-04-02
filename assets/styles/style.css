@@ -1,0 +1,57 @@
+/* General body styling */
+body {
+    background-color: #f0f4f8;
+    color: #333333;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Header styling */
+h1, h2, h3, h4 {
+    color: #2e6da4;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background-color: #ffffff;
+    padding: 20px;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* Metric component styling */
+div[data-testid="stMetric"] {
+    background-color: #e0f7fa;
+    border: 1px solid #b2ebf2;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+/* Chart container styling */
+.chart-container {
+    margin: 20px 0;
+}
+
+/* Custom styling for Streamlit buttons */
+button {
+    background-color: #2e6da4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #285e8e;
+}
+
+/* Link styling */
+a {
+    color: #2e6da4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
