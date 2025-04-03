@@ -48,6 +48,7 @@ coverage.xml
 *.pot
 
 # Virtual environments
+.env
 .env/
 .venv/
 venv/

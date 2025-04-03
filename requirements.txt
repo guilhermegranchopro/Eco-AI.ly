@@ -11,3 +11,4 @@ joblib==1.4.2
 streamlit>=1.16.0
 requests>=2.27.1
 pytest>=7.0.1
+python-dotenv>=1.0.0

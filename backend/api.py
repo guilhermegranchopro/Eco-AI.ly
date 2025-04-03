@@ -1,18 +1,22 @@
+import os
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 def fetch_pie_chart_data(endpoint_url: str, params: dict = None) -> dict:
     """
-    Fetches data for pie charts from the specified API endpoint.
-
-    Args:
-        endpoint_url (str): The API URL for pie chart data.
-        params (dict, optional): Query parameters for the API call.
-
-    Returns:
-        dict: JSON data returned from the API, or an empty dict if an error occurs.
+    Fetches data for pie charts from the specified API endpoint using an API key from the .env file.
     """
+    # Retrieve the API key from the environment variables
+    api_key = os.getenv("PIE_CHART_API_KEY")
+    headers = {
+        "Authorization": f"Bearer {api_key}"
+    }
+    
     try:
-        response = requests.get(endpoint_url, params=params, timeout=10)
+        response = requests.get(endpoint_url, params=params, headers=headers, timeout=10)
         response.raise_for_status()
         return response.json()
     except Exception as e:
@@ -21,17 +25,15 @@ def fetch_pie_chart_data(endpoint_url: str, params: dict = None) -> dict:
 
 def fetch_model_input_data(endpoint_url: str, params: dict = None) -> dict:
     """
-    Fetches input data for the AI models from the specified API endpoint.
-
-    Args:
-        endpoint_url (str): The API URL for model input data.
-        params (dict, optional): Query parameters for the API call.
-
-    Returns:
-        dict: JSON data returned from the API, or an empty dict if an error occurs.
+    Fetches input data for the AI models from the specified API endpoint using an API key from the .env file.
     """
+    api_key = os.getenv("MODEL_INPUT_API_KEY")
+    headers = {
+        "Authorization": f"Bearer {api_key}"
+    }
+    
     try:
-        response = requests.get(endpoint_url, params=params, timeout=10)
+        response = requests.get(endpoint_url, params=params, headers=headers, timeout=10)
         response.raise_for_status()
         return response.json()
     except Exception as e:
@@ -48,4 +50,3 @@ if __name__ == "__main__":
     
     print("Pie Chart Data:", pie_data)
     print("Model Input Data:", model_input)
-# This code is for the backend API calls of the Eco AI.ly web application.

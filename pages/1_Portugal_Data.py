@@ -3,6 +3,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+def set_page_config_once():
+    if "page_config_done" not in st.session_state:
+        st.set_page_config(page_title="Eco AI.ly", page_icon="🌿", layout="wide")
+        st.session_state["page_config_done"] = True
+
+set_page_config_once()
+
 def main():
     st.title("Portugal Data Dashboard")
     st.header("Environmental Data and Predictions for Portugal")
