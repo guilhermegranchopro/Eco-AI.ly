@@ -14,7 +14,7 @@ def render_ai_predictions():
     to predict the next 24-hour class.
     """
     st.markdown("---")
-    st.subheader("Section 3: AI Model Predictions")
+    st.subheader("AI Predictions")
     
     # ----- Carbon Intensity Prediction -----
     data_ci = fetch_carbon_intensity_history(zone="PT")

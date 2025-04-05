@@ -149,7 +149,7 @@ def plot_breakdown_chart(breakdown_total, total_sum, limite, now_dt, chart_title
 # Main Render Function
 # -----------------------------
 def render_pie_charts():
-    st.subheader("Section 1: Power Data Breakdown")
+    st.subheader("Power Data Breakdown")
     
     # Single dropdown controlling all pie charts
     time_range = st.selectbox(
