@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 from backend.api import fetch_power_breakdown_history, fetch_carbon_intensity_history
+import altair as alt
 
 def render_time_series():
     st.markdown("---")
@@ -13,7 +14,6 @@ def render_time_series():
     # -----------------------------
     # Carbon Intensity Time Series
     # -----------------------------
-    st.write("**Carbon Intensity (Last 24 Hours)**")
     data_ci = fetch_carbon_intensity_history(zone="PT")
     if data_ci:
         historico_carbon = data_ci.get("history", [])
@@ -34,7 +34,19 @@ def render_time_series():
                     # Format the time to include day and month (e.g., 24/04 14:30)
                     df_ci_last24['Time'] = df_ci_last24['datetime'].dt.strftime('%d/%m %H:%M')
                     df_ci_last24 = df_ci_last24.set_index('Time')
-                    st.line_chart(df_ci_last24['LCA'])
+                    # Create a custom line chart using Altair
+                    chart = alt.Chart(df_ci_last24.reset_index()).mark_line().encode(
+                        x=alt.X('Time', title='Time (Last 24 Hours)'),
+                        y=alt.Y('LCA', title='Carbon Intensity (gCO2/kWh)'),
+                        tooltip=['Time', 'LCA']
+                    ).properties(
+                        title='Carbon Intensity Over the Last 24 Hours',
+                        width=700,
+                        height=400
+                    ).interactive()  # Enable zoom and pan
+
+                    # Render the chart in Streamlit
+                    st.altair_chart(chart, use_container_width=True)
             else:
                 st.error("API data does not contain 'carbonIntensity'.")
         else:
@@ -45,7 +57,6 @@ def render_time_series():
     # ------------------------------------
     # Renewable Percentage Time Series
     # ------------------------------------
-    st.write("**Renewable Percentage (Last 24 Hours)**")
     data_rp = fetch_power_breakdown_history(zone="PT")
     if data_rp:
         historico_rp = data_rp.get("history", [])
@@ -61,10 +72,22 @@ def render_time_series():
                 if df_rp_last24.empty:
                     st.error("No renewable percentage data available for the last 24 hours.")
                 else:
-                    # Format time to include day and month
+                    # Format the time to include day and month (e.g., 24/04 14:30)
                     df_rp_last24['Time'] = df_rp_last24['datetime'].dt.strftime('%d/%m %H:%M')
                     df_rp_last24 = df_rp_last24.set_index('Time')
-                    st.line_chart(df_rp_last24['RP'])
+                    # Create a custom line chart using Altair
+                    chart = alt.Chart(df_rp_last24.reset_index()).mark_line().encode(
+                        x=alt.X('Time', title='Time (Last 24 Hours)'),
+                        y=alt.Y('RP', title='Renewable Percentage (%)'),
+                        tooltip=['Time', 'RP']
+                    ).properties(
+                        title='Renewable Percentage Over the Last 24 Hours',
+                        width=700,
+                        height=400
+                    ).interactive()  # Enable zoom and pan
+
+                    # Render the chart in Streamlit
+                    st.altair_chart(chart, use_container_width=True)
             else:
                 st.error("API data does not contain 'renewablePercentage'.")
         else:
@@ -72,3 +95,7 @@ def render_time_series():
     else:
         st.error("Error fetching renewable percentage data.")
 
+if __name__ == "__main__":
+    render_time_series()
+    # Uncomment the following line to run the function directly for testing purposes
+    # render_time_series()
