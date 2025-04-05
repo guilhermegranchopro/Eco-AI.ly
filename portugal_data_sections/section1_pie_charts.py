@@ -112,7 +112,7 @@ def format_label(label):
 def plot_breakdown_chart(breakdown_total, total_sum, limite, now_dt, chart_title, time_hours):
     """
     Creates and returns a pie chart figure for a given breakdown.
-    If no valid values are present, returns a figure with an aesthetic message.
+    If no valid values are present (i.e. total_sum==0), returns a placeholder chart with a custom message.
     """
     labels = []
     values = []
@@ -121,12 +121,12 @@ def plot_breakdown_chart(breakdown_total, total_sum, limite, now_dt, chart_title
         if val != 0:
             labels.append(format_label(key))
             values.append(val)
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6,6))
     if not values or total_sum == 0:
-        # Create a placeholder figure with an aesthetic message
+        # Create a placeholder figure with a centered aesthetic message.
         ax.text(0.5, 0.5, "No energy data available\nfor this time frame", 
                 horizontalalignment="center", verticalalignment="center",
-                fontsize=14, color="gray")
+                fontsize=16, color="gray")
         ax.set_xticks([])
         ax.set_yticks([])
         timeframe_str = f"{limite.strftime('%d/%m/%Y %H:%M')} - {now_dt.strftime('%d/%m/%Y %H:%M')} (UTC)"
@@ -139,7 +139,7 @@ def plot_breakdown_chart(breakdown_total, total_sum, limite, now_dt, chart_title
     labels_sorted = [f"{lab} ({(val/total_value*100):.2f}%)" for lab, val, _ in items_sorted]
     wedges_sorted = [w for _, _, w in items_sorted]
     timeframe_str = f"{limite.strftime('%d/%m/%Y %H:%M')} - {now_dt.strftime('%d/%m/%Y %H:%M')} (UTC)"
-    # Extract breakdown type from chart_title for display
+    # Extract breakdown type from chart_title (assumes title like "Power Import Breakdown")
     breakdown_type = chart_title.split()[1]
     ax.set_title(f"{timeframe_str}\n{chart_title}\nLast {time_hours} h\nPortugal\nTotal {breakdown_type}: {total_sum} MWh", fontsize=12)
     ax.legend(wedges_sorted, labels_sorted, loc="upper right", bbox_to_anchor=(1.3, 1))
@@ -200,5 +200,4 @@ def render_pie_charts():
 
 if __name__ == "__main__":
     render_pie_charts()
-    # Uncomment the following line to run the function directly for testing purposes
-    # render_pie_charts()
+

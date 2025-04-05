@@ -6,7 +6,7 @@ from backend.api import fetch_power_breakdown_history, fetch_carbon_intensity_hi
 
 def render_time_series():
     st.markdown("---")
-    st.subheader("Section 2: Time Series Data")
+    st.subheader("Time Series Data")
     
     # Get the current time (UTC)
     now_dt = datetime.now(timezone.utc)
