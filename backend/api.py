@@ -57,31 +57,6 @@ def fetch_power_breakdown_history(zone: str = "PT") -> dict:
         print(f"Error fetching power breakdown history: {e}")
         return {}
 
-def fetch_model_input_data(endpoint_url: str, params: dict = None) -> dict:
-    """
-    Fetches input data for the AI models from the specified API endpoint.
-    This function assumes that you require an API key provided under MODEL_INPUT_API_KEY.
-    
-    Args:
-        endpoint_url (str): The API URL for model input data.
-        params (dict, optional): Query parameters for the API call.
-    
-    Returns:
-        dict: JSON data returned from the API, or an empty dict if an error occurs.
-    """
-    api_key = os.getenv("MODEL_INPUT_API_KEY")
-    headers = {
-        "Authorization": f"Bearer {api_key}"
-    }
-    
-    try:
-        response = requests.get(endpoint_url, params=params, headers=headers, timeout=10)
-        response.raise_for_status()
-        return response.json()
-    except Exception as e:
-        print(f"Error fetching model input data: {e}")
-        return {}
-
 if __name__ == "__main__":
     # Example usage for testing purposes:
     
@@ -89,7 +64,3 @@ if __name__ == "__main__":
     power_data = fetch_power_breakdown_history("PT")
     print("Power Breakdown Data:", power_data)
     
-    # Example for model input data (replace with your actual endpoint)
-    model_input_api_url = "https://api.example.com/model-input-data"
-    model_input = fetch_model_input_data(model_input_api_url, params={"country": "PT"})
-    print("Model Input Data:", model_input)
