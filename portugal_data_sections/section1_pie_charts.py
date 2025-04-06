@@ -1,5 +1,6 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
 from datetime import datetime, timedelta, timezone
 from backend.api import fetch_power_breakdown_history
 
@@ -107,12 +108,13 @@ def format_label(label):
     return label if label.isupper() else label.capitalize()
 
 # -----------------------------
-# Helper Plotting Function
+# Helper Plotting Function using Plotly Express
 # -----------------------------
-def plot_breakdown_chart(breakdown_total, total_sum, limite, now_dt, chart_title, time_hours):
+def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt, chart_title, time_hours):
     """
-    Creates and returns a pie chart figure for a given breakdown.
-    If no valid values are present (i.e. total_sum==0), returns a placeholder chart with a custom message.
+    Creates and returns an interactive Plotly pie chart for a given breakdown.
+    If no valid values are present (i.e. total_sum == 0), returns a placeholder chart
+    with an aesthetic message.
     """
     labels = []
     values = []
@@ -121,28 +123,24 @@ def plot_breakdown_chart(breakdown_total, total_sum, limite, now_dt, chart_title
         if val != 0:
             labels.append(format_label(key))
             values.append(val)
-    fig, ax = plt.subplots(figsize=(6,6))
     if not values or total_sum == 0:
-        # Create a placeholder figure with a centered aesthetic message.
-        ax.text(0.5, 0.5, "No energy data available\nfor this time frame", 
-                horizontalalignment="center", verticalalignment="center",
-                fontsize=16, color="gray")
-        ax.set_xticks([])
-        ax.set_yticks([])
-        timeframe_str = f"{limite.strftime('%d/%m/%Y %H:%M')} - {now_dt.strftime('%d/%m/%Y %H:%M')} (UTC)"
-        ax.set_title(f"{timeframe_str}\n{chart_title}\nLast {time_hours} h\nPortugal", fontsize=12)
+        # Create a placeholder interactive chart
+        placeholder_df = pd.DataFrame({'Category': ['No Data'], 'Value': [1]})
+        title_str = f"No energy data available for this time frame\nLast {time_hours} h"
+        fig = px.pie(placeholder_df, names='Category', values='Value', title=title_str)
+        fig.update_traces(textinfo='none')
+        fig.update_layout(annotations=[dict(text="No energy data available", x=0.5, y=0.5,
+                                              font_size=16, showarrow=False)])
         return fig
-    total_value = sum(values)
-    wedges, _ = ax.pie(values, startangle=90)
-    items = list(zip(labels, values, wedges))
-    items_sorted = sorted(items, key=lambda x: x[1], reverse=True)
-    labels_sorted = [f"{lab} ({(val/total_value*100):.2f}%)" for lab, val, _ in items_sorted]
-    wedges_sorted = [w for _, _, w in items_sorted]
-    timeframe_str = f"{limite.strftime('%d/%m/%Y %H:%M')} - {now_dt.strftime('%d/%m/%Y %H:%M')} (UTC)"
-    # Extract breakdown type from chart_title (assumes title like "Power Import Breakdown")
-    breakdown_type = chart_title.split()[1]
-    ax.set_title(f"{timeframe_str}\n{chart_title}\nLast {time_hours} h\nPortugal\nTotal {breakdown_type}: {total_sum} MWh", fontsize=12)
-    ax.legend(wedges_sorted, labels_sorted, loc="upper right", bbox_to_anchor=(1.3, 1))
+    # Create DataFrame for Plotly
+    df = pd.DataFrame({'Category': labels, 'Value': values})
+    timeframe_str = f"{limite.strftime('%d/%m %H:%M')} - {now_dt.strftime('%d/%m %H:%M')} (UTC)"
+    title_str = f"{timeframe_str}<br>Total {chart_title.split()[1]}: {total_sum} MWh"
+    fig = px.pie(df, names='Category', values='Value', title=title_str)
+    fig.update_layout(title=dict(x=0.5, y=0.95, font=dict(size=16), xanchor='center', yanchor='top'))
+    fig.update_traces(textposition='inside', textinfo='percent+label',
+                      hovertemplate='%{label}: %{value} MWh (%{percent})')
+    fig.update_layout(margin=dict(l=20, r=20, t=80, b=20))
     return fig
 
 # -----------------------------
@@ -176,28 +174,29 @@ def render_pie_charts():
         # Plot Power Import Breakdown
         st.write("**Power Import Breakdown**")
         imp_total, imp_sum, limite_imp = aggregate_import(historico, time_hours, now_dt)
-        fig_imp = plot_breakdown_chart(imp_total, imp_sum, limite_imp, now_dt, "Power Import Breakdown", time_hours)
-        st.pyplot(fig_imp, use_container_width=True)
+        fig_imp = plot_breakdown_chart_interactive(imp_total, imp_sum, limite_imp, now_dt, "Power Import Breakdown", time_hours)
+        st.plotly_chart(fig_imp, use_container_width=True)
         
         # Plot Power Production Breakdown
         st.write("**Power Production Breakdown**")
         prod_total, prod_sum, limite_prod = aggregate_production(historico, time_hours, now_dt)
-        fig_prod = plot_breakdown_chart(prod_total, prod_sum, limite_prod, now_dt, "Power Production Breakdown", time_hours)
-        st.pyplot(fig_prod, use_container_width=True)
+        fig_prod = plot_breakdown_chart_interactive(prod_total, prod_sum, limite_prod, now_dt, "Power Production Breakdown", time_hours)
+        st.plotly_chart(fig_prod, use_container_width=True)
     
     with col2:
         # Plot Power Export Breakdown
         st.write("**Power Export Breakdown**")
         export_total, export_sum, limite_export = aggregate_export(historico, time_hours, now_dt)
-        fig_export = plot_breakdown_chart(export_total, export_sum, limite_export, now_dt, "Power Export Breakdown", time_hours)
-        st.pyplot(fig_export, use_container_width=True)
+        fig_export = plot_breakdown_chart_interactive(export_total, export_sum, limite_export, now_dt, "Power Export Breakdown", time_hours)
+        st.plotly_chart(fig_export, use_container_width=True)
         
         # Plot Power Consumption Breakdown
         st.write("**Power Consumption Breakdown**")
         cons_total, cons_sum, limite_cons = aggregate_consumption(historico, time_hours, now_dt)
-        fig_cons = plot_breakdown_chart(cons_total, cons_sum, limite_cons, now_dt, "Power Consumption Breakdown", time_hours)
-        st.pyplot(fig_cons, use_container_width=True)
+        fig_cons = plot_breakdown_chart_interactive(cons_total, cons_sum, limite_cons, now_dt, "Power Consumption Breakdown", time_hours)
+        st.plotly_chart(fig_cons, use_container_width=True)
 
 if __name__ == "__main__":
     render_pie_charts()
-
+    st.title("Power Data Breakdown Visualization")
+    st.write("This section provides a detailed breakdown of power data, including import, production, export, and consumption.")
