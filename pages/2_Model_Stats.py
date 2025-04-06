@@ -37,17 +37,17 @@ def display_model_stats(model_name: str, base_path: str):
     loss_img = os.path.join(base_path, "loss_plot.png")
     accuracy_img = os.path.join(base_path, "accuracy_plot.png")
     confusion_img = os.path.join(base_path, "confusion_matrix.png")
-    heatmap_img = os.path.join(base_path, "heatmap_table.png")
     
     # Define file paths for test metrics
     test_accuracy_file = os.path.join(base_path, "test_accuracy.txt")
     test_loss_file = os.path.join(base_path, "test_loss.txt")
     
-    # Display images using the updated parameter
-    st.image(loss_img, caption="Loss Plot", use_container_width=True)
-    st.image(accuracy_img, caption="Accuracy Plot", use_container_width=True)
-    st.image(confusion_img, caption="Confusion Matrix", use_container_width=True)
-    st.image(heatmap_img, caption="Heatmap Table", use_container_width=True)
+    # Display images centered with a smaller width and add spacing between them
+    st.image(loss_img, caption="Loss Plot", width=750)
+    st.markdown("<br>", unsafe_allow_html=True)  # Add space
+    st.image(accuracy_img, caption="Accuracy Plot", width=750)
+    st.markdown("<br>", unsafe_allow_html=True)  # Add space
+    st.image(confusion_img, caption="Confusion Matrix", width=750)
     
     # Load and display test metrics
     test_accuracy = load_text(test_accuracy_file)
