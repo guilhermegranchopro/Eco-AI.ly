@@ -5,20 +5,7 @@ import pandas as pd
 import joblib
 import tensorflow as tf
 from datetime import datetime, timedelta, timezone
-from backend.api import fetch_power_breakdown_history, fetch_carbon_intensity_history
-
-def get_bg_color_RP(value):
-    """
-    Returns a hex color string interpolated between red (#FF0000) and green (#00FF00).
-    0 -> red, 5 -> green.
-    """
-    # Clamp value between 0 and 5
-    value = max(0, min(5, value))
-    fraction = value / 5.0
-    red = int(255 * (1 - fraction))
-    green = int(255 * fraction)
-    blue = 0
-    return f"#{red:02X}{green:02X}{blue:02X}"
+from backend.api import fetch_carbon_intensity_history
 
 def get_bg_color_CI(value):
     """
@@ -96,46 +83,24 @@ def render_ai_predictions():
     
     scaler_carbon = joblib.load('backend/models/scaler_carbon_intensity.pkl')
     df_ci['scaled'] = scaler_carbon.transform(df_ci[['Carbon Intensity gCO₂eq/kWh (LCA)']])
+    df_labelling = np.round(df_ci['scaled'])
+    mode_labelling_CI = pd.Series(df_labelling).mode()[0]
+    mode_labelling_CI = int(mode_labelling_CI)
     X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
     
     model_carbon = tf.keras.models.load_model('backend/models/model_carbon_intensity.keras')
     prediction_ci = model_carbon.predict(X_ci)
     prediction_class_carbon = int(np.argmax(prediction_ci, axis=1)[0])
     
-    # ----- Renewable Percentage Prediction -----
-    data_rp = fetch_power_breakdown_history(zone="PT")
-    if not data_rp or not data_rp.get("history"):
-        st.error("No renewable percentage data available.")
-        return
-    
-    historico_rp = data_rp["history"]
-    df_rp = pd.DataFrame(historico_rp)
-    df_rp['datetime'] = pd.to_datetime(df_rp['datetime'])
-    df_rp = df_rp.sort_values(by='datetime', ascending=True)
-    if 'renewablePercentage' not in df_rp.columns:
-        st.error("API data does not contain 'renewablePercentage'.")
-        return
-
-    df_rp = df_rp[['datetime', 'renewablePercentage']].tail(24).reset_index(drop=True)
-    df_rp.rename(columns={'renewablePercentage': 'Renewable Percentage'}, inplace=True)
-    
-    scaler_rp = joblib.load('backend/models/scaler_renewable_percentage.pkl')
-    df_rp['scaled'] = scaler_rp.transform(df_rp[['Renewable Percentage']])
-    X_rp = df_rp['scaled'].values.reshape(1, 24, 1)
-    
-    model_rp = tf.keras.models.load_model('backend/models/model_renewable_percentage.keras')
-    prediction_rp = model_rp.predict(X_rp)
-    prediction_class_renewable = int(np.argmax(prediction_rp, axis=1)[0])
-    
     # Map predictions to background colors
     bg_color_carbon = get_bg_color_CI(prediction_class_carbon)
-    bg_color_renewable = get_bg_color_RP(prediction_class_renewable)
+    bg_color_renewable = get_bg_color_CI(mode_labelling_CI)
     
     col_pred1, col_pred2 = st.columns(2)
     with col_pred1:
-        colored_metric("Carbon Intensity Lifecycle", prediction_class_carbon, bg_color_carbon)
+        colored_metric("Carbon Intensity Lifecycle", mode_labelling_CI, bg_color_renewable)
     with col_pred2:
-        colored_metric("Renewable Percentage", prediction_class_renewable, bg_color_renewable)
+        colored_metric("Renewable Percentage", prediction_class_carbon, bg_color_carbon)
 
 if __name__ == "__main__":
     render_ai_predictions()

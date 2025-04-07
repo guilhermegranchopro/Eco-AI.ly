@@ -74,32 +74,7 @@ def render_current_index():
     """
     st.markdown("---")
     st.subheader("Current Metrics - Last 24 Hours")
-    
-        # ----- Carbon Intensity Prediction -----
-    data_ci = fetch_carbon_intensity_history(zone="PT")
-    if not data_ci or not data_ci.get("history"):
-        st.error("No carbon intensity data available.")
-        return
-    
-    historico_carbon = data_ci["history"]
-    df_ci = pd.DataFrame(historico_carbon)
-    df_ci['datetime'] = pd.to_datetime(df_ci['datetime'])
-    df_ci = df_ci.sort_values(by='datetime', ascending=True)
-    if 'carbonIntensity' not in df_ci.columns:
-        st.error("API data does not contain 'carbonIntensity'.")
-        return
 
-    # Take the last 24 hours of data
-    df_ci = df_ci[['datetime', 'carbonIntensity']].tail(24).reset_index(drop=True)
-    df_ci.rename(columns={'carbonIntensity': 'Carbon Intensity gCO₂eq/kWh (LCA)'}, inplace=True)
-    
-    scaler_carbon = joblib.load('backend/models/labelling_scaler_CI.pkl')
-    df_ci['scaled'] = scaler_carbon.transform(df_ci[['Carbon Intensity gCO₂eq/kWh (LCA)']])
-    df_ci['scaled'] = np.round(df_ci['scaled'])
-    mode_labelling_CI = pd.Series(df_ci['scaled']).mode()[0]
-    mode_labelling_CI = int(mode_labelling_CI)
-    
-    
     # ----- Renewable Percentage Prediction -----
     data_rp = fetch_power_breakdown_history(zone="PT")
     if not data_rp or not data_rp.get("history"):
@@ -117,19 +92,24 @@ def render_current_index():
     df_rp = df_rp[['datetime', 'renewablePercentage']].tail(24).reset_index(drop=True)
     df_rp.rename(columns={'renewablePercentage': 'Renewable Percentage'}, inplace=True)
     
-    scaler_rp = joblib.load('backend/models/labelling_scaler_RP.pkl')
+    scaler_rp = joblib.load('backend/models/scaler_renewable_percentage.pkl')
     df_rp['scaled'] = scaler_rp.transform(df_rp[['Renewable Percentage']])
-    df_rp['scaled'] = np.round(df_rp['scaled'])
-    mode_labelling_RP = pd.Series(df_rp['scaled']).mode()[0]
+    labelling_rp = np.round(df_rp['scaled'])
+    mode_labelling_RP = pd.Series(labelling_rp).mode()[0]
     mode_labelling_RP = int(mode_labelling_RP)
+    X_rp = df_rp['scaled'].values.reshape(1, 24, 1)
+    
+    model_rp = tf.keras.models.load_model('backend/models/model_renewable_percentage.keras')
+    prediction_rp = model_rp.predict(X_rp)
+    prediction_class_renewable = int(np.argmax(prediction_rp, axis=1)[0])
 
     # Map predictions to background colors
-    bg_color_carbon = get_bg_color_CI(mode_labelling_CI)
-    bg_color_renewable = get_bg_color_RP(mode_labelling_RP)
+    bg_color_carbon = get_bg_color_RP(mode_labelling_RP)
+    bg_color_renewable = get_bg_color_RP(prediction_class_renewable)
     
     col_pred1, col_pred2 = st.columns(2)
     with col_pred1:
-        colored_metric("Carbon Intensity Lifecycle", mode_labelling_CI, bg_color_carbon)
+        colored_metric("Carbon Intensity Lifecycle", mode_labelling_RP, bg_color_carbon)
     with col_pred2:
-        colored_metric("Renewable Percentage", mode_labelling_RP, bg_color_renewable)
+        colored_metric("Renewable Percentage",prediction_class_renewable, bg_color_renewable)
 
