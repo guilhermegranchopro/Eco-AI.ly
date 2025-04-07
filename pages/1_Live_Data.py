@@ -2,7 +2,8 @@ import streamlit as st
 from portugal_data_sections.section1_pie_charts import render_pie_charts
 from portugal_data_sections.section2_time_series import render_time_series
 from portugal_data_sections.section3_ai_predictions import render_ai_predictions
-from portugal_data_sections.section4_pie_charts2 import render_pie_charts2
+from portugal_data_sections.section4_current_index import render_current_index
+from portugal_data_sections.section5_pie_charts2 import render_pie_charts2
 
 # -----------------------------
 # Helper Functions
@@ -28,7 +29,10 @@ def main():
     # Render Section 3: AI Model Predictions
     render_ai_predictions()
 
-    # Render Section 4: Additional Pie Charts
+    # Render Section 4: Current Index
+    render_current_index()
+
+    # Render Section 5: Additional Pie Charts
     render_pie_charts2()
 
 if __name__ == "__main__":

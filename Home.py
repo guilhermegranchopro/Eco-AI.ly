@@ -3,8 +3,9 @@ import streamlit as st
 # Set up the page configuration at the very top.
 st.set_page_config(
     page_title="Eco AI.ly",
-    page_icon="assets/images/logo.png",  # Alternatively, you can use an emoji if needed.
-    layout="wide"
+    page_icon="🌿",  # Alternatively, you can use an emoji if needed.
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # Main title and header

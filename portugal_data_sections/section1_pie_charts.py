@@ -106,8 +106,6 @@ def render_pie_charts():
         ["Last 24 Hours", "Last 12 Hours", "Last 6 Hours", "Last 3 Hours", "Last 1 Hour"],
         key="select_time_range_piecharts"
     )
-
-    st.write("Displaying Power Breakdown for:", time_range)
     
     try:
         hours_str = time_range.split()[1]  # e.g., "1" from "Last 1 Hour"
