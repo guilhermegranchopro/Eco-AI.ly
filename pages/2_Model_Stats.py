@@ -27,6 +27,7 @@ def display_model_stats(model_name: str, base_path: str):
         model_name (str): The display name for the model.
         base_path (str): The base path where the model's stats files are located.
     """
+
     st.subheader(f"{model_name} Model Stats")
     
     # Define file paths in the desired order:

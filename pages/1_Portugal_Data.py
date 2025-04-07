@@ -2,6 +2,7 @@ import streamlit as st
 from portugal_data_sections.section1_pie_charts import render_pie_charts
 from portugal_data_sections.section2_time_series import render_time_series
 from portugal_data_sections.section3_ai_predictions import render_ai_predictions
+from portugal_data_sections.section4_pie_charts2 import render_pie_charts2
 
 # -----------------------------
 # Helper Functions
@@ -12,6 +13,7 @@ def set_page_config_once():
         st.session_state["page_config_done"] = True
 
 def main():
+
     set_page_config_once()
     # Set the title and header for the app
     st.title("Portugal Data Dashboard")
@@ -25,6 +27,9 @@ def main():
     
     # Render Section 3: AI Model Predictions
     render_ai_predictions()
+
+    # Render Section 4: Additional Pie Charts
+    render_pie_charts2()
 
 if __name__ == "__main__":
     main()
