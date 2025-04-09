@@ -1,5 +1,5 @@
 import streamlit as st
-from portugal_data_sections.section5_pie_charts2 import render_pie_charts2
+from backend.section5_pie_charts2 import render_pie_charts2
 
 # -----------------------------
 # Helper Functions
