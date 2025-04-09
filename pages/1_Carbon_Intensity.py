@@ -1,6 +1,6 @@
 import streamlit as st
-from backend.section2_time_series import render_time_series
-from backend.section3_ai_predictions import render_ai_predictions
+from backend.carbon_intensity_time_series import render_time_series_CI
+from backend.carbon_intensity_ai import render_ai_predictions_CI
 
 # -----------------------------
 # Helper Functions
@@ -18,10 +18,10 @@ def main():
     st.header("Environmental Data and Predictions for Portugal")
 
     # Render Section 3: AI Model Predictions
-    render_ai_predictions()
+    render_ai_predictions_CI()
     
     # Render Section 2: Time Series Data
-    render_time_series() 
+    render_time_series_CI() 
 
 if __name__ == "__main__":
     main()

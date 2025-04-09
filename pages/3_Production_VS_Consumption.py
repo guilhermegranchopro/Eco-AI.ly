@@ -1,5 +1,5 @@
 import streamlit as st
-from backend.section1_pie_charts import render_pie_charts
+from backend.production_consumption import render_pie_charts
 
 # -----------------------------
 # Helper Functions

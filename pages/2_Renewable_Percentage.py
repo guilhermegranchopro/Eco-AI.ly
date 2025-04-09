@@ -1,6 +1,6 @@
 import streamlit as st
-from backend.section2_time_series import render_time_series
-from backend.section4_current_index import render_current_index
+from backend.renewable_percentage_time_series import render_time_series_RP
+from backend.renewable_percentage_ai import render_ai_predictions_RP
 
 # -----------------------------
 # Helper Functions
@@ -18,10 +18,10 @@ def main():
     st.header("Environmental Data and Predictions for Portugal")
 
     # Render Section 4: Current Index
-    render_current_index()
+    render_ai_predictions_RP()
     
     # Render Section 2: Time Series Data
-    render_time_series()
+    render_time_series_RP()
 
 if __name__ == "__main__":
     main()
