@@ -1,7 +1,7 @@
 import streamlit as st
 from backend.import_export.import_export import render_pie_charts2
 from backend.other_countries import get_expansion_message
-
+from backend.import_export.import_export_info import render_import_export_info
 
 # -----------------------------
 # Helper Functions
@@ -28,8 +28,7 @@ def main():
 
     with tab2:
         set_page_config_once()
-        st.subheader("Info")
-        st.write("This is the info page.")
+        render_import_export_info()
 
     with tab3:
         set_page_config_once()

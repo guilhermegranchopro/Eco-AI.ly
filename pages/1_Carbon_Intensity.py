@@ -3,6 +3,7 @@ from backend.carbon_intensity.carbon_intensity_time_series import render_time_se
 from backend.carbon_intensity.carbon_intensity_ai import render_ai_predictions_CI
 from backend.carbon_intensity.carbon_intensity_model_stats import rend_model_stats_CI
 from backend.other_countries import get_expansion_message
+from backend.carbon_intensity.carbon_intensity_info import render_carbon_intensity_info
 
 # -----------------------------
 # Helper Functions
@@ -37,8 +38,7 @@ def main():
 
     with tab3:
         set_page_config_once()
-        st.subheader("Info")
-        st.write("This is the info page.")
+        render_carbon_intensity_info()
 
     with tab4:
         set_page_config_once()

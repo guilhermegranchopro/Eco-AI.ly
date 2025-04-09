@@ -3,6 +3,7 @@ from backend.renewable_percentage.renewable_percentage_time_series import render
 from backend.renewable_percentage.renewable_percentage_ai import render_ai_predictions_RP
 from backend.renewable_percentage.renewable_percentage_model_stats import rend_model_stats_RP
 from backend.other_countries import get_expansion_message
+from backend.renewable_percentage.renewable_percentage_info import render_renewable_percentage_info
 
 # -----------------------------
 # Helper Functions
@@ -37,8 +38,7 @@ def main():
 
     with tab3:
         set_page_config_once()
-        st.subheader("Info")
-        st.write("This is the info page.")
+        render_renewable_percentage_info()
 
     with tab4:
         set_page_config_once()

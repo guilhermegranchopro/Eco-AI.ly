@@ -1,6 +1,7 @@
 import streamlit as st
 from backend.production_consumption.production_consumption import render_pie_charts
 from backend.other_countries import get_expansion_message
+from backend.production_consumption.production_consumption_info import render_production_consumption_info
 
 # -----------------------------
 # Helper Functions
@@ -22,13 +23,12 @@ def main():
         st.title("Portugal Data Dashboard")
         st.header("Environmental Data and Predictions for Portugal")
         
-    # Render Section 1: Pie Charts
+        # Render Section 1: Pie Charts
         render_pie_charts()
 
     with tab2:
         set_page_config_once()
-        st.subheader("Info")
-        st.write("This is the info page.")
+        render_production_consumption_info()
 
     with tab3:
         set_page_config_once()
