@@ -19,25 +19,12 @@ def get_bg_color_RP(value):
     blue = 0
     return f"#{red:02X}{green:02X}{blue:02X}"
 
-def get_bg_color_CI(value):
-    """
-    Returns a hex color string interpolated between green (#00FF00) and red (#FF0000).
-    0 -> green, 5 -> red.
-    """
-    # Clamp value between 0 and 5
-    value = max(0, min(5, value))
-    fraction = value / 5.0
-    red = int(255 * fraction)
-    green = int(255 * (1 - fraction))
-    blue = 0
-    return f"#{red:02X}{green:02X}{blue:02X}"
-
 def colored_metric(label, value, bg_color):
     """
     Renders a custom metric with a colored background using st.components.v1.html.
     Adds a fixed transparency level to the background color.
     """
-    # Set transparency level (alpha) to 0.8 (80% opacity)
+    # Set transparency level (alpha) to 0.6 (60% opacity)
     transparency = 0.6
 
     # Convert hex color to RGBA with transparency
@@ -67,7 +54,7 @@ def colored_metric(label, value, bg_color):
 def render_ai_predictions_RP():
     """
     Renders the AI Model Predictions section using real predictions.
-    It fetches the last 24 hours of carbon intensity and renewable percentage data,
+    It fetches the last 24 hours of renewable percentage data,
     applies the corresponding scaler transformations, and uses pre-trained LSTM models
     to predict the next 24-hour class (on a scale from 0 to 5). The result is displayed
     with a background color that interpolates from red (0) to green (5).
@@ -114,19 +101,41 @@ def render_ai_predictions_RP():
         model_rp = tf.keras.models.load_model('backend/models/model_renewable_percentage.keras')
         prediction_rp = model_rp.predict(X_rp)
         prediction_class_renewable = int(np.argmax(prediction_rp, axis=1)[0])
-
+    
         # Map predictions to background colors
         bg_color_carbon = get_bg_color_RP(mode_labelling_RP)
         bg_color_renewable = get_bg_color_RP(prediction_class_renewable)
         
-        col_pred1, col_pred2 = st.columns(2)
-        with col_pred1:
+        # Create three columns:
+        # left: current value, center: arrow, right: prediction.
+        col_current, col_arrow, col_prediction = st.columns([1, 0.3, 1])
+        with col_current:
             colored_metric("Current 24 hours", mode_labelling_RP, bg_color_carbon)
-        with col_pred2:
+        with col_arrow:
+            # Determine arrow based on comparison
+            if prediction_class_renewable > mode_labelling_RP:
+                arrow = "↑"
+                arrow_color = "#28a745"  # green
+            elif prediction_class_renewable < mode_labelling_RP:
+                arrow = "↓"
+                arrow_color = "#dc3545"  # red
+            else:
+                arrow = "→"
+                arrow_color = "#6c757d"  # gray
+            st.markdown(
+                f"<h1 style='text-align: center; color: {arrow_color}; margin-top: 5px; font-size: 70px; line-height: 50px;'>{arrow}</h1>",
+                unsafe_allow_html=True
+            )
+        with col_prediction:
             colored_metric("Next 24 hours", prediction_class_renewable, bg_color_renewable)
     except FileNotFoundError as e:
         st.error(f"Model file not found: {e}")
     except Exception as e:
         st.error(f"Error loading or using models: {e}")
         st.error(f"Error details: {str(e)}")
+
+if __name__ == "__main__":
+    render_ai_predictions_RP()
+    st.title("AI Model Predictions")
+    st.write("This section provides predictions for carbon intensity and renewable percentage for the next 24 hours.")
 

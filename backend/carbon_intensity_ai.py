@@ -24,7 +24,7 @@ def colored_metric(label, value, bg_color):
     Renders a custom metric with a colored background using st.components.v1.html.
     Adds a fixed transparency level to the background color.
     """
-    # Set transparency level (alpha) to 0.8 (80% opacity)
+    # Set transparency level (alpha) to 0.6 (60% opacity)
     transparency = 0.6
 
     # Convert hex color to RGBA with transparency
@@ -54,10 +54,10 @@ def colored_metric(label, value, bg_color):
 def render_ai_predictions_CI():
     """
     Renders the AI Model Predictions section using real predictions.
-    It fetches the last 24 hours of carbon intensity and renewable percentage data,
-    applies the corresponding scaler transformations, and uses pre-trained LSTM models
+    It fetches the last 24 hours of carbon intensity data,
+    applies the corresponding scaler transformations, and uses a pre-trained LSTM model
     to predict the next 24-hour class (on a scale from 0 to 5). The result is displayed
-    with a background color that interpolates from red (0) to green (5).
+    with a background color that interpolates from green (0) to red (5).
     """
     st.markdown("---")
     st.subheader("Carbon Intensity AI Model")
@@ -105,12 +105,28 @@ def render_ai_predictions_CI():
         
         # Map predictions to background colors
         bg_color_carbon = get_bg_color_CI(prediction_class_carbon)
-        bg_color_renewable = get_bg_color_CI(mode_labelling_CI)
+        bg_color_current = get_bg_color_CI(mode_labelling_CI)
         
-        col_pred1, col_pred2 = st.columns(2)
-        with col_pred1:
-            colored_metric("Current 24 hours", mode_labelling_CI, bg_color_renewable)
-        with col_pred2:
+        # Create three columns: current value, arrow, prediction
+        col_current, col_arrow, col_prediction = st.columns([1, 0.3, 1])
+        with col_current:
+            colored_metric("Current 24 hours", mode_labelling_CI, bg_color_current)
+        with col_arrow:
+            # Determine arrow direction based on the values
+            if prediction_class_carbon > mode_labelling_CI:
+                arrow = "↑"
+                arrow_color = "#dc3545"  # green
+            elif prediction_class_carbon < mode_labelling_CI:
+                arrow = "↓"
+                arrow_color = "#28a745"  # red
+            else:
+                arrow = "→"
+                arrow_color = "#6c757d"  # gray
+            st.markdown(
+                f"<h1 style='text-align: center; color: {arrow_color}; margin-top: 5px; font-size: 70px; line-height: 50px;'>{arrow}</h1>",
+                unsafe_allow_html=True
+            )
+        with col_prediction:
             colored_metric("Next 24 Hours", prediction_class_carbon, bg_color_carbon)
     except FileNotFoundError as e:
         st.error(f"Model file not found: {e}")
@@ -119,6 +135,7 @@ def render_ai_predictions_CI():
         st.error(f"Error details: {str(e)}")
 
 if __name__ == "__main__":
-    render_ai_predictions()
+    render_ai_predictions_CI()
     st.title("AI Model Predictions")
     st.write("This section provides predictions for carbon intensity and renewable percentage for the next 24 hours.")
+
