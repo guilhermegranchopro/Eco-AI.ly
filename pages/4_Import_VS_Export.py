@@ -1,5 +1,5 @@
 import streamlit as st
-from backend.import_export import render_pie_charts2
+from backend.import_export.import_export import render_pie_charts2
 
 # -----------------------------
 # Helper Functions

@@ -1,7 +1,7 @@
 import streamlit as st
-from backend.carbon_intensity_time_series import render_time_series_CI
-from backend.carbon_intensity_ai import render_ai_predictions_CI
-from backend.carbon_intensity_model_stats import rend_model_stats_CI
+from backend.carbon_intensity.carbon_intensity_time_series import render_time_series_CI
+from backend.carbon_intensity.carbon_intensity_ai import render_ai_predictions_CI
+from backend.carbon_intensity.carbon_intensity_model_stats import rend_model_stats_CI
 
 # -----------------------------
 # Helper Functions

@@ -1,7 +1,7 @@
 import streamlit as st
-from backend.renewable_percentage_time_series import render_time_series_RP
-from backend.renewable_percentage_ai import render_ai_predictions_RP
-from backend.renewable_percentage_model_stats import rend_model_stats_RP
+from backend.renewable_percentage.renewable_percentage_time_series import render_time_series_RP
+from backend.renewable_percentage.renewable_percentage_ai import render_ai_predictions_RP
+from backend.renewable_percentage.renewable_percentage_model_stats import rend_model_stats_RP
 
 # -----------------------------
 # Helper Functions
