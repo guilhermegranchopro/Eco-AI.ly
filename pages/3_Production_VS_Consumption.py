@@ -12,12 +12,27 @@ def set_page_config_once():
 def main():
 
     set_page_config_once()
-    # Set the title and header for the app
-    st.title("Portugal Data Dashboard")
-    st.header("Environmental Data and Predictions for Portugal")
-    
+
+    tab1, tab2, tab3 = st.tabs(["Portugal Overview", "Info", "Other Countries"])
+
+    with tab1:
+        set_page_config_once()
+        # Set the title and header for the app
+        st.title("Portugal Data Dashboard")
+        st.header("Environmental Data and Predictions for Portugal")
+        
     # Render Section 1: Pie Charts
-    render_pie_charts()
+        render_pie_charts()
+
+    with tab2:
+        set_page_config_once()
+        st.subheader("Info")
+        st.write("This is the info page.")
+
+    with tab3:
+        set_page_config_once()
+        st.subheader("Other Countries")
+        st.write("This is the other countries page.")
 
 if __name__ == "__main__":
     main()

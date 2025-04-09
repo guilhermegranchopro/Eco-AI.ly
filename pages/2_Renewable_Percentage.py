@@ -16,9 +16,10 @@ def main():
     set_page_config_once()
 
     # Top navigation tabs
-    tab1, tab2 = st.tabs(["Overview", "Model Stats"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Portugal Overview", "Model Stats", "Info", "Other Countries"])
 
     with tab1:
+        set_page_config_once()
         # Set the title and header for the app
         st.title("Portugal Data Dashboard")
         st.header("Environmental Data and Predictions for Portugal")
@@ -30,7 +31,18 @@ def main():
         render_time_series_RP()
 
     with tab2:
+        set_page_config_once()
         rend_model_stats_RP()
+
+    with tab3:
+        set_page_config_once()
+        st.subheader("Info")
+        st.write("This is the info page.")
+
+    with tab4:
+        set_page_config_once()
+        st.subheader("Other Countries")
+        st.write("This is the other countries page.")
 
 if __name__ == "__main__":
     main()
