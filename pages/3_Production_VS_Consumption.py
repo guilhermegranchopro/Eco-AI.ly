@@ -1,5 +1,6 @@
 import streamlit as st
 from backend.production_consumption.production_consumption import render_pie_charts
+from backend.other_countries import get_expansion_message
 
 # -----------------------------
 # Helper Functions
@@ -32,7 +33,7 @@ def main():
     with tab3:
         set_page_config_once()
         st.subheader("Other Countries")
-        st.write("This is the other countries page.")
+        st.markdown(get_expansion_message())
 
 if __name__ == "__main__":
     main()

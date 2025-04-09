@@ -2,6 +2,7 @@ import streamlit as st
 from backend.carbon_intensity.carbon_intensity_time_series import render_time_series_CI
 from backend.carbon_intensity.carbon_intensity_ai import render_ai_predictions_CI
 from backend.carbon_intensity.carbon_intensity_model_stats import rend_model_stats_CI
+from backend.other_countries import get_expansion_message
 
 # -----------------------------
 # Helper Functions
@@ -42,7 +43,7 @@ def main():
     with tab4:
         set_page_config_once()
         st.subheader("Other Countries")
-        st.write("This is the other countries page.")
+        st.markdown(get_expansion_message())
 
 
 
