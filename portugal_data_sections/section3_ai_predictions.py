@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import joblib
 import tensorflow as tf
-from datetime import datetime, timedelta, timezone
 from backend.api import fetch_carbon_intensity_history
 
 def get_bg_color_CI(value):
@@ -61,7 +60,7 @@ def render_ai_predictions():
     with a background color that interpolates from red (0) to green (5).
     """
     st.markdown("---")
-    st.subheader("AI Model Predictions - Next 24 Hours")
+    st.subheader("Carbon Intensity AI Model")
     
     # ----- Carbon Intensity Prediction -----
     data_ci = fetch_carbon_intensity_history(zone="PT")
@@ -80,27 +79,44 @@ def render_ai_predictions():
     # Take the last 24 hours of data
     df_ci = df_ci[['datetime', 'carbonIntensity']].tail(24).reset_index(drop=True)
     df_ci.rename(columns={'carbonIntensity': 'Carbon Intensity gCO₂eq/kWh (LCA)'}, inplace=True)
-    
-    scaler_carbon = joblib.load('backend/models/scaler_carbon_intensity.pkl')
-    df_ci['scaled'] = scaler_carbon.transform(df_ci[['Carbon Intensity gCO₂eq/kWh (LCA)']])
-    df_labelling = np.round(df_ci['scaled'])
-    mode_labelling_CI = pd.Series(df_labelling).mode()[0]
-    mode_labelling_CI = int(mode_labelling_CI)
-    X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
-    
-    model_carbon = tf.keras.models.load_model('backend/models/model_carbon_intensity.keras')
-    prediction_ci = model_carbon.predict(X_ci)
-    prediction_class_carbon = int(np.argmax(prediction_ci, axis=1)[0])
-    
-    # Map predictions to background colors
-    bg_color_carbon = get_bg_color_CI(prediction_class_carbon)
-    bg_color_renewable = get_bg_color_CI(mode_labelling_CI)
-    
-    col_pred1, col_pred2 = st.columns(2)
-    with col_pred1:
-        colored_metric("Carbon Intensity Lifecycle", mode_labelling_CI, bg_color_renewable)
-    with col_pred2:
-        colored_metric("Renewable Percentage", prediction_class_carbon, bg_color_carbon)
+
+    try:
+        # Load the labelling scaler and transform the data
+        labelling_scaler_carbon = joblib.load('backend/models/labelling_scaler_CI.pkl')
+        
+        # Ensure data is 1D for the labelling scaler
+        carbon_intensity_values = df_ci['Carbon Intensity gCO₂eq/kWh (LCA)'].values
+        df_labelling = labelling_scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
+        df_labelling = np.round(df_labelling)
+        mode_labelling_CI = pd.Series(df_labelling.flatten()).mode()[0]
+        mode_labelling_CI = int(mode_labelling_CI)
+        
+        # Load the main scaler and transform the data
+        scaler_carbon = joblib.load('backend/models/scaler_carbon_intensity.pkl')
+        df_ci['scaled'] = scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
+        
+        # Reshape for LSTM model (samples, time steps, features)
+        X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
+        
+        # Load and use the model
+        model_carbon = tf.keras.models.load_model('backend/models/model_carbon_intensity.keras')
+        prediction_ci = model_carbon.predict(X_ci)
+        prediction_class_carbon = int(np.argmax(prediction_ci, axis=1)[0])
+        
+        # Map predictions to background colors
+        bg_color_carbon = get_bg_color_CI(prediction_class_carbon)
+        bg_color_renewable = get_bg_color_CI(mode_labelling_CI)
+        
+        col_pred1, col_pred2 = st.columns(2)
+        with col_pred1:
+            colored_metric("Current 24 hours", mode_labelling_CI, bg_color_renewable)
+        with col_pred2:
+            colored_metric("Next 24 Hours", prediction_class_carbon, bg_color_carbon)
+    except FileNotFoundError as e:
+        st.error(f"Model file not found: {e}")
+    except Exception as e:
+        st.error(f"Error loading or using models: {e}")
+        st.error(f"Error details: {str(e)}")
 
 if __name__ == "__main__":
     render_ai_predictions()

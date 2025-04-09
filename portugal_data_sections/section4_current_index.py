@@ -3,8 +3,8 @@ import streamlit.components.v1 as components
 import numpy as np
 import pandas as pd
 import joblib
-from datetime import datetime, timedelta, timezone
-from backend.api import fetch_power_breakdown_history, fetch_carbon_intensity_history
+import tensorflow as tf
+from backend.api import fetch_power_breakdown_history
 
 def get_bg_color_RP(value):
     """
@@ -73,7 +73,7 @@ def render_current_index():
     with a background color that interpolates from red (0) to green (5).
     """
     st.markdown("---")
-    st.subheader("Current Metrics - Last 24 Hours")
+    st.subheader("Renewable Percentage AI Model")
 
     # ----- Renewable Percentage Prediction -----
     data_rp = fetch_power_breakdown_history(zone="PT")
@@ -91,25 +91,42 @@ def render_current_index():
 
     df_rp = df_rp[['datetime', 'renewablePercentage']].tail(24).reset_index(drop=True)
     df_rp.rename(columns={'renewablePercentage': 'Renewable Percentage'}, inplace=True)
-    
-    scaler_rp = joblib.load('backend/models/scaler_renewable_percentage.pkl')
-    df_rp['scaled'] = scaler_rp.transform(df_rp[['Renewable Percentage']])
-    labelling_rp = np.round(df_rp['scaled'])
-    mode_labelling_RP = pd.Series(labelling_rp).mode()[0]
-    mode_labelling_RP = int(mode_labelling_RP)
-    X_rp = df_rp['scaled'].values.reshape(1, 24, 1)
-    
-    model_rp = tf.keras.models.load_model('backend/models/model_renewable_percentage.keras')
-    prediction_rp = model_rp.predict(X_rp)
-    prediction_class_renewable = int(np.argmax(prediction_rp, axis=1)[0])
 
-    # Map predictions to background colors
-    bg_color_carbon = get_bg_color_RP(mode_labelling_RP)
-    bg_color_renewable = get_bg_color_RP(prediction_class_renewable)
-    
-    col_pred1, col_pred2 = st.columns(2)
-    with col_pred1:
-        colored_metric("Carbon Intensity Lifecycle", mode_labelling_RP, bg_color_carbon)
-    with col_pred2:
-        colored_metric("Renewable Percentage",prediction_class_renewable, bg_color_renewable)
+    try:
+        # Load the labelling scaler and transform the data
+        labelling_scaler_rp = joblib.load('backend/models/labelling_scaler_RP.pkl')
+        
+        # Ensure data is 1D for the labelling scaler
+        renewable_percentage_values = df_rp['Renewable Percentage'].values
+        labelling_rp = labelling_scaler_rp.transform(renewable_percentage_values.reshape(-1, 1))
+        labelling_rp = np.round(labelling_rp)
+        mode_labelling_RP = pd.Series(labelling_rp.flatten()).mode()[0]
+        mode_labelling_RP = int(mode_labelling_RP)
+        
+        # Load the main scaler and transform the data
+        scaler_rp = joblib.load('backend/models/scaler_renewable_percentage.pkl')
+        df_rp['scaled'] = scaler_rp.transform(renewable_percentage_values.reshape(-1, 1))
+        
+        # Reshape for LSTM model (samples, time steps, features)
+        X_rp = df_rp['scaled'].values.reshape(1, 24, 1)
+        
+        # Load and use the model
+        model_rp = tf.keras.models.load_model('backend/models/model_renewable_percentage.keras')
+        prediction_rp = model_rp.predict(X_rp)
+        prediction_class_renewable = int(np.argmax(prediction_rp, axis=1)[0])
+
+        # Map predictions to background colors
+        bg_color_carbon = get_bg_color_RP(mode_labelling_RP)
+        bg_color_renewable = get_bg_color_RP(prediction_class_renewable)
+        
+        col_pred1, col_pred2 = st.columns(2)
+        with col_pred1:
+            colored_metric("Current 24 hours", mode_labelling_RP, bg_color_carbon)
+        with col_pred2:
+            colored_metric("Next 24 hours", prediction_class_renewable, bg_color_renewable)
+    except FileNotFoundError as e:
+        st.error(f"Model file not found: {e}")
+    except Exception as e:
+        st.error(f"Error loading or using models: {e}")
+        st.error(f"Error details: {str(e)}")
 
