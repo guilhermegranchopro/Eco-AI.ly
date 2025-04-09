@@ -6,8 +6,6 @@ def set_page_config_once():
         st.set_page_config(page_title="Eco AI.ly", page_icon="🌿", layout="wide")
         st.session_state["page_config_done"] = True
 
-set_page_config_once()
-
 def load_text(file_path):
     """
     Reads and returns the content of a text file.
@@ -63,18 +61,16 @@ def display_model_stats(model_name: str, base_path: str):
         st.write("**Test Loss:**")
         st.write(test_loss)
 
-# Main content for the Model Stats page
-st.title("Model Statistics")
-st.write("Below are the precomputed performance metrics for our AI models.")
+def rend_model_stats_CI():
 
-# Set base paths for each model's statistics
-carbon_base_path = os.path.join("backend", "model_stats", "carbon")
-renewable_base_path = os.path.join("backend", "model_stats", "renewable")
+    set_page_config_once()
 
-st.header("Carbon Intensity Model")
-display_model_stats("Carbon Intensity", carbon_base_path)
+    # Main content for the Model Stats page
+    st.title("Model Statistics")
+    st.write("Below are the precomputed performance metrics for our AI models.")
 
-st.markdown("---")
+    # Set base paths for each model's statistics
+    carbon_base_path = os.path.join("backend", "model_stats", "carbon")
 
-st.header("Renewable Percentage Model")
-display_model_stats("Renewable Percentage", renewable_base_path)
+    st.header("Carbon Intensity Model")
+    display_model_stats("Carbon Intensity", carbon_base_path)

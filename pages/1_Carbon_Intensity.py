@@ -1,6 +1,7 @@
 import streamlit as st
 from backend.carbon_intensity_time_series import render_time_series_CI
 from backend.carbon_intensity_ai import render_ai_predictions_CI
+from backend.carbon_intensity_model_stats import rend_model_stats_CI
 
 # -----------------------------
 # Helper Functions
@@ -13,15 +14,24 @@ def set_page_config_once():
 def main():
 
     set_page_config_once()
-    # Set the title and header for the app
-    st.title("Portugal Data Dashboard")
-    st.header("Environmental Data and Predictions for Portugal")
 
-    # Render Section 3: AI Model Predictions
-    render_ai_predictions_CI()
-    
-    # Render Section 2: Time Series Data
-    render_time_series_CI() 
+    # Top navigation tabs
+    tab1, tab2 = st.tabs(["Overview", "Model Stats"])
+
+    with tab1:
+        # Set the title and header for the app
+        st.title("Portugal Data Dashboard")
+        st.header("Environmental Data and Predictions for Portugal")
+
+        # Render Section 3: AI Model Predictions
+        render_ai_predictions_CI()
+        
+        # Render Section 2: Time Series Data
+        render_time_series_CI() 
+
+    with tab2:
+        rend_model_stats_CI()
+
 
 if __name__ == "__main__":
     main()
