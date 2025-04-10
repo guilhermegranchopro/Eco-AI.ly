@@ -58,7 +58,7 @@ def colored_metric(label, value, bg_color):
          background-color: {bg_color} !important;
          border-radius: 10px;
          padding: 16px;
-         width: 95%;
+         width: 90%;
          text-align: center;
          color: #FFFFFF;
          font-family: Arial, sans-serif;
