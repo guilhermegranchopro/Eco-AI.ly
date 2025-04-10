@@ -81,7 +81,7 @@ def render_ai_predictions_RP():
 
     try:
         # Load the labelling scaler and transform the data
-        labelling_scaler_rp = joblib.load('backend/models/labelling_scaler_RP.pkl')
+        labelling_scaler_rp = joblib.load('backend/renewable_percentage/models/labelling_scaler_RP.pkl')
         
         # Ensure data is 1D for the labelling scaler
         renewable_percentage_values = df_rp['Renewable Percentage'].values
@@ -91,14 +91,14 @@ def render_ai_predictions_RP():
         mode_labelling_RP = int(mode_labelling_RP)
         
         # Load the main scaler and transform the data
-        scaler_rp = joblib.load('backend/models/scaler_renewable_percentage.pkl')
+        scaler_rp = joblib.load('backend/renewable_percentage/models/scaler_renewable_percentage.pkl')
         df_rp['scaled'] = scaler_rp.transform(renewable_percentage_values.reshape(-1, 1))
         
         # Reshape for LSTM model (samples, time steps, features)
         X_rp = df_rp['scaled'].values.reshape(1, 24, 1)
         
         # Load and use the model
-        model_rp = tf.keras.models.load_model('backend/models/model_renewable_percentage.keras')
+        model_rp = tf.keras.models.load_model('backend/renewable_percentage/models/model_renewable_percentage.keras')
         prediction_rp = model_rp.predict(X_rp)
         prediction_class_renewable = int(np.argmax(prediction_rp, axis=1)[0])
     

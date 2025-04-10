@@ -70,7 +70,7 @@ def rend_model_stats_CI():
     st.write("Below are the precomputed performance metrics for our AI models.")
 
     # Set base paths for each model's statistics
-    carbon_base_path = os.path.join("backend", "model_stats", "carbon")
+    carbon_base_path = os.path.join("backend", "carbon_intensity", "model_stats")
 
     st.header("Carbon Intensity Model")
     display_model_stats("Carbon Intensity", carbon_base_path)

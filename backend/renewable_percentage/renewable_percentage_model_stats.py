@@ -70,7 +70,7 @@ def rend_model_stats_RP():
     st.write("Below are the precomputed performance metrics for our AI models.")
 
     # Set base paths for each model's statistics
-    renewable_base_path = os.path.join("backend", "model_stats", "renewable")
+    renewable_base_path = os.path.join("backend", "renewable_percentage", "model_stats")
 
     st.header("Renewable Percentage Model")
     display_model_stats("Renewable Percentage", renewable_base_path)

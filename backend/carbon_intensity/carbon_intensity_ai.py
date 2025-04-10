@@ -82,7 +82,7 @@ def render_ai_predictions_CI():
 
     try:
         # Load the labelling scaler and transform the data
-        labelling_scaler_carbon = joblib.load('backend/models/labelling_scaler_CI.pkl')
+        labelling_scaler_carbon = joblib.load('backend/carbon_intensity/models/labelling_scaler_CI.pkl')
         
         # Ensure data is 1D for the labelling scaler
         carbon_intensity_values = df_ci['Carbon Intensity gCO₂eq/kWh (LCA)'].values
@@ -92,14 +92,14 @@ def render_ai_predictions_CI():
         mode_labelling_CI = int(mode_labelling_CI)
         
         # Load the main scaler and transform the data
-        scaler_carbon = joblib.load('backend/models/scaler_carbon_intensity.pkl')
+        scaler_carbon = joblib.load('backend/carbon_intensity/models/scaler_carbon_intensity.pkl')
         df_ci['scaled'] = scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
         
         # Reshape for LSTM model (samples, time steps, features)
         X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
         
         # Load and use the model
-        model_carbon = tf.keras.models.load_model('backend/models/model_carbon_intensity.keras')
+        model_carbon = tf.keras.models.load_model('backend/carbon_intensity/models/model_carbon_intensity.keras')
         prediction_ci = model_carbon.predict(X_ci)
         prediction_class_carbon = int(np.argmax(prediction_ci, axis=1)[0])
         
