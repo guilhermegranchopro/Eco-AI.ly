@@ -24,10 +24,10 @@ def main():
         st.header("Environmental Data and Predictions for Portugal")
 
         # Render Section 5: Additional Pie Charts
-        render_pie_charts2()
+        import_data_dict, export_data_dict = render_pie_charts2()
 
         # Render Section 6: Import Export Report
-        create_import_export_report_download_button([2, 3, 4])
+        create_import_export_report_download_button(import_data_dict, export_data_dict)
 
     with tab2:
         set_page_config_once()

@@ -127,6 +127,16 @@ def render_pie_charts():
         prod_total, prod_sum, limite_prod = aggregate_production(historico, time_hours, now_dt)
         fig_prod = plot_breakdown_chart_interactive(prod_total, prod_sum, limite_prod, now_dt, "Power Production Breakdown", time_hours)
         st.plotly_chart(fig_prod, use_container_width=True)
+
+        # Create a dictionary with the specified variables
+        production_data_dict = {
+            "prod_total": prod_total,
+            "prod_sum": prod_sum,
+            "limite_prod": limite_prod,
+            "fig_prod": fig_prod,
+            "time_hours": time_hours,
+            "now_dt": now_dt
+        }
     
     with col2:
         # Plot Power Consumption Breakdown
@@ -134,6 +144,18 @@ def render_pie_charts():
         cons_total, cons_sum, limite_cons = aggregate_consumption(historico, time_hours, now_dt)
         fig_cons = plot_breakdown_chart_interactive(cons_total, cons_sum, limite_cons, now_dt, "Power Consumption Breakdown", time_hours)
         st.plotly_chart(fig_cons, use_container_width=True)
+
+        # Create a dictionary with the specified variables
+        consumption_data_dict = {
+            "cons_total": cons_total,
+            "cons_sum": cons_sum,
+            "limite_cons": limite_cons,
+            "fig_cons": fig_cons,
+            "time_hours": time_hours,
+            "now_dt": now_dt
+        }
+
+    return production_data_dict, consumption_data_dict
 
 if __name__ == "__main__":
     render_pie_charts()

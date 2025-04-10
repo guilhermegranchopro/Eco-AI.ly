@@ -26,10 +26,10 @@ def main():
         st.header("Environmental Data and Predictions for Portugal")
         
         # Render Section 1: Pie Charts
-        render_pie_charts()
+        production_data_dict, consumption_data_dict = render_pie_charts()
 
         # Render Section 6: Production Consumption Report
-        create_production_consumption_report_download_button([2, 3, 4])
+        create_production_consumption_report_download_button(production_data_dict, consumption_data_dict)
 
     with tab2:
         set_page_config_once()

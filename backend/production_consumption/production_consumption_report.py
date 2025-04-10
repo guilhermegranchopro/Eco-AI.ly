@@ -9,7 +9,7 @@ import io
 import os
 from PIL import Image
 
-def create_production_consumption_report_download_button(data, charts=None, title="Production Consumption Portugal Overview"):
+def create_production_consumption_report_download_button(import_data_dict, export_data_dict, charts=None, title="Production Consumption Portugal Overview"):
     """
     Creates a download button for a comprehensive production consumption report in PDF format.
     
@@ -18,33 +18,90 @@ def create_production_consumption_report_download_button(data, charts=None, titl
         charts (dict, optional): Dictionary of figures/charts to include in the report
         title (str, optional): Title of the report
     """
-    if st.button("Download Comprehensive Report (PDF)"):
-        # Create PDF report
-        pdf_buffer = generate_production_consumption_pdf_report(data, charts, title)
+    col1, col2, col3 = st.columns([2, 1, 2])
+
+    with col2:
+        # Show a progress message
+        with st.spinner("Preparing your report..."):
+            # Create PDF report
+            pdf_buffer = generate_production_consumption_pdf_report(import_data_dict, export_data_dict, charts, title)
+        
+        # Create a styled download button
+        st.markdown("""
+        <div style='text-align: center; margin-top: 50px;'>
+            <style>
+                .stDownloadButton button {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    border: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                .stDownloadButton button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Create download button for the PDF
         st.download_button(
-            label="📥 Download PDF Report",
+            "📥 Download Report", 
             data=pdf_buffer,
             file_name=f"production_consumption_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
             mime="application/pdf",
             help="Download a comprehensive report of the production consumption data with ECO AI.ly validation"
         )
-        
-        st.success("Report generated successfully! Click the button above to download.")
 
-def generate_production_consumption_pdf_report(data, charts=None, title="Production Consumption Portugal Overview"):
+def generate_production_consumption_pdf_report(import_data_dict, export_data_dict, charts=None, title="Production Consumption Portugal Overview"):
     """
     Generates a PDF report for production consumption data with ECO AI.ly validation.
     
     Args:
-        data (pd.DataFrame): The production consumption data
+        import_data_dict (dict): Dictionary containing import data
+        export_data_dict (dict): Dictionary containing export data
         charts (dict, optional): Dictionary of figures/charts to include
         title (str): Title of the report
     
     Returns:
         bytes: PDF file as bytes
     """
+    # Helper function to safely format numeric values
+    def format_value(value, default="N/A"):
+        try:
+            if value is None:
+                return default
+            return f"{float(value):.2f}"
+        except (ValueError, TypeError):
+            return str(value) if value is not None else default
+    
+    # Helper function to safely save a figure to a buffer
+    def save_figure_to_buffer(fig, img_buf):
+        try:
+            # Check if the figure has a savefig method (matplotlib Figure)
+            if hasattr(fig, 'savefig'):
+                fig.savefig(img_buf, format='png', dpi=300, bbox_inches='tight')
+                return True
+            # Check if the figure is a PIL Image
+            elif hasattr(fig, 'save'):
+                fig.save(img_buf, format='PNG')
+                return True
+            # If it's already bytes or a string, write it directly
+            elif isinstance(fig, (bytes, str)):
+                if isinstance(fig, str):
+                    img_buf.write(fig.encode())
+                else:
+                    img_buf.write(fig)
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"Error saving figure: {e}")
+            return False
+    
     class PDF(FPDF):
         def header(self):
             # Logo
@@ -83,23 +140,42 @@ def generate_production_consumption_pdf_report(data, charts=None, title="Product
     pdf.cell(0, 10, "Summary Statistics", 0, 1)
     pdf.set_font('Arial', '', 10)
     
+    # Extract data from dictionaries
+    prod_total = import_data_dict.get("prod_total", 0)
+    prod_sum = import_data_dict.get("prod_sum", 0)
+    limite_prod = import_data_dict.get("limite_prod", 0)
+    time_hours = import_data_dict.get("time_hours", [])
+    now_dt = import_data_dict.get("now_dt", datetime.now())
+    
+    cons_total = export_data_dict.get("cons_total", 0)
+    cons_sum = export_data_dict.get("cons_sum", 0)
+    limite_cons = export_data_dict.get("limite_cons", 0)
+    
+    # Safely format time period
+    time_period = "N/A"
+    if isinstance(time_hours, list) and len(time_hours) >= 2:
+        time_period = f"{time_hours[0]} to {time_hours[-1]}"
+    elif isinstance(time_hours, list) and len(time_hours) == 1:
+        time_period = str(time_hours[0])
+    elif time_hours:
+        time_period = str(time_hours)
+    
     # Calculate summary statistics
-    if not data.empty:
-        stats = data.describe().round(2)
-        stats_text = (
-            f"Average Production Consumption: {stats.loc['mean'].iloc[0]} gCO2eq/kWh\n"
-            f"Minimum Production Consumption: {stats.loc['min'].iloc[0]} gCO2eq/kWh\n"
-            f"Maximum Production Consumption: {stats.loc['max'].iloc[0]} gCO2eq/kWh\n"
-            f"Data Period: {data.index.min().strftime('%Y-%m-%d')} to {data.index.max().strftime('%Y-%m-%d')}\n"
-            f"Number of Data Points: {len(data)}"
-        )
-        
-        pdf.multi_cell(0, 5, stats_text)
-    else:
-        pdf.cell(0, 10, "No data available for analysis", 0, 1)
+    stats_text = (
+        f"Total Production: {format_value(prod_total)} kWh\n"
+        f"Production Sum: {format_value(prod_sum)} kWh\n"
+        f"Production Limit: {format_value(limite_prod)} kWh\n"
+        f"Total Consumption: {format_value(cons_total)} kWh\n"
+        f"Consumption Sum: {format_value(cons_sum)} kWh\n"
+        f"Consumption Limit: {format_value(limite_cons)} kWh\n"
+        f"Time Period: {time_period}\n"
+        f"Report Date: {now_dt.strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+    
+    pdf.multi_cell(0, 5, stats_text)
     
     # Add charts if provided
-    if charts:
+    if charts and isinstance(charts, dict):
         pdf.add_page()
         pdf.set_font('Arial', 'B', 11)
         pdf.cell(0, 10, "Visualizations", 0, 1)
@@ -107,68 +183,87 @@ def generate_production_consumption_pdf_report(data, charts=None, title="Product
         for chart_name, fig in charts.items():
             # Save the figure to a temporary buffer
             img_buf = io.BytesIO()
-            fig.savefig(img_buf, format='png', dpi=300, bbox_inches='tight')
-            img_buf.seek(0)
             
-            # Add the image to the PDF
-            pdf.ln(5)
-            pdf.set_font('Arial', 'B', 10)
-            pdf.cell(0, 10, chart_name, 0, 1)
-            
-            # Convert to PIL Image to get dimensions
-            img = Image.open(img_buf)
-            width, height = img.size
-            
-            # Calculate aspect ratio and set width to fit page
-            page_width = pdf.w - 2*pdf.l_margin
-            img_width = min(page_width, 180)
-            img_height = img_width * height / width
-            
-            # Save the BytesIO object to a temporary file
-            temp_img_path = f"temp_{chart_name.replace(' ', '_')}.png"
-            with open(temp_img_path, 'wb') as temp_file:
-                temp_file.write(img_buf.getvalue())
-            
-            # Add the image to the PDF using the temporary file
-            pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
-            
-            # Clean up the temporary file
-            try:
-                os.remove(temp_img_path)
-            except:
-                pass
+            if save_figure_to_buffer(fig, img_buf):
+                img_buf.seek(0)
                 
-            pdf.ln(5)
+                # Add the image to the PDF
+                pdf.ln(5)
+                pdf.set_font('Arial', 'B', 10)
+                pdf.cell(0, 10, chart_name, 0, 1)
+                
+                # Convert to PIL Image to get dimensions
+                img = Image.open(img_buf)
+                width, height = img.size
+                
+                # Calculate aspect ratio and set width to fit page
+                page_width = pdf.w - 2*pdf.l_margin
+                img_width = min(page_width, 180)
+                img_height = img_width * height / width
+                
+                # Save the BytesIO object to a temporary file
+                temp_img_path = f"temp_{chart_name.replace(' ', '_')}.png"
+                with open(temp_img_path, 'wb') as temp_file:
+                    temp_file.write(img_buf.getvalue())
+                
+                # Add the image to the PDF using the temporary file
+                pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
+                
+                # Clean up the temporary file
+                try:
+                    os.remove(temp_img_path)
+                except:
+                    pass
+                    
+                pdf.ln(5)
     
-    # Add data table
+    # Add data tables
     pdf.add_page()
     pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Production Consumption Data", 0, 1)
+    pdf.cell(0, 10, "Production Data", 0, 1)
     
-    if not data.empty:
-        # Format the data for display
-        display_data = data.head(50).copy()  # Limit to first 50 rows
-        display_data.index = display_data.index.strftime('%Y-%m-%d %H:%M')
-        
-        # Create table header
-        pdf.set_font('Arial', 'B', 8)
-        col_width = 40
-        row_height = 6
-        
-        # Add column headers
-        pdf.cell(col_width, row_height, "Timestamp", 1, 0, 'C')
-        pdf.cell(col_width, row_height, "Production Consumption (gCO2eq/kWh)", 1, 1, 'C')
-        
-        # Add data rows
-        pdf.set_font('Arial', '', 8)
-        for idx, row in display_data.iterrows():
-            pdf.cell(col_width, row_height, str(idx), 1, 0, 'L')
-            pdf.cell(col_width, row_height, f"{row.iloc[0]:.2f}", 1, 1, 'R')
-            
-        if len(data) > 50:
-            pdf.cell(0, 10, f"Note: Showing first 50 of {len(data)} records", 0, 1, 'L')
-    else:
-        pdf.cell(0, 10, "No data available", 0, 1)
+    # Create table header for production data
+    pdf.set_font('Arial', 'B', 8)
+    col_width = 40
+    row_height = 6
+    
+    # Add column headers
+    pdf.cell(col_width, row_height, "Metric", 1, 0, 'C')
+    pdf.cell(col_width, row_height, "Value", 1, 1, 'C')
+    
+    # Add production data rows
+    pdf.set_font('Arial', '', 8)
+    production_data = [
+        ("Total Production", format_value(prod_total)),
+        ("Production Sum", format_value(prod_sum)),
+        ("Production Limit", format_value(limite_prod))
+    ]
+    
+    for metric, value in production_data:
+        pdf.cell(col_width, row_height, metric, 1, 0, 'L')
+        pdf.cell(col_width, row_height, value, 1, 1, 'R')
+    
+    # Add consumption data
+    pdf.ln(10)
+    pdf.set_font('Arial', 'B', 11)
+    pdf.cell(0, 10, "Consumption Data", 0, 1)
+    
+    # Add column headers
+    pdf.set_font('Arial', 'B', 8)
+    pdf.cell(col_width, row_height, "Metric", 1, 0, 'C')
+    pdf.cell(col_width, row_height, "Value", 1, 1, 'C')
+    
+    # Add consumption data rows
+    pdf.set_font('Arial', '', 8)
+    consumption_data = [
+        ("Total Consumption", format_value(cons_total)),
+        ("Consumption Sum", format_value(cons_sum)),
+        ("Consumption Limit", format_value(limite_cons))
+    ]
+    
+    for metric, value in consumption_data:
+        pdf.cell(col_width, row_height, metric, 1, 0, 'L')
+        pdf.cell(col_width, row_height, value, 1, 1, 'R')
     
     # Add validation stamp
     pdf.add_page()

@@ -127,6 +127,16 @@ def render_pie_charts2():
         imp_total, imp_sum, limite_imp = aggregate_import(historico, time_hours, now_dt)
         fig_imp = plot_breakdown_chart_interactive(imp_total, imp_sum, limite_imp, now_dt, "Power Import Breakdown", time_hours)
         st.plotly_chart(fig_imp, use_container_width=True)
+
+        # Create a dictionary with the specified variables
+        import_data_dict = {
+            "imp_total": imp_total,
+            "imp_sum": imp_sum,
+            "limite_imp": limite_imp,
+            "fig_imp": fig_imp,
+            "time_hours": time_hours,
+            "now_dt": now_dt
+        }
     
     with col2:
         # Plot Power Export Breakdown
@@ -134,6 +144,19 @@ def render_pie_charts2():
         export_total, export_sum, limite_export = aggregate_export(historico, time_hours, now_dt)
         fig_export = plot_breakdown_chart_interactive(export_total, export_sum, limite_export, now_dt, "Power Export Breakdown", time_hours)
         st.plotly_chart(fig_export, use_container_width=True)
+
+        # Create a dictionary with the specified variables
+        export_data_dict = {
+            "export_total": export_total,
+            "export_sum": export_sum,
+            "limite_export": limite_export,
+            "fig_export": fig_export,
+            "time_hours": time_hours,
+            "now_dt": now_dt
+        }
+
+
+    return import_data_dict, export_data_dict
 
 if __name__ == "__main__":
     render_pie_charts2()

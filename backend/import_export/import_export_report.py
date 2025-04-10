@@ -9,42 +9,102 @@ import io
 import os
 from PIL import Image
 
-def create_import_export_report_download_button(data, charts=None, title="Import Export Portugal Overview"):
+def create_import_export_report_download_button(import_data_dict, export_data_dict, charts=None, title="Import Export Portugal Overview"):
     """
     Creates a download button for a comprehensive import export report in PDF format.
     
     Args:
-        data (pd.DataFrame): The import export data to include in the report
+        import_data_dict (dict): Dictionary containing import data information
+        export_data_dict (dict): Dictionary containing export data information
         charts (dict, optional): Dictionary of figures/charts to include in the report
         title (str, optional): Title of the report
     """
-    if st.button("Download Comprehensive Report (PDF)"):
-        # Create PDF report
-        pdf_buffer = generate_import_export_pdf_report(data, charts, title)
-        
+
+    col1, col2, col3 = st.columns([2, 1, 2])
+
+    with col2:
+        # Show a progress message
+        with st.spinner("Preparing your report..."):
+            # Create PDF report
+            pdf_buffer = generate_import_export_pdf_report(import_data_dict, export_data_dict, charts, title)
+
+        # Create a styled download button
+        st.markdown("""
+        <div style='text-align: center; margin-top: 50px;'>
+            <style>
+                .stDownloadButton button {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    border: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                .stDownloadButton button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </div>
+        """, unsafe_allow_html=True)
+
         # Create download button for the PDF
         st.download_button(
-            label="📥 Download PDF Report",
+            "📥 Download Report", 
             data=pdf_buffer,
             file_name=f"import_export_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
             mime="application/pdf",
             help="Download a comprehensive report of the import export data with ECO AI.ly validation"
         )
         
-        st.success("Report generated successfully! Click the button above to download.")
 
-def generate_import_export_pdf_report(data, charts=None, title="Import Export Portugal Overview"):
+def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts=None, title="Import Export Portugal Overview"):
     """
     Generates a PDF report for import export data with ECO AI.ly validation.
     
     Args:
-        data (pd.DataFrame): The import export data
+        import_data_dict (dict): Dictionary containing import data information
+        export_data_dict (dict): Dictionary containing export data information
         charts (dict, optional): Dictionary of figures/charts to include
         title (str): Title of the report
     
     Returns:
         bytes: PDF file as bytes
     """
+    # Helper function to safely format numeric values
+    def format_value(value, default="N/A"):
+        try:
+            if value is None:
+                return default
+            return f"{float(value):.2f}"
+        except (ValueError, TypeError):
+            return str(value) if value is not None else default
+    
+    # Helper function to safely save a figure to a buffer
+    def save_figure_to_buffer(fig, img_buf):
+        try:
+            # Check if the figure has a savefig method (matplotlib Figure)
+            if hasattr(fig, 'savefig'):
+                fig.savefig(img_buf, format='png', dpi=300, bbox_inches='tight')
+                return True
+            # Check if the figure is a PIL Image
+            elif hasattr(fig, 'save'):
+                fig.save(img_buf, format='PNG')
+                return True
+            # If it's already bytes or a string, write it directly
+            elif isinstance(fig, (bytes, str)):
+                if isinstance(fig, str):
+                    img_buf.write(fig.encode())
+                else:
+                    img_buf.write(fig)
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"Error saving figure: {e}")
+            return False
+    
     class PDF(FPDF):
         def header(self):
             # Logo
@@ -83,23 +143,40 @@ def generate_import_export_pdf_report(data, charts=None, title="Import Export Po
     pdf.cell(0, 10, "Summary Statistics", 0, 1)
     pdf.set_font('Arial', '', 10)
     
-    # Calculate summary statistics
-    if not data.empty:
-        stats = data.describe().round(2)
-        stats_text = (
-            f"Average Import Export: {stats.loc['mean'].iloc[0]} gCO2eq/kWh\n"
-            f"Minimum Import Export: {stats.loc['min'].iloc[0]} gCO2eq/kWh\n"
-            f"Maximum Import Export: {stats.loc['max'].iloc[0]} gCO2eq/kWh\n"
-            f"Data Period: {data.index.min().strftime('%Y-%m-%d')} to {data.index.max().strftime('%Y-%m-%d')}\n"
-            f"Number of Data Points: {len(data)}"
-        )
-        
-        pdf.multi_cell(0, 5, stats_text)
-    else:
-        pdf.cell(0, 10, "No data available for analysis", 0, 1)
+    # Add import summary statistics
+    pdf.ln(5)
+    pdf.set_font('Arial', 'B', 11)
+    pdf.cell(0, 10, "Import Statistics", 0, 1)
+    pdf.set_font('Arial', '', 10)
+    
+    import_stats_text = (
+        f"Total Import: {format_value(import_data_dict.get('imp_total'))} gCO2eq/kWh\n"
+        f"Import Sum: {format_value(import_data_dict.get('imp_sum'))} gCO2eq/kWh\n"
+        f"Import Limit: {format_value(import_data_dict.get('limite_imp'))} gCO2eq/kWh\n"
+        f"Time Period: {import_data_dict.get('time_hours', 'N/A')} hours\n"
+        f"Report Date: {import_data_dict.get('now_dt', datetime.now()).strftime('%Y-%m-%d %H:%M')}"
+    )
+    
+    pdf.multi_cell(0, 5, import_stats_text)
+    
+    # Add export summary statistics
+    pdf.ln(5)
+    pdf.set_font('Arial', 'B', 11)
+    pdf.cell(0, 10, "Export Statistics", 0, 1)
+    pdf.set_font('Arial', '', 10)
+    
+    export_stats_text = (
+        f"Total Export: {format_value(export_data_dict.get('export_total'))} gCO2eq/kWh\n"
+        f"Export Sum: {format_value(export_data_dict.get('export_sum'))} gCO2eq/kWh\n"
+        f"Export Limit: {format_value(export_data_dict.get('limite_export'))} gCO2eq/kWh\n"
+        f"Time Period: {export_data_dict.get('time_hours', 'N/A')} hours\n"
+        f"Report Date: {export_data_dict.get('now_dt', datetime.now()).strftime('%Y-%m-%d %H:%M')}"
+    )
+    
+    pdf.multi_cell(0, 5, export_stats_text)
     
     # Add charts if provided
-    if charts:
+    if charts and isinstance(charts, dict):
         pdf.add_page()
         pdf.set_font('Arial', 'B', 11)
         pdf.cell(0, 10, "Visualizations", 0, 1)
@@ -107,13 +184,52 @@ def generate_import_export_pdf_report(data, charts=None, title="Import Export Po
         for chart_name, fig in charts.items():
             # Save the figure to a temporary buffer
             img_buf = io.BytesIO()
-            fig.savefig(img_buf, format='png', dpi=300, bbox_inches='tight')
-            img_buf.seek(0)
             
-            # Add the image to the PDF
-            pdf.ln(5)
-            pdf.set_font('Arial', 'B', 10)
-            pdf.cell(0, 10, chart_name, 0, 1)
+            if save_figure_to_buffer(fig, img_buf):
+                img_buf.seek(0)
+                
+                # Add the image to the PDF
+                pdf.ln(5)
+                pdf.set_font('Arial', 'B', 10)
+                pdf.cell(0, 10, chart_name, 0, 1)
+                
+                # Convert to PIL Image to get dimensions
+                img = Image.open(img_buf)
+                width, height = img.size
+                
+                # Calculate aspect ratio and set width to fit page
+                page_width = pdf.w - 2*pdf.l_margin
+                img_width = min(page_width, 180)
+                img_height = img_width * height / width
+                
+                # Save the BytesIO object to a temporary file
+                temp_img_path = f"temp_{chart_name.replace(' ', '_')}.png"
+                with open(temp_img_path, 'wb') as temp_file:
+                    temp_file.write(img_buf.getvalue())
+                
+                # Add the image to the PDF using the temporary file
+                pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
+                
+                # Clean up the temporary file
+                try:
+                    os.remove(temp_img_path)
+                except:
+                    pass
+                    
+                pdf.ln(5)
+    
+    # Add import data table
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 11)
+    pdf.cell(0, 10, "Import Data", 0, 1)
+    
+    # Add import figure if available
+    if 'fig_imp' in import_data_dict and import_data_dict['fig_imp'] is not None:
+        # Save the figure to a temporary buffer
+        img_buf = io.BytesIO()
+        
+        if save_figure_to_buffer(import_data_dict['fig_imp'], img_buf):
+            img_buf.seek(0)
             
             # Convert to PIL Image to get dimensions
             img = Image.open(img_buf)
@@ -125,7 +241,7 @@ def generate_import_export_pdf_report(data, charts=None, title="Import Export Po
             img_height = img_width * height / width
             
             # Save the BytesIO object to a temporary file
-            temp_img_path = f"temp_{chart_name.replace(' ', '_')}.png"
+            temp_img_path = "temp_import_figure.png"
             with open(temp_img_path, 'wb') as temp_file:
                 temp_file.write(img_buf.getvalue())
             
@@ -137,38 +253,42 @@ def generate_import_export_pdf_report(data, charts=None, title="Import Export Po
                 os.remove(temp_img_path)
             except:
                 pass
-                
-            pdf.ln(5)
     
-    # Add data table
+    # Add export data table
     pdf.add_page()
     pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Import Export Data", 0, 1)
+    pdf.cell(0, 10, "Export Data", 0, 1)
     
-    if not data.empty:
-        # Format the data for display
-        display_data = data.head(50).copy()  # Limit to first 50 rows
-        display_data.index = display_data.index.strftime('%Y-%m-%d %H:%M')
+    # Add export figure if available
+    if 'fig_export' in export_data_dict and export_data_dict['fig_export'] is not None:
+        # Save the figure to a temporary buffer
+        img_buf = io.BytesIO()
         
-        # Create table header
-        pdf.set_font('Arial', 'B', 8)
-        col_width = 40
-        row_height = 6
-        
-        # Add column headers
-        pdf.cell(col_width, row_height, "Timestamp", 1, 0, 'C')
-        pdf.cell(col_width, row_height, "Import Export (gCO2eq/kWh)", 1, 1, 'C')
-        
-        # Add data rows
-        pdf.set_font('Arial', '', 8)
-        for idx, row in display_data.iterrows():
-            pdf.cell(col_width, row_height, str(idx), 1, 0, 'L')
-            pdf.cell(col_width, row_height, f"{row.iloc[0]:.2f}", 1, 1, 'R')
+        if save_figure_to_buffer(export_data_dict['fig_export'], img_buf):
+            img_buf.seek(0)
             
-        if len(data) > 50:
-            pdf.cell(0, 10, f"Note: Showing first 50 of {len(data)} records", 0, 1, 'L')
-    else:
-        pdf.cell(0, 10, "No data available", 0, 1)
+            # Convert to PIL Image to get dimensions
+            img = Image.open(img_buf)
+            width, height = img.size
+            
+            # Calculate aspect ratio and set width to fit page
+            page_width = pdf.w - 2*pdf.l_margin
+            img_width = min(page_width, 180)
+            img_height = img_width * height / width
+            
+            # Save the BytesIO object to a temporary file
+            temp_img_path = "temp_export_figure.png"
+            with open(temp_img_path, 'wb') as temp_file:
+                temp_file.write(img_buf.getvalue())
+            
+            # Add the image to the PDF using the temporary file
+            pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
+            
+            # Clean up the temporary file
+            try:
+                os.remove(temp_img_path)
+            except:
+                pass
     
     # Add validation stamp
     pdf.add_page()
