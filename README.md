@@ -3,7 +3,7 @@
 <div align="center">
   <img src="assets/images/logo.png" alt="Eco AI.ly Logo" width="200"/>
   <br>
-  <em>Empowering Environmental Sustainability Through AI</em>
+  <em>Your Ecological AI Ally!</em>
 </div>
 
 ## 📋 Table of Contents
