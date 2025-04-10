@@ -63,6 +63,8 @@ def render_time_series_CI():
     else:
         st.error("Error fetching carbon intensity data.")
 
+    return df_ci_last24
+
 if __name__ == "__main__":
     render_time_series_CI()
     # Uncomment the line below to run the function directly
