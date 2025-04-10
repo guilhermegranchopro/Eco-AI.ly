@@ -1,7 +1,7 @@
 # Eco AI.ly 🌱
 
 <div align="center">
-  <img src="assets/logo.png" alt="Eco AI.ly Logo" width="200"/>
+  <img src="assets/images/logo.png" alt="Eco AI.ly Logo" width="200"/>
   <br>
   <em>Empowering Environmental Sustainability Through AI</em>
 </div>
