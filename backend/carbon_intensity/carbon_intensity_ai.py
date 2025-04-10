@@ -110,7 +110,7 @@ def render_ai_predictions_CI():
         # Create three columns: current value, arrow, prediction
         col_current, col_arrow, col_prediction = st.columns([1, 0.3, 1])
         with col_current:
-            colored_metric("Current 24 hours", mode_labelling_CI, bg_color_current)
+            colored_metric("Last 24 hours", mode_labelling_CI, bg_color_current)
         with col_arrow:
             # Determine arrow direction based on the values
             if prediction_class_carbon > mode_labelling_CI:

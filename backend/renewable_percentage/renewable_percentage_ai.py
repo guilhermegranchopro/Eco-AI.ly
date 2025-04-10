@@ -34,6 +34,20 @@ def colored_metric(label, value, bg_color):
         blue = int(bg_color[5:7], 16)
         bg_color = f"rgba({red}, {green}, {blue}, {transparency})"
 
+    if value == 0:
+        value_displayed = "< 16%"
+    elif value == 1:
+        value_displayed = "16% - 32%"
+    elif value == 2:
+        value_displayed = "32% - 48%"
+    elif value == 3:
+        value_displayed = "48% - 64%"
+    elif value == 4:
+        value_displayed = "64% - 80%"
+    elif value == 5:
+        value_displayed = "> 80%"
+        
+
     html = f"""
     <div style="
          background-color: {bg_color} !important;
@@ -46,7 +60,7 @@ def colored_metric(label, value, bg_color):
          margin-bottom: 1rem;
          ">
          <div style="font-size: 16px; font-weight: 600;">{label}</div>
-         <div style="font-size: 36px; font-weight: 700; margin-top: 4px;">{value}</div>
+         <div style="font-size: 36px; font-weight: 700; margin-top: 4px;">{value_displayed}</div>
     </div>
     """
     components.html(html, height=150)
@@ -82,6 +96,23 @@ def render_ai_predictions_RP():
     try:
         # Load the labelling scaler and transform the data
         labelling_scaler_rp = joblib.load('backend/renewable_percentage/models/labelling_scaler_RP.pkl')
+        #print("Labelling Scaler RP Details:")
+        #print(f"Scale: {labelling_scaler_rp.scale_}")
+        #print(f"Min: {labelling_scaler_rp.min_}")
+        
+        # Calculate value intervals for each class from 0 to 5
+        #intervals = []
+        #for i in range(6):
+        #    lower_bound = labelling_scaler_rp.inverse_transform([[i]])[0][0]
+        #    upper_bound = labelling_scaler_rp.inverse_transform([[i + 1]])[0][0] if i < 5 else None
+        #    intervals.append((lower_bound, upper_bound))
+        
+        #for i, (lower, upper) in enumerate(intervals):
+        #    if upper is not None:
+        #        print(f"Class {i}: {lower:.2f} to {upper:.2f}")
+        #    else:
+        #        print(f"Class {i}: {lower:.2f} and above")
+        
         
         # Ensure data is 1D for the labelling scaler
         renewable_percentage_values = df_rp['Renewable Percentage'].values
@@ -110,7 +141,7 @@ def render_ai_predictions_RP():
         # left: current value, center: arrow, right: prediction.
         col_current, col_arrow, col_prediction = st.columns([1, 0.3, 1])
         with col_current:
-            colored_metric("Current 24 hours", mode_labelling_RP, bg_color_carbon)
+            colored_metric("Last 24 hours", mode_labelling_RP, bg_color_carbon)
         with col_arrow:
             # Determine arrow based on comparison
             if prediction_class_renewable > mode_labelling_RP:
