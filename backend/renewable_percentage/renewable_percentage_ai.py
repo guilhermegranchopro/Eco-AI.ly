@@ -36,17 +36,22 @@ def colored_metric(label, value, bg_color):
 
     if value == 0:
         value_displayed = "< 16%"
+        relative_value = "The Worst!"
     elif value == 1:
         value_displayed = "16% - 32%"
+        relative_value = "Very Bad!"
     elif value == 2:
         value_displayed = "32% - 48%"
+        relative_value = "Bad!"
     elif value == 3:
         value_displayed = "48% - 64%"
+        relative_value = "Ok!"
     elif value == 4:
         value_displayed = "64% - 80%"
+        relative_value = "Good!"
     elif value == 5:
         value_displayed = "> 80%"
-        
+        relative_value = "The Best!"
 
     html = f"""
     <div style="
@@ -61,6 +66,7 @@ def colored_metric(label, value, bg_color):
          ">
          <div style="font-size: 16px; font-weight: 600;">{label}</div>
          <div style="font-size: 36px; font-weight: 700; margin-top: 4px;">{value_displayed}</div>
+         <div style="font-size: 18px; font-weight: 500; margin-top: 8px;">{relative_value}</div>
     </div>
     """
     components.html(html, height=150)
