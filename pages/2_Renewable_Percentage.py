@@ -19,7 +19,7 @@ def main():
     set_page_config_once()
 
     # Top navigation tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["Portugal Overview", "Model Stats", "Info", "Other Countries"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Portugal Overview", "Other Countries", "Model Stats", "Info"])
 
     with tab1:
         set_page_config_once()
@@ -36,18 +36,19 @@ def main():
         # Render Section 6: Renewable Percentage Report
         create_renewable_percentage_report_download_button([value_displayed_now, relative_value_now, value_displayed_next, relative_value_next], df_rp_last24)
 
+
     with tab2:
-        set_page_config_once()
-        rend_model_stats_RP()
-
-    with tab3:
-        set_page_config_once()
-        render_renewable_percentage_info()
-
-    with tab4:
         set_page_config_once()
         st.subheader("Other Countries")
         st.markdown(get_expansion_message())
+
+    with tab3:
+        set_page_config_once()
+        rend_model_stats_RP()
+
+    with tab4:
+        set_page_config_once()
+        render_renewable_percentage_info()
 
 
 if __name__ == "__main__":

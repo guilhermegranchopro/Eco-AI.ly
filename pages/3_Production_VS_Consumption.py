@@ -17,7 +17,7 @@ def main():
 
     set_page_config_once()
 
-    tab1, tab2, tab3 = st.tabs(["Portugal Overview", "Info", "Other Countries"])
+    tab1, tab2, tab3 = st.tabs(["Portugal Overview", "Other Countries", "Info"])
 
     with tab1:
         set_page_config_once()
@@ -33,12 +33,13 @@ def main():
 
     with tab2:
         set_page_config_once()
-        render_production_consumption_info()
+        st.subheader("Other Countries")
+        st.markdown(get_expansion_message())
+
 
     with tab3:
         set_page_config_once()
-        st.subheader("Other Countries")
-        st.markdown(get_expansion_message())
+        render_production_consumption_info()
 
 if __name__ == "__main__":
     main()
