@@ -71,6 +71,8 @@ def colored_metric(label, value, bg_color):
     """
     components.html(html, height=150)
 
+    return value_displayed, relative_value
+
 def render_ai_predictions_RP():
     """
     Renders the AI Model Predictions section using real predictions.
@@ -147,7 +149,7 @@ def render_ai_predictions_RP():
         # left: current value, center: arrow, right: prediction.
         col_current, col_arrow, col_prediction = st.columns([1, 0.3, 1])
         with col_current:
-            colored_metric("Last 24 hours", mode_labelling_RP, bg_color_carbon)
+            value_displayed_now, relative_value_now = colored_metric("Last 24 hours", mode_labelling_RP, bg_color_carbon)
         with col_arrow:
             # Determine arrow based on comparison
             if prediction_class_renewable > mode_labelling_RP:
@@ -164,12 +166,14 @@ def render_ai_predictions_RP():
                 unsafe_allow_html=True
             )
         with col_prediction:
-            colored_metric("Next 24 hours", prediction_class_renewable, bg_color_renewable)
+            value_displayed_next, relative_value_next = colored_metric("Next 24 hours", prediction_class_renewable, bg_color_renewable)
     except FileNotFoundError as e:
         st.error(f"Model file not found: {e}")
     except Exception as e:
         st.error(f"Error loading or using models: {e}")
         st.error(f"Error details: {str(e)}")
+
+    return value_displayed_now, relative_value_now, value_displayed_next, relative_value_next
 
 if __name__ == "__main__":
     render_ai_predictions_RP()

@@ -11,34 +11,58 @@ from PIL import Image
 
 def create_renewable_percentage_report_download_button(data, charts=None, title="Renewable Percentage Portugal Overview"):
     """
-    Creates a download button for a comprehensive renewable percentage report in PDF format.
+    Creates a download button for a comprehensive import export report in PDF format.
     
     Args:
-        data (pd.DataFrame): The renewable percentage data to include in the report
+        data (array): Array containing data information
         charts (dict, optional): Dictionary of figures/charts to include in the report
         title (str, optional): Title of the report
     """
-    if st.button("Download Comprehensive Report (PDF)"):
-        # Create PDF report
-        pdf_buffer = generate_renewable_percentage_pdf_report(data, charts, title)
-        
+
+    col1, col2, col3 = st.columns([2, 1, 2])
+
+    with col2:
+        # Show a progress message
+        with st.spinner("Preparing your report..."):
+            # Create PDF report
+            pdf_buffer = generate_renewable_percentage_pdf_report(data, charts, title)
+
+        # Create a styled download button
+        st.markdown("""
+        <div style='text-align: center; margin-top: 50px;'>
+            <style>
+                .stDownloadButton button {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    border: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                .stDownloadButton button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </div>
+        """, unsafe_allow_html=True)
+
         # Create download button for the PDF
         st.download_button(
-            label="📥 Download PDF Report",
+            "📥 Download Report", 
             data=pdf_buffer,
             file_name=f"renewable_percentage_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
             mime="application/pdf",
             help="Download a comprehensive report of the renewable percentage data with ECO AI.ly validation"
         )
-        
-        st.success("Report generated successfully! Click the button above to download.")
 
 def generate_renewable_percentage_pdf_report(data, charts=None, title="Renewable Percentage Portugal Overview"):
     """
     Generates a PDF report for renewable percentage data with ECO AI.ly validation.
     
     Args:
-        data (pd.DataFrame): The renewable percentage data
+        data (list): List containing [value_displayed_now, relative_value_now, value_displayed_next, relative_value_next]
         charts (dict, optional): Dictionary of figures/charts to include
         title (str): Title of the report
     
@@ -83,28 +107,54 @@ def generate_renewable_percentage_pdf_report(data, charts=None, title="Renewable
     pdf.cell(0, 10, "Summary Statistics", 0, 1)
     pdf.set_font('Arial', '', 10)
     
-    # Calculate summary statistics
-    if not data.empty:
-        stats = data.describe().round(2)
-        stats_text = (
-            f"Average Renewable Percentage: {stats.loc['mean'].iloc[0]} %\n"
-            f"Minimum Renewable Percentage: {stats.loc['min'].iloc[0]} %\n"
-            f"Maximum Renewable Percentage: {stats.loc['max'].iloc[0]} %\n"
-            f"Data Period: {data.index.min().strftime('%Y-%m-%d')} to {data.index.max().strftime('%Y-%m-%d')}\n"
-            f"Number of Data Points: {len(data)}"
-        )
-        
-        pdf.multi_cell(0, 5, stats_text)
+    # Display the current and next values
+    if data and len(data) >= 4:
+        # Convert string values to floats
+        try:
+            value_displayed_now = float(data[0])
+            relative_value_now = float(data[1])
+            value_displayed_next = float(data[2])
+            relative_value_next = float(data[3])
+            
+            stats_text = (
+                f"Current Renewable Percentage: {value_displayed_now:.2f} %\n"
+                f"Current Relative Value: {relative_value_now:.2f} %\n"
+                f"Next Renewable Percentage: {value_displayed_next:.2f} %\n"
+                f"Next Relative Value: {relative_value_next:.2f} %\n"
+                f"Report Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+            
+            pdf.multi_cell(0, 5, stats_text)
+        except (ValueError, TypeError):
+            # If conversion fails, display the values as strings
+            stats_text = (
+                f"Current Renewable Percentage: {data[0]} %\n"
+                f"Current Relative Value: {data[1]} %\n"
+                f"Next Renewable Percentage: {data[2]} %\n"
+                f"Next Relative Value: {data[3]} %\n"
+                f"Report Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+            
+            pdf.multi_cell(0, 5, stats_text)
     else:
         pdf.cell(0, 10, "No data available for analysis", 0, 1)
     
     # Add charts if provided
-    if charts:
+    if charts is not None:
         pdf.add_page()
         pdf.set_font('Arial', 'B', 11)
         pdf.cell(0, 10, "Visualizations", 0, 1)
         
-        for chart_name, fig in charts.items():
+        # Handle charts as a DataFrame
+        if isinstance(charts, pd.DataFrame) and not charts.empty:
+            # Create a figure from the DataFrame
+            fig, ax = plt.subplots(figsize=(10, 6))
+            charts.plot(ax=ax)
+            ax.set_title("Renewable Percentage Last 24 Hours")
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Renewable Percentage (%)")
+            plt.tight_layout()
+            
             # Save the figure to a temporary buffer
             img_buf = io.BytesIO()
             fig.savefig(img_buf, format='png', dpi=300, bbox_inches='tight')
@@ -113,7 +163,7 @@ def generate_renewable_percentage_pdf_report(data, charts=None, title="Renewable
             # Add the image to the PDF
             pdf.ln(5)
             pdf.set_font('Arial', 'B', 10)
-            pdf.cell(0, 10, chart_name, 0, 1)
+            pdf.cell(0, 10, "Renewable Percentage Last 24 Hours", 0, 1)
             
             # Convert to PIL Image to get dimensions
             img = Image.open(img_buf)
@@ -125,7 +175,7 @@ def generate_renewable_percentage_pdf_report(data, charts=None, title="Renewable
             img_height = img_width * height / width
             
             # Save the BytesIO object to a temporary file
-            temp_img_path = f"temp_{chart_name.replace(' ', '_')}.png"
+            temp_img_path = "temp_chart.png"
             with open(temp_img_path, 'wb') as temp_file:
                 temp_file.write(img_buf.getvalue())
             
@@ -139,34 +189,72 @@ def generate_renewable_percentage_pdf_report(data, charts=None, title="Renewable
                 pass
                 
             pdf.ln(5)
+        elif isinstance(charts, dict) and charts:
+            # Handle charts as a dictionary of figures
+            for chart_name, fig in charts.items():
+                # Save the figure to a temporary buffer
+                img_buf = io.BytesIO()
+                fig.savefig(img_buf, format='png', dpi=300, bbox_inches='tight')
+                img_buf.seek(0)
+                
+                # Add the image to the PDF
+                pdf.ln(5)
+                pdf.set_font('Arial', 'B', 10)
+                pdf.cell(0, 10, chart_name, 0, 1)
+                
+                # Convert to PIL Image to get dimensions
+                img = Image.open(img_buf)
+                width, height = img.size
+                
+                # Calculate aspect ratio and set width to fit page
+                page_width = pdf.w - 2*pdf.l_margin
+                img_width = min(page_width, 180)
+                img_height = img_width * height / width
+                
+                # Save the BytesIO object to a temporary file
+                temp_img_path = f"temp_{chart_name.replace(' ', '_')}.png"
+                with open(temp_img_path, 'wb') as temp_file:
+                    temp_file.write(img_buf.getvalue())
+                
+                # Add the image to the PDF using the temporary file
+                pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
+                
+                # Clean up the temporary file
+                try:
+                    os.remove(temp_img_path)
+                except:
+                    pass
+                    
+                pdf.ln(5)
     
     # Add data table
     pdf.add_page()
     pdf.set_font('Arial', 'B', 11)
     pdf.cell(0, 10, "Renewable Percentage Data", 0, 1)
     
-    if not data.empty:
-        # Format the data for display
-        display_data = data.head(50).copy()  # Limit to first 50 rows
-        display_data.index = display_data.index.strftime('%Y-%m-%d %H:%M')
-        
+    if data and len(data) >= 4:
         # Create table header
         pdf.set_font('Arial', 'B', 8)
         col_width = 40
         row_height = 6
         
         # Add column headers
-        pdf.cell(col_width, row_height, "Timestamp", 1, 0, 'C')
-        pdf.cell(col_width, row_height, "Renewable Percentage (%)", 1, 1, 'C')
+        pdf.cell(col_width, row_height, "Metric", 1, 0, 'C')
+        pdf.cell(col_width, row_height, "Value (%)", 1, 1, 'C')
         
         # Add data rows
         pdf.set_font('Arial', '', 8)
-        for idx, row in display_data.iterrows():
-            pdf.cell(col_width, row_height, str(idx), 1, 0, 'L')
-            pdf.cell(col_width, row_height, f"{row.iloc[0]:.2f}", 1, 1, 'R')
-            
-        if len(data) > 50:
-            pdf.cell(0, 10, f"Note: Showing first 50 of {len(data)} records", 0, 1, 'L')
+        metrics = ["Current Renewable Percentage", "Current Relative Value", 
+                  "Next Renewable Percentage", "Next Relative Value"]
+        
+        for i, metric in enumerate(metrics):
+            pdf.cell(col_width, row_height, metric, 1, 0, 'L')
+            # Try to convert to float for formatting, otherwise use as string
+            try:
+                value = float(data[i])
+                pdf.cell(col_width, row_height, f"{value:.2f}", 1, 1, 'R')
+            except (ValueError, TypeError):
+                pdf.cell(col_width, row_height, str(data[i]), 1, 1, 'R')
     else:
         pdf.cell(0, 10, "No data available", 0, 1)
     

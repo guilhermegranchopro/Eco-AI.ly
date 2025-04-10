@@ -28,13 +28,13 @@ def main():
         st.header("Environmental Data and Predictions for Portugal")
 
         # Render Section 4: Current Index
-        render_ai_predictions_RP()
+        value_displayed_now, relative_value_now, value_displayed_next, relative_value_next = render_ai_predictions_RP()
         
         # Render Section 2: Time Series Data
-        render_time_series_RP()
+        df_rp_last24 = render_time_series_RP()
 
         # Render Section 6: Renewable Percentage Report
-        create_renewable_percentage_report_download_button([2, 3, 4])
+        create_renewable_percentage_report_download_button([value_displayed_now, relative_value_now, value_displayed_next, relative_value_next], df_rp_last24)
 
     with tab2:
         set_page_config_once()

@@ -58,6 +58,8 @@ def render_time_series_RP():
     else:
         st.error("Error fetching renewable percentage data.")
 
+    return df_rp_last24
+
 if __name__ == "__main__":
     render_time_series_RP()
     # Uncomment the line below to run the function directly
