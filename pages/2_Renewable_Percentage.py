@@ -4,6 +4,7 @@ from backend.renewable_percentage.renewable_percentage_ai import render_ai_predi
 from backend.renewable_percentage.renewable_percentage_model_stats import rend_model_stats_RP
 from backend.other_countries import get_expansion_message
 from backend.renewable_percentage.renewable_percentage_info import render_renewable_percentage_info
+from backend.renewable_percentage.renewable_percentage_report import create_renewable_percentage_report_download_button
 
 # -----------------------------
 # Helper Functions
@@ -31,6 +32,9 @@ def main():
         
         # Render Section 2: Time Series Data
         render_time_series_RP()
+
+        # Render Section 6: Renewable Percentage Report
+        create_renewable_percentage_report_download_button([2, 3, 4])
 
     with tab2:
         set_page_config_once()

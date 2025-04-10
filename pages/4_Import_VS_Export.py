@@ -2,7 +2,7 @@ import streamlit as st
 from backend.import_export.import_export import render_pie_charts2
 from backend.other_countries import get_expansion_message
 from backend.import_export.import_export_info import render_import_export_info
-
+from backend.import_export.import_export_report import create_import_export_report_download_button
 # -----------------------------
 # Helper Functions
 # -----------------------------
@@ -25,6 +25,9 @@ def main():
 
         # Render Section 5: Additional Pie Charts
         render_pie_charts2()
+
+        # Render Section 6: Import Export Report
+        create_import_export_report_download_button([2, 3, 4])
 
     with tab2:
         set_page_config_once()

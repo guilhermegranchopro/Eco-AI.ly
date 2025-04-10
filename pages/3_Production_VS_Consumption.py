@@ -2,6 +2,8 @@ import streamlit as st
 from backend.production_consumption.production_consumption import render_pie_charts
 from backend.other_countries import get_expansion_message
 from backend.production_consumption.production_consumption_info import render_production_consumption_info
+from backend.production_consumption.production_consumption_report import create_production_consumption_report_download_button
+
 
 # -----------------------------
 # Helper Functions
@@ -25,6 +27,9 @@ def main():
         
         # Render Section 1: Pie Charts
         render_pie_charts()
+
+        # Render Section 6: Production Consumption Report
+        create_production_consumption_report_download_button([2, 3, 4])
 
     with tab2:
         set_page_config_once()
