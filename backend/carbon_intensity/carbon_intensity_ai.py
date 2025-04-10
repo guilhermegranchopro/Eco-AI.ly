@@ -73,6 +73,18 @@ def colored_metric(label, value, bg_color):
 
     return value_displayed, relative_value
 
+def when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI):
+    if prediction_class_carbon > mode_labelling_CI and mode_labelling_CI < 3:
+        return "Use energy now!"
+    elif prediction_class_carbon < mode_labelling_CI and prediction_class_carbon < 3:
+        return "Use energy later!"
+    elif prediction_class_carbon == mode_labelling_CI and mode_labelling_CI < 3 or prediction_class_carbon < 3:
+        return "Use energy whenever!"
+    elif prediction_class_carbon <= 3 and mode_labelling_CI <= 3:
+        return "Bad timming!"
+    else:
+        return "Better wait!"
+
 def render_ai_predictions_CI():
     """
     Renders the AI Model Predictions section using real predictions.
@@ -146,7 +158,7 @@ def render_ai_predictions_CI():
         bg_color_current = get_bg_color_CI(mode_labelling_CI)
         
         # Create three columns: current value, arrow, prediction
-        col_current, col_arrow, col_prediction = st.columns([1, 0.3, 1])
+        col_current, col_arrow, col_prediction = st.columns([1, 0.4, 1])
         with col_current:
             value_displayed_now, relative_value_now = colored_metric("Last 24 hours (gCO₂eq/kWh)", mode_labelling_CI, bg_color_current)
         with col_arrow:
@@ -154,16 +166,27 @@ def render_ai_predictions_CI():
             if prediction_class_carbon > mode_labelling_CI:
                 arrow = "↑"
                 arrow_color = "#dc3545"  # green
+                timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
+                arbitrage_bool = True
             elif prediction_class_carbon < mode_labelling_CI:
                 arrow = "↓"
                 arrow_color = "#28a745"  # red
+                timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
+                arbitrage_bool = True
             else:
                 arrow = "→"
                 arrow_color = "#6c757d"  # gray
+                timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
+                arbitrage_bool = False
             st.markdown(
                 f"<h1 style='text-align: center; color: {arrow_color}; margin-top: 5px; font-size: 70px; line-height: 50px;'>{arrow}</h1>",
                 unsafe_allow_html=True
             )
+            st.write(timming_message)
+            if arbitrage_bool:
+                st.write("Arbitrage oportunity!")
+            else:
+                st.write("No arbitrage oportunity.")
         with col_prediction:
             value_displayed_next, relative_value_next = colored_metric("Next 24 Hours (gCO₂eq/kWh)", prediction_class_carbon, bg_color_carbon)
     except FileNotFoundError as e:
