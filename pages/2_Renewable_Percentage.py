@@ -5,6 +5,7 @@ from backend.renewable_percentage.renewable_percentage_model_stats import rend_m
 from backend.other_countries import get_expansion_message
 from backend.renewable_percentage.renewable_percentage_info import render_renewable_percentage_info
 from backend.renewable_percentage.renewable_percentage_report import create_renewable_percentage_report_download_button
+from backend.renewable_percentage.renewable_percentage_arbitrage import render_arbitrage_opportunity_RP
 
 # -----------------------------
 # Helper Functions
@@ -29,6 +30,9 @@ def main():
 
         # Render Section 4: Current Index
         value_displayed_now, relative_value_now, value_displayed_next, relative_value_next = render_ai_predictions_RP()
+
+        # Render Section: Arbitrage Opportunity
+        arbitrage_value = render_arbitrage_opportunity_RP(value_displayed_now, value_displayed_next)
         
         # Render Section 2: Time Series Data
         df_rp_last24 = render_time_series_RP()

@@ -46,15 +46,16 @@ def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
     st.markdown("---")
     st.subheader("Arbitrage Opportunity")
     
-    # Energy consumption input
-    energy_kwh = st.number_input(
-        "Energy Consumption (kWh)", 
-        min_value=0.0,
-        max_value=10000.0,
-        value=100.0,
-        step=10.0,
-        help="Enter the amount of energy you plan to consume in kilowatt-hours"
-    )
+    if value_displayed_now != value_displayed_next:
+        # Energy consumption input
+        energy_kwh = st.number_input(
+            "Energy Consumption (kWh)", 
+            min_value=0.00,
+            max_value=10000.00,
+            value=115.53,
+            step=10.00,
+            help="Enter the amount of energy you plan to consume in kilowatt-hours"
+        )
 
     average_carbon_intensity_now, average_carbon_intensity_next = average_carbon_intensity(value_displayed_now, value_displayed_next)
 
@@ -74,26 +75,27 @@ def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
         saved_carbon_intensity = 0
         recommendation_message = "**Currently there are no visible upsite on programing your energy consumption.**"
 
-    # Calculate potential savings
-    st.markdown("### Potential Savings")
+    if saved_carbon > 0:
+        # Calculate potential savings
+        st.markdown("### Carbon Intensity Upside")
+            
+        # Display results
+        col3, col4 = st.columns(2)
         
-    # Display results
-    col3, col4 = st.columns(2)
-    
-    with col3:
-        st.metric(
-            "Carbon Intensity Lifecycle", 
-            f"{saved_carbon_intensity} gCO₂eq/kWh",
-        )
-    
-    with col4:
-        st.metric(
-            "Carbon Emissions", 
-            f"{saved_carbon} gCO₂eq",
-        )
+        with col3:
+            st.metric(
+                "Carbon Intensity Lifecycle", 
+                f"{saved_carbon_intensity:.2f} gCO₂eq/kWh",
+            )
+        
+        with col4:
+            st.metric(
+                "Carbon Emissions", 
+                f"{saved_carbon:.2f} gCO₂eq",
+            )
             
     # Recommendation
-    st.markdown("### Recommendation")
+    st.markdown("**Recommendation**")
     if saved_carbon > 0:
         st.success(recommendation_message)
     else:
