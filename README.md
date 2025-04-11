@@ -30,7 +30,7 @@
 
 ## 🌟 Overview
 
-Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models and interactive visualizations to help users monitor and make informed decisions about environmental metrics, with a particular focus on energy consumption and renewable energy production.
+Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models and interactive visualizations to help users monitor and make informed decisions about environmental metrics, with a particular focus on energy consumption, renewable energy production, carbon intensity, and cross-border energy exchange.
 
 ### Key Benefits
 - 🔍 Real-time environmental monitoring
@@ -39,61 +39,88 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 - 🌍 Focus on sustainability metrics
 - 📱 User-friendly interface
 - 🔄 Automated data updates
+- 📈 Energy arbitrage opportunities
+- 📑 Automated PDF reporting
 
 ## ✨ Features
 
 ### Interactive Dashboard
-- **Introduction Page**
-  - Platform overview and purpose
-  - Tool explanations and usage guidelines
-  - Quick start guide for new users
-  - Interactive tutorials
-  - User onboarding flow
+- **Carbon Intensity Analytics**
+  - Real-time carbon intensity monitoring
+  - 24-hour forecasting with AI model
+  - Historical trend analysis
+  - Arbitrage opportunity detection
+  - Automated PDF reporting
+  - Model performance statistics
+  - Interactive time series visualization
 
-- **Portugal Data Page**
-  - **Section 1: Power Analytics**
-    - Interactive pie charts with time range selection
-    - Power import breakdown visualization
-    - Power export analysis
-    - Production distribution
-    - Consumption patterns
-    - Historical trends
-    - Custom date range selection
-  - **Section 2: Real-time Monitoring**
-    - 24-hour carbon intensity lifecycle tracking
-    - Renewable percentage monitoring
-    - Historical data comparison
-    - Alert system for anomalies
-    - Custom threshold settings
-  - **Section 3: AI Predictions**
-    - 24-hour forecast for carbon intensity
-    - Renewable percentage predictions
-    - Confidence scores and uncertainty ranges
-    - Model performance metrics
-    - Prediction accuracy visualization
+- **Renewable Percentage Tracking**
+  - Real-time renewable energy percentage
+  - AI-powered 24-hour predictions
+  - Historical data analysis
+  - Energy usage optimization suggestions
+  - Automated PDF reporting
+  - Model performance metrics
+  - Interactive data visualization
 
-- **Model Statistics Page**
-  - Performance metrics visualization
-  - Loss curves analysis
-  - Accuracy assessment
-  - Confusion matrices
-  - F1 score and recall metrics
-  - Test metrics dashboard
-  - Model comparison tools
-  - Hyperparameter analysis
+- **Production vs Consumption**
+  - Real-time power production breakdown
+  - Consumption pattern analysis
+  - Interactive pie charts
+  - Time range selection
+  - Detailed metrics panel
+  - PDF report generation
+  - Historical data comparison
+
+- **Import vs Export**
+  - Cross-border energy flow analysis
+  - Real-time import/export breakdown
+  - Interactive visualizations
+  - Detailed metrics dashboard
+  - PDF report generation
+  - Time-based analysis
+  - Energy balance tracking
+
+### AI Models
+- **Carbon Intensity Prediction**
+  - LSTM-based architecture
+  - 90.9% test accuracy
+  - 6-class classification
+  - Confusion matrix visualization
+  - Loss and accuracy plots
+  - Real-time inference
+  - Model performance tracking
+
+- **Renewable Percentage Prediction**
+  - LSTM neural network
+  - 90.9% test accuracy
+  - 6-class classification
+  - Performance visualization
+  - Continuous monitoring
+  - Real-time predictions
+  - Model statistics dashboard
+
+### Reporting System
+- **Automated PDF Generation**
+  - ECO AI.ly authentication
+  - Detailed metrics
+  - Interactive charts
+  - Time series analysis
+  - Custom date ranges
+  - Professional formatting
+  - Data validation stamps
+
+### Data Visualization
+- **Interactive Charts**
+  - Real-time updates
+  - Time range selection
+  - Zoom and pan capabilities
+  - Tooltip information
+  - Metric breakdowns
+  - Historical comparisons
+  - Custom date filtering
 
 ## 🚀 Getting Started
-
-### Quick Start
-1. Clone the repository
-2. Set up your environment
-3. Install dependencies
-4. Run the application
-5. Access the dashboard
-
-For detailed instructions, see the [Installation](#installation) section.
-
-## 💻 Installation
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -102,217 +129,108 @@ For detailed instructions, see the [Installation](#installation) section.
 - 4GB RAM minimum
 - 2GB free disk space
 
-### Setup Steps
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/eco-ai-ly.git
-   cd eco-ai-ly
-   ```
+### Quick Start
+1. Clone the repository
+2. Set up your environment
+3. Install dependencies
+4. Run the application
+5. Access the dashboard
 
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows
-   .\venv\Scripts\activate
-   # On Unix or MacOS
-   source venv/bin/activate
-   ```
+## 💻 Installation
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/your-username/eco-ai-ly.git
+cd eco-ai-ly
 
-4. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # Unix/MacOS
+.\venv\Scripts\activate   # Windows
 
-5. Initialize the database:
-   ```bash
-   python src/scripts/init_db.py
-   ```
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+streamlit run app.py
+```
 
 ## 📁 Project Structure
 
 ```
 eco-ai-ly/
-├── assets/                 # Static assets (images, logos)
-├── data/                   # Data storage
-│   ├── raw/               # Raw data files
-│   ├── processed/         # Processed data
-│   └── models/            # Trained models
-├── src/                   # Source code
-│   ├── api/              # API integration
-│   ├── models/           # AI model definitions
-│   ├── preprocessing/    # Data preprocessing
-│   ├── visualization/    # Visualization components
-│   ├── utils/           # Utility functions
-│   └── scripts/         # Maintenance scripts
-├── tests/                # Test files
-├── docs/                # Documentation
-├── .env.example          # Environment variables template
-├── requirements.txt      # Project dependencies
-├── setup.py             # Package configuration
-└── README.md            # Project documentation
+├── assets/                    # Static assets and images
+├── backend/                   # Backend logic and processing
+│   ├── carbon_intensity/      # Carbon intensity analysis
+│   ├── renewable_percentage/  # Renewable energy tracking
+│   ├── production_consumption/# Production vs consumption
+│   ├── import_export/        # Import/export analysis
+│   └── api/                  # API integrations
+├── pages/                    # Streamlit pages
+│   ├── 1_Carbon_Intensity.py
+│   ├── 2_Renewable_Percentage.py
+│   ├── 3_Production_VS_Consumption.py
+│   └── 4_Import_VS_Export.py
+├── models/                   # AI model files
+│   ├── carbon_intensity/
+│   └── renewable_percentage/
+├── requirements.txt          # Project dependencies
+└── README.md                # Project documentation
 ```
 
 ## 🎯 Usage
 
-1. Start the Streamlit application:
-   ```bash
-   streamlit run src/app.py
-   ```
-
-2. Access the dashboard through your web browser at `http://localhost:8501`
-
-3. Navigate through different sections using the sidebar menu
-
-### Basic Commands
+1. Start the application:
 ```bash
-# Start the application
-streamlit run src/app.py
-
-# Run tests
-python -m pytest tests/
-
-# Format code
-black src/
-
-# Check code style
-flake8 src/
+streamlit run app.py
 ```
 
-## 📚 API Documentation
-
-### Endpoints
-- `/api/v1/power-analytics`
-- `/api/v1/real-time-monitoring`
-- `/api/v1/predictions`
-- `/api/v1/model-stats`
-
-For detailed API documentation, visit [https://ecoai.ly/docs/api](https://ecoai.ly/docs/api)
-
-## 🏗️ Technical Architecture
-
-### Backend Components
-- **Data Collection**
-  - API integration for real-time data
-  - Automated data fetching and storage
-  - Data validation and cleaning
-  - Error handling and retry mechanisms
-  - Rate limiting and caching
-
-- **Data Processing**
-  - Feature engineering
-  - Data normalization
-  - Time series preprocessing
-  - Data quality checks
-  - Automated cleaning pipelines
-
-- **AI Models**
-  - Keras-based deep learning models
-  - Model versioning and management
-  - Automated retraining pipeline
-  - Model performance monitoring
-  - A/B testing framework
-
-### Frontend Components
-- **Streamlit Dashboard**
-  - Interactive visualizations
-  - Real-time data updates
-  - Responsive design
-  - Custom themes
-  - Accessibility features
+2. Navigate to `http://localhost:8501` in your web browser
+3. Use the sidebar to access different features:
+   - Carbon Intensity Analysis
+   - Renewable Percentage Tracking
+   - Production vs Consumption
+   - Import vs Export
 
 ## 🤖 AI Models
 
-### Model Architecture
-- Deep Neural Networks for time series prediction
-- LSTM layers for temporal dependencies
-- Dense layers for feature processing
-- Attention mechanisms
-- Residual connections
+### Carbon Intensity Model
+- Architecture: LSTM Neural Network
+- Input: 24-hour historical data
+- Output: 6-class classification
+- Test Accuracy: 90.9%
+- Features: Real-time inference, uncertainty estimation
 
-### Model Performance
-- Mean Absolute Error (MAE): < 0.1
-- Root Mean Square Error (RMSE): < 0.15
-- R² Score: > 0.9
-- F1 Score: > 0.85
-- Precision: > 0.88
-- Recall: > 0.87
+### Renewable Percentage Model
+- Architecture: LSTM Neural Network
+- Input: 24-hour historical data
+- Output: 6-class classification
+- Test Accuracy: 90.9%
+- Features: Real-time predictions, confidence scoring
 
 ## 📊 Data Sources
+- Real-time power grid data
+- Historical energy production
+- Cross-border energy exchange
+- Carbon intensity measurements
+- Renewable energy generation
 
-- Real-time energy data from Portuguese grid
-- Historical environmental metrics
-- Weather data integration
-- Energy consumption patterns
-- Grid stability metrics
-- Renewable energy production data
-- Carbon emission data
-- Economic indicators
+## 🛠️ Development
 
-## 👩‍💻 Development
+### Running Tests
+```bash
+python -m pytest tests/
+```
 
-### Setting Up Development Environment
-1. Install development dependencies:
-   ```bash
-   pip install -r requirements-dev.txt
-   ```
+### Code Formatting
+```bash
+black .
+```
 
-2. Set up pre-commit hooks:
-   ```bash
-   pre-commit install
-   ```
-
-3. Configure your IDE:
-   - VSCode settings in `.vscode/`
-   - PyCharm settings in `.idea/`
-
-### Development Workflow
-1. Create a feature branch
-2. Make your changes
-3. Run tests
-4. Submit a pull request
-
-## 🔧 Troubleshooting
-
-### Common Issues
-1. **Application won't start**
-   - Check Python version
-   - Verify dependencies
-   - Check environment variables
-
-2. **Data not loading**
-   - Verify API keys
-   - Check internet connection
-   - Validate data format
-
-3. **Model predictions inaccurate**
-   - Check model version
-   - Verify input data
-   - Update model if needed
-
-For more help, visit our [FAQ](https://ecoai.ly/faq) or [contact support](#contact).
-
-## 👥 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Contribution Guidelines
-- Follow PEP 8 style guide
-- Write meaningful commit messages
-- Include tests for new features
-- Update documentation
-- Add your name to CONTRIBUTORS.md
+### Linting
+```bash
+flake8 .
+```
 
 ## 📝 License
 
@@ -320,11 +238,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-- Project Link: [https://github.com/your-username/eco-ai-ly](https://github.com/your-username/eco-ai-ly)
-- Email: contact@ecoai.ly
-- Website: [https://ecoai.ly](https://ecoai.ly)
-- Twitter: [@EcoAIly](https://twitter.com/EcoAIly)
-- LinkedIn: [Eco AI.ly](https://linkedin.com/company/eco-ai-ly)
+For questions and support, please contact:
+- Email: support@ecoai.ly
+- Website: https://ecoai.ly
+- GitHub: https://github.com/eco-ai-ly
 
 ---
 
