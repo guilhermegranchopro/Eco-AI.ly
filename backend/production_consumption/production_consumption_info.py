@@ -6,110 +6,239 @@ def render_production_consumption_info():
     explaining its purpose, features, and the role of Eco AI.ly.
     """
     st.markdown("""
-    # Production vs Consumption Overview
+    # Production vs Consumption: Understanding the Energy Balance
     
-    ## Understanding Energy Production and Consumption
+    ## What is Energy Production and Consumption?
     
-    The Production vs Consumption page provides real-time insights into Portugal's energy landscape, offering a detailed breakdown of how energy is generated and consumed across the country. This crucial information helps users understand the balance between energy production and consumption, which is essential for sustainable energy management.
+    Energy production and consumption represent the two fundamental sides of the energy equation:
     
-    ## Key Features
+    - **Energy Production**: The generation of electricity from various sources (renewable and non-renewable)
+    - **Energy Consumption**: The use of electricity by homes, businesses, industries, and other sectors
     
-    ### Interactive Time Range Selection
-    - Choose from multiple time windows: Last 24 Hours, 12 Hours, 6 Hours, 3 Hours, or 1 Hour
-    - Real-time data updates to reflect current energy conditions
-    - Flexible viewing options to analyze different time periods
+    Understanding the relationship between production and consumption is crucial for:
     
-    ### Production Breakdown
-    The production section shows:
-    - Total power production in Megawatt-hours (MWh)
-    - Detailed breakdown of energy sources
-    - Percentage distribution of different energy types
-    - Interactive pie charts for visual representation
+    - **Energy Security**: Ensuring a country can meet its energy needs
+    - **Economic Stability**: Maintaining reliable energy supply for economic activities
+    - **Environmental Impact**: Managing the environmental consequences of energy generation
+    - **Policy Planning**: Informing decisions about energy infrastructure and regulations
     
-    ### Consumption Breakdown
-    The consumption section displays:
-    - Total power consumption in Megawatt-hours (MWh)
-    - Distribution of energy usage across different sectors
-    - Real-time consumption patterns
-    - Visual representation through interactive charts
+    ## The Science Behind Energy Production and Consumption
+    
+    ### Energy Production Sources
+    
+    Electricity can be generated from various sources, each with different environmental and economic characteristics:
+    
+    - **Renewable Sources**:
+      - **Hydroelectric**: Energy from flowing water (dams, rivers, tides)
+      - **Wind**: Energy captured by wind turbines
+      - **Solar**: Energy from sunlight via photovoltaic panels or concentrated solar power
+      - **Biomass**: Energy from organic materials (wood, agricultural residues, waste)
+      - **Geothermal**: Heat extracted from the Earth's interior
+    
+    - **Non-Renewable Sources**:
+      - **Coal**: Combustion of coal to generate steam for turbines
+      - **Natural Gas**: Combustion of methane-rich gas
+      - **Nuclear**: Fission of uranium atoms to produce heat
+      - **Oil**: Combustion of petroleum products
+    
+    ### Energy Consumption Sectors
+    
+    Electricity consumption is typically divided into several sectors:
+    
+    - **Residential**: Homes and apartments
+    - **Commercial**: Offices, retail spaces, and service businesses
+    - **Industrial**: Manufacturing, processing, and heavy industry
+    - **Transportation**: Electric vehicles, trains, and other transport systems
+    - **Agriculture**: Farming operations and food processing
+    
+    ## Why Understanding Production vs Consumption Matters
+    
+    ### Environmental Impact
+    
+    - **Carbon Emissions**: Different energy sources produce varying amounts of greenhouse gases
+    - **Air Quality**: Fossil fuel combustion releases pollutants that affect public health
+    - **Water Usage**: Energy production can consume significant water resources
+    - **Habitat Impact**: Energy infrastructure can affect ecosystems and biodiversity
+    
+    ### Economic Considerations
+    
+    - **Energy Independence**: Countries that produce more than they consume have greater energy security
+    - **Cost Stability**: Understanding production-consumption balance helps predict energy prices
+    - **Investment Planning**: Informs decisions about energy infrastructure investments
+    - **Job Creation**: Different energy sources create different types of employment opportunities
+    
+    ### Policy and Planning
+    
+    - **Grid Management**: Balancing supply and demand is essential for grid stability
+    - **Renewable Integration**: Understanding consumption patterns helps integrate variable renewable sources
+    - **Energy Storage**: Identifies needs for energy storage solutions
+    - **International Trade**: Informs decisions about energy imports and exports
+    
+    ## Eco AI.ly's Production vs Consumption Tools and Features
+    
+    ### 1. Interactive Time Range Selection
+    
+    Our platform offers flexible time windows to analyze energy data:
+    
+    - **Multiple Time Ranges**: Choose from Last 24 Hours, 12 Hours, 6 Hours, 3 Hours, or 1 Hour
+    - **Real-Time Updates**: Data continuously refreshes to reflect current conditions
+    - **Customizable Analysis**: Select the timeframe most relevant to your needs
+    - **Historical Comparison**: Compare current data with historical patterns
+    
+    This feature allows you to:
+    
+    - Analyze short-term fluctuations in energy production and consumption
+    - Identify daily patterns and peak demand periods
+    - Compare different time periods to spot trends
+    - Make time-sensitive decisions based on current energy conditions
+    
+    ### 2. Production Breakdown Visualization
+    
+    Our interactive production breakdown provides detailed insights into energy generation:
+    
+    - **Source Distribution**: Visual representation of different energy sources
+    - **Quantitative Metrics**: Total production in Megawatt-hours (MWh)
+    - **Percentage Analysis**: Proportion of each energy source
+    - **Interactive Elements**: Hover for detailed information, zoom for closer examination
+    
+    The production breakdown helps you:
+    
+    - Identify the dominant energy sources in Portugal
+    - Track changes in the energy mix over time
+    - Understand the environmental impact of current production
+    - Recognize opportunities for increasing renewable energy
+    
+    ### 3. Consumption Breakdown Visualization
+    
+    Our consumption breakdown offers insights into how energy is being used:
+    
+    - **Sector Analysis**: Distribution of energy usage across different sectors
+    - **Total Consumption**: Overall energy use in Megawatt-hours (MWh)
+    - **Usage Patterns**: Visualization of consumption patterns
+    - **Interactive Features**: Explore data through interactive charts
+    
+    This visualization helps you:
+    
+    - Identify which sectors consume the most energy
+    - Understand daily and seasonal consumption patterns
+    - Recognize opportunities for energy efficiency
+    - Plan for future energy needs
+    
+    ### 4. Power Metrics Dashboard
+    
+    Our comprehensive metrics panel provides additional insights:
+    
+    - **Production Efficiency**: Analysis of fossil fuel vs. renewable energy production
+    - **Consumption per Capita**: Energy use per person in Portugal
+    - **Net Energy Balance**: Difference between production and consumption
+    - **Energy Self-Sufficiency**: Percentage of consumption met by domestic production
+    - **Largest Sources**: Identification of dominant production and consumption sources
+    - **Average Hourly Rates**: Production and consumption per hour
+    
+    These metrics help you:
+    
+    - Assess Portugal's energy independence
+    - Evaluate the environmental impact of current energy use
+    - Identify opportunities for improving energy efficiency
+    - Make data-driven decisions about energy management
+    
+    ### 5. Comprehensive Production-Consumption Reports
+    
+    Generate detailed PDF reports for documentation and sharing:
+    
+    - **Professional Formatting**: Clean, professional layout suitable for business presentations
+    - **Data Visualization**: Includes charts and graphs of production and consumption
+    - **Detailed Metrics**: Comprehensive statistics and analysis
+    - **Time Period Summary**: Overview of the selected time range
+    - **Exportable Format**: Easy to share with stakeholders, clients, or team members
+    
+    These reports are valuable for:
+    
+    - Corporate sustainability reporting
+    - Policy documentation
+    - Research and analysis
+    - Educational purposes
+    
+    ## How to Use Production vs Consumption Data Effectively
+    
+    ### For Businesses
+    
+    - **Load Management**: Optimize operations based on energy availability
+    - **Cost Reduction**: Identify opportunities to reduce energy costs
+    - **Sustainability Planning**: Develop strategies to increase renewable energy use
+    - **Risk Management**: Prepare for potential energy shortages or price fluctuations
+    - **Competitive Analysis**: Compare your energy usage with industry benchmarks
+    
+    ### For Policy Makers
+    
+    - **Energy Policy Development**: Create policies that promote sustainable energy
+    - **Infrastructure Planning**: Identify needs for new energy infrastructure
+    - **Renewable Energy Targets**: Set realistic goals for renewable energy adoption
+    - **Emergency Preparedness**: Develop plans for energy supply disruptions
+    - **International Cooperation**: Inform decisions about energy imports and exports
+    
+    ### For Researchers
+    
+    - **Pattern Analysis**: Study correlations between production, consumption, and other factors
+    - **Model Development**: Use data to develop and validate energy models
+    - **Impact Studies**: Assess the environmental impact of different energy scenarios
+    - **Trend Forecasting**: Predict future energy needs and production capabilities
+    
+    ### For Individuals
+    
+    - **Personal Energy Management**: Make informed decisions about personal energy use
+    - **Environmental Awareness**: Understand the environmental impact of energy consumption
+    - **Cost Savings**: Identify opportunities to reduce energy bills
+    - **Renewable Energy Adoption**: Make informed decisions about installing solar panels or other renewable systems
+    
+    ## The Relationship Between Production, Consumption, and Carbon Intensity
+    
+    Production, consumption, and carbon intensity are interconnected metrics that together provide a complete picture of a country's energy system:
+    
+    - **Production**: What energy sources are being used to generate electricity
+    - **Consumption**: How much electricity is being used and by whom
+    - **Carbon Intensity**: How much CO₂ is emitted per unit of electricity consumed
+    
+    Understanding these relationships is crucial for:
+    
+    - **Environmental Impact Assessment**: Evaluating the environmental consequences of energy use
+    - **Energy Transition Planning**: Developing strategies to reduce carbon emissions
+    - **Sustainable Development**: Balancing economic growth with environmental protection
+    
+    Eco AI.ly provides all these metrics to give you a comprehensive understanding of Portugal's energy system.
+    
+    ## The Future of Energy Production and Consumption Tracking
+    
+    Eco AI.ly is continuously evolving to provide even more powerful energy insights:
+    
+    - **Geographic Expansion**: Adding more countries and regions to our coverage
+    - **Enhanced Predictions**: Improving forecast accuracy with more advanced AI models
+    - **Sector-Specific Analysis**: Providing more detailed breakdowns by industry
+    - **Integration Capabilities**: Developing APIs and integrations with other energy management systems
+    - **Personalized Recommendations**: Creating customized suggestions based on user behavior patterns
     
     ## About Eco AI.ly
     
-    Eco AI.ly is a cutting-edge environmental technology platform dedicated to making energy data accessible and actionable. Our mission is to empower businesses, governments, and individuals with real-time environmental insights to drive sustainable decision-making.
+    Eco AI.ly is a pioneering environmental technology startup dedicated to making environmental data accessible and actionable. Our mission is to empower businesses, governments, and individuals with real-time environmental insights to drive sustainable decision-making and positive environmental impact.
     
-    ### What We Do
-    - Provide real-time energy production and consumption data
-    - Offer AI-powered predictions and analysis
-    - Track renewable energy percentages
-    - Monitor carbon intensity
-    - Analyze import/export patterns
+    We combine cutting-edge artificial intelligence with comprehensive environmental data to provide accurate, timely, and actionable insights. Our platform is designed to be intuitive and informative, making complex environmental data understandable and useful for everyone.
     
-    ### Our Impact
-    By making energy data transparent and understandable, we help:
-    - Businesses optimize their energy usage
-    - Policymakers make informed decisions
-    - Researchers analyze energy patterns
-    - Individuals understand their energy footprint
+    Currently focused on Portugal, we're rapidly expanding to provide similar insights for countries around the world, helping to drive global environmental awareness and action.
     
-    ## How to Use This Information
+    ### Our Commitment to Accuracy
     
-    ### For Businesses
-    - Optimize energy consumption patterns
-    - Plan operations during optimal production periods
-    - Reduce energy costs
-    - Improve sustainability metrics
+    All data presented on our platform is sourced from reliable, authoritative sources and processed using rigorous methodologies. Our visualizations and analyses are regularly validated to ensure accuracy and reliability.
     
-    ### For Policy Makers
-    - Monitor energy production efficiency
-    - Track progress toward renewable energy goals
-    - Identify areas needing infrastructure investment
-    - Make data-driven policy decisions
+    ### Join Us in Understanding the Energy Balance
     
-    ### For Researchers
-    - Analyze energy production-consumption patterns
-    - Study renewable energy integration
-    - Investigate peak demand periods
-    - Research energy efficiency measures
-    
-    ### For Individuals
-    - Understand personal energy impact
-    - Make informed decisions about energy usage
-    - Track renewable energy adoption
-    - Support sustainable energy initiatives
-    
-    ## Technical Details
-    
-    ### Data Sources
-    - Real-time energy production data
-    - Consumption statistics
-    - Historical trends
-    - Predictive analytics
-    
-    ### Metrics Explained
-    - **Production Total**: Total energy generated in MWh
-    - **Consumption Total**: Total energy used in MWh
-    - **Time Range**: Selected period for data analysis
-    - **Breakdown Percentages**: Distribution of different energy sources
-    
-    ## Future Developments
-    
-    Eco AI.ly is continuously evolving, with plans to:
-    - Expand coverage to more countries
-    - Add more detailed sector-specific analysis
-    - Implement advanced prediction models
-    - Enhance visualization capabilities
-    - Integrate additional environmental metrics
-    
-    ## Support and Resources
-    
-    For more information about:
-    - Data sources and methodology
-    - API documentation
-    - Technical support
-    - Feature requests
-    
-    Please visit our documentation or contact our support team.
+    By understanding the relationship between energy production and consumption, you're taking an important step toward more sustainable energy use. Together, we can work toward a future where energy is generated cleanly and used efficiently.
     """)
+
+def main():
+    render_production_consumption_info()
+
+if __name__ == "__main__":
+    main()
 
 
 
