@@ -107,6 +107,9 @@ def generate_production_consumption_pdf_report(import_data_dict, export_data_dic
     
     class PDF(FPDF):
         def header(self):
+            # Skip header on first page
+            if self.page_no() == 1:
+                return
             # Logo
             try:
                 # Attempt to load logo if available
@@ -120,6 +123,9 @@ def generate_production_consumption_pdf_report(import_data_dict, export_data_dic
             self.ln(10)
             
         def footer(self):
+            # Skip footer on first page
+            if self.page_no() == 1:
+                return
             # Position at 1.5 cm from bottom
             self.set_y(-15)
             # Add timestamp
@@ -132,56 +138,91 @@ def generate_production_consumption_pdf_report(import_data_dict, export_data_dic
     pdf = PDF()
     pdf.add_page()
     
-    # Add report content
+    # Add authentication stamp at the beginning
+    try:
+        # Add logo at the top center
+        logo_width = 150
+        pdf.image("assets/images/logo.png", x=pdf.w/2 - logo_width/2, y=20, w=logo_width)
+    except:
+        pass
+    
+    pdf.ln(60)  # Add space after logo
+    
+    # Add validation stamp
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, "ECO AI.ly Authentication", 0, 1, 'C')
+    pdf.ln(5)
+    
+    # Add validation details
+    pdf.set_font('Arial', '', 10)
+    validation_text = (
+        f"Report ID: ECO-{datetime.now().strftime('%Y%m%d')}-{os.urandom(4).hex().upper()}\n"
+        f"Validation Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"Data Source: Portuguese Electricity Grid Production Consumption Monitoring\n"
+        f"Validation Method: Automated data integrity verification\n"
+        f"Verified By: ECO AI.ly Production Consumption Intelligence Platform\n\n"
+        f"This report has been automatically generated and validated by ECO AI.ly's production consumption intelligence platform. "
+        f"The data presented in this report has been verified for accuracy and integrity. "
+        f"This stamp certifies that the information contained herein represents an accurate assessment "
+        f"of production consumption data for the Portuguese electricity grid during the specified period."
+    )
+    
+    pdf.multi_cell(0, 5, validation_text)
+    
+    # Add new page for content
+    pdf.add_page()
+    
+    # Add Production Consumption Overview
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(0, 10, "Production Consumption Overview", 0, 1)
     pdf.set_font('Arial', '', 10)
     
-    # Add summary statistics
-    pdf.ln(5)
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Summary Statistics", 0, 1)
-    pdf.set_font('Arial', '', 10)
-    
     # Extract data from dictionaries
-    prod_total = import_data_dict.get("prod_total", 0)
+    prod_total = import_data_dict.get("prod_total", {})
     prod_sum = import_data_dict.get("prod_sum", 0)
     limite_prod = import_data_dict.get("limite_prod", 0)
     time_hours = import_data_dict.get("time_hours", [])
     now_dt = import_data_dict.get("now_dt", datetime.now())
     
-    cons_total = export_data_dict.get("cons_total", 0)
+    cons_total = export_data_dict.get("cons_total", {})
     cons_sum = export_data_dict.get("cons_sum", 0)
     limite_cons = export_data_dict.get("limite_cons", 0)
     
-    # Safely format time period
-    time_period = "N/A"
-    if isinstance(time_hours, list) and len(time_hours) >= 2:
-        time_period = f"{time_hours[0]} to {time_hours[-1]}"
-    elif isinstance(time_hours, list) and len(time_hours) == 1:
-        time_period = str(time_hours[0])
-    elif time_hours:
-        time_period = str(time_hours)
+    # Calculate total production and consumption values
+    total_production = sum(prod_total.values()) if isinstance(prod_total, dict) else prod_sum
+    total_consumption = sum(cons_total.values()) if isinstance(cons_total, dict) else cons_sum
     
-    # Calculate summary statistics
-    stats_text = (
-        f"Total Production: {format_value(prod_total)} kWh\n"
-        f"Production Sum: {format_value(prod_sum)} kWh\n"
-        f"Production Limit: {format_value(limite_prod)} kWh\n"
-        f"Total Consumption: {format_value(cons_total)} kWh\n"
-        f"Consumption Sum: {format_value(cons_sum)} kWh\n"
-        f"Consumption Limit: {format_value(limite_cons)} kWh\n"
-        f"Time Period: {time_period}\n"
+    # Get time range from the selectbox options
+    time_range = "Last 24 Hours"  # Default value
+    if time_hours and isinstance(time_hours, list) and len(time_hours) > 0:
+        hours = time_hours[0]
+        if hours == 24:
+            time_range = "Last 24 Hours"
+        elif hours == 12:
+            time_range = "Last 12 Hours"
+        elif hours == 6:
+            time_range = "Last 6 Hours"
+        elif hours == 3:
+            time_range = "Last 3 Hours"
+        elif hours == 1:
+            time_range = "Last 1 Hour"
+    
+    # Calculate overview statistics
+    overview_text = (
+        f"Total Production: {format_value(total_production)} kWh\n"
+        f"Total Consumption: {format_value(total_consumption)} kWh\n"
+        f"Net Energy Balance: {format_value(total_production - total_consumption)} kWh\n"
+        f"Time Period: {time_range}\n"
         f"Report Date: {now_dt.strftime('%Y-%m-%d %H:%M:%S')}"
     )
     
-    pdf.multi_cell(0, 5, stats_text)
+    pdf.multi_cell(0, 5, overview_text)
     
     # Add charts if provided
     if charts and isinstance(charts, dict):
         pdf.add_page()
         pdf.set_font('Arial', 'B', 11)
-        pdf.cell(0, 10, "Visualizations", 0, 1)
+        pdf.cell(0, 10, "Time Series Visualization", 0, 1)
         
         for chart_name, fig in charts.items():
             # Save the figure to a temporary buffer
@@ -219,91 +260,6 @@ def generate_production_consumption_pdf_report(import_data_dict, export_data_dic
                     pass
                     
                 pdf.ln(5)
-    
-    # Add data tables
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Production Data", 0, 1)
-    
-    # Create table header for production data
-    pdf.set_font('Arial', 'B', 8)
-    col_width = 40
-    row_height = 6
-    
-    # Add column headers
-    pdf.cell(col_width, row_height, "Metric", 1, 0, 'C')
-    pdf.cell(col_width, row_height, "Value", 1, 1, 'C')
-    
-    # Add production data rows
-    pdf.set_font('Arial', '', 8)
-    production_data = [
-        ("Total Production", format_value(prod_total)),
-        ("Production Sum", format_value(prod_sum)),
-        ("Production Limit", format_value(limite_prod))
-    ]
-    
-    for metric, value in production_data:
-        pdf.cell(col_width, row_height, metric, 1, 0, 'L')
-        pdf.cell(col_width, row_height, value, 1, 1, 'R')
-    
-    # Add consumption data
-    pdf.ln(10)
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Consumption Data", 0, 1)
-    
-    # Add column headers
-    pdf.set_font('Arial', 'B', 8)
-    pdf.cell(col_width, row_height, "Metric", 1, 0, 'C')
-    pdf.cell(col_width, row_height, "Value", 1, 1, 'C')
-    
-    # Add consumption data rows
-    pdf.set_font('Arial', '', 8)
-    consumption_data = [
-        ("Total Consumption", format_value(cons_total)),
-        ("Consumption Sum", format_value(cons_sum)),
-        ("Consumption Limit", format_value(limite_cons))
-    ]
-    
-    for metric, value in consumption_data:
-        pdf.cell(col_width, row_height, metric, 1, 0, 'L')
-        pdf.cell(col_width, row_height, value, 1, 1, 'R')
-    
-    # Add validation stamp
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, "Authentication & Validation", 0, 1, 'C')
-    pdf.ln(5)
-    
-    # Create validation stamp
-    pdf.set_font('Arial', 'B', 12)
-    pdf.set_fill_color(240, 240, 240)
-    pdf.cell(0, 10, "ECO AI.ly Validation Stamp", 0, 1, 'C', True)
-    pdf.ln(5)
-    
-    # Add validation details
-    pdf.set_font('Arial', '', 10)
-    validation_text = (
-        f"Report ID: ECO-{datetime.now().strftime('%Y%m%d')}-{os.urandom(4).hex().upper()}\n"
-        f"Validation Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-        f"Data Source: Portuguese Electricity Grid Production Consumption Monitoring\n"
-        f"Validation Method: Automated data integrity verification\n"
-        f"Verified By: ECO AI.ly Production Consumption Intelligence Platform\n\n"
-        f"This report has been automatically generated and validated by ECO AI.ly's production consumption intelligence platform. "
-        f"The data presented in this report has been verified for accuracy and integrity. "
-        f"This stamp certifies that the information contained herein represents an accurate assessment "
-        f"of production consumption data for the Portuguese electricity grid during the specified period."
-    )
-    
-    pdf.multi_cell(0, 5, validation_text)
-    
-    # Add digital signature box
-    pdf.ln(10)
-    pdf.set_draw_color(0, 0, 0)
-    pdf.rect(pdf.w/2 - 40, pdf.get_y(), 80, 30)
-    
-    pdf.set_font('Arial', 'I', 8)
-    pdf.set_xy(pdf.w/2 - 40, pdf.get_y() + 15)
-    pdf.cell(80, 10, "Digital Signature", 0, 0, 'C')
     
     # Save PDF to a temporary file
     temp_pdf_path = "temp_report.pdf"

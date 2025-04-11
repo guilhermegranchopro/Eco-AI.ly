@@ -109,6 +109,9 @@ def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts
     
     class PDF(FPDF):
         def header(self):
+            # Skip header on first page
+            if self.page_no() == 1:
+                return
             # Logo
             try:
                 # Attempt to load logo if available
@@ -122,6 +125,9 @@ def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts
             self.ln(10)
             
         def footer(self):
+            # Skip footer on first page
+            if self.page_no() == 1:
+                return
             # Position at 1.5 cm from bottom
             self.set_y(-15)
             # Add timestamp
@@ -134,54 +140,91 @@ def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts
     pdf = PDF()
     pdf.add_page()
     
-    # Add report content
+    # Add authentication stamp at the beginning
+    try:
+        # Add logo at the top center
+        logo_width = 150
+        pdf.image("assets/images/logo.png", x=pdf.w/2 - logo_width/2, y=20, w=logo_width)
+    except:
+        pass
+    
+    pdf.ln(60)  # Add space after logo
+    
+    # Add validation stamp
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, "ECO AI.ly Authentication", 0, 1, 'C')
+    pdf.ln(5)
+    
+    # Add validation details
+    pdf.set_font('Arial', '', 10)
+    validation_text = (
+        f"Report ID: ECO-{datetime.now().strftime('%Y%m%d')}-{os.urandom(4).hex().upper()}\n"
+        f"Validation Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"Data Source: Portuguese Electricity Grid Import Export Monitoring\n"
+        f"Validation Method: Automated data integrity verification\n"
+        f"Verified By: ECO AI.ly Import Export Intelligence Platform\n\n"
+        f"This report has been automatically generated and validated by ECO AI.ly's import export intelligence platform. "
+        f"The data presented in this report has been verified for accuracy and integrity. "
+        f"This stamp certifies that the information contained herein represents an accurate assessment "
+        f"of import export data for the Portuguese electricity grid during the specified period."
+    )
+    
+    pdf.multi_cell(0, 5, validation_text)
+    
+    # Add new page for content
+    pdf.add_page()
+    
+    # Add Import Export Overview
     pdf.set_font('Arial', 'B', 12)
     pdf.cell(0, 10, "Import Export Overview", 0, 1)
     pdf.set_font('Arial', '', 10)
     
-    # Add summary statistics
-    pdf.ln(5)
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Summary Statistics", 0, 1)
-    pdf.set_font('Arial', '', 10)
+    # Extract data from dictionaries
+    imp_total = import_data_dict.get("imp_total", {})
+    imp_sum = import_data_dict.get("imp_sum", 0)
+    limite_imp = import_data_dict.get("limite_imp", 0)
+    time_hours = import_data_dict.get("time_hours", [])
+    now_dt = import_data_dict.get("now_dt", datetime.now())
     
-    # Add import summary statistics
-    pdf.ln(5)
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Import Statistics", 0, 1)
-    pdf.set_font('Arial', '', 10)
+    export_total = export_data_dict.get("export_total", {})
+    export_sum = export_data_dict.get("export_sum", 0)
+    limite_export = export_data_dict.get("limite_export", 0)
     
-    import_stats_text = (
-        f"Total Import: {format_value(import_data_dict.get('imp_total'))} gCO2eq/kWh\n"
-        f"Import Sum: {format_value(import_data_dict.get('imp_sum'))} gCO2eq/kWh\n"
-        f"Import Limit: {format_value(import_data_dict.get('limite_imp'))} gCO2eq/kWh\n"
-        f"Time Period: {import_data_dict.get('time_hours', 'N/A')} hours\n"
-        f"Report Date: {import_data_dict.get('now_dt', datetime.now()).strftime('%Y-%m-%d %H:%M')}"
+    # Calculate total import and export values
+    total_import = sum(imp_total.values()) if isinstance(imp_total, dict) else imp_sum
+    total_export = sum(export_total.values()) if isinstance(export_total, dict) else export_sum
+    
+    # Get time range from the selectbox options
+    time_range = "Last 24 Hours"  # Default value
+    if time_hours and isinstance(time_hours, list) and len(time_hours) > 0:
+        hours = time_hours[0]
+        if hours == 24:
+            time_range = "Last 24 Hours"
+        elif hours == 12:
+            time_range = "Last 12 Hours"
+        elif hours == 6:
+            time_range = "Last 6 Hours"
+        elif hours == 3:
+            time_range = "Last 3 Hours"
+        elif hours == 1:
+            time_range = "Last 1 Hour"
+    
+    # Calculate overview statistics
+    overview_text = (
+        f"Total Import: {format_value(total_import)} kWh\n"
+        f"Total Export: {format_value(total_export)} kWh\n"
+        f"Net Energy Balance: {format_value(total_import - total_export)} kWh\n"
+        f"Time Period: {time_range}\n"
+        f"Report Date: {now_dt.strftime('%Y-%m-%d %H:%M:%S')}"
     )
     
-    pdf.multi_cell(0, 5, import_stats_text)
-    
-    # Add export summary statistics
-    pdf.ln(5)
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Export Statistics", 0, 1)
-    pdf.set_font('Arial', '', 10)
-    
-    export_stats_text = (
-        f"Total Export: {format_value(export_data_dict.get('export_total'))} gCO2eq/kWh\n"
-        f"Export Sum: {format_value(export_data_dict.get('export_sum'))} gCO2eq/kWh\n"
-        f"Export Limit: {format_value(export_data_dict.get('limite_export'))} gCO2eq/kWh\n"
-        f"Time Period: {export_data_dict.get('time_hours', 'N/A')} hours\n"
-        f"Report Date: {export_data_dict.get('now_dt', datetime.now()).strftime('%Y-%m-%d %H:%M')}"
-    )
-    
-    pdf.multi_cell(0, 5, export_stats_text)
+    pdf.multi_cell(0, 5, overview_text)
     
     # Add charts if provided
     if charts and isinstance(charts, dict):
         pdf.add_page()
         pdf.set_font('Arial', 'B', 11)
-        pdf.cell(0, 10, "Visualizations", 0, 1)
+        pdf.cell(0, 10, "Time Series Visualization", 0, 1)
         
         for chart_name, fig in charts.items():
             # Save the figure to a temporary buffer
@@ -219,115 +262,6 @@ def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts
                     pass
                     
                 pdf.ln(5)
-    
-    # Add import data table
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Import Data", 0, 1)
-    
-    # Add import figure if available
-    if 'fig_imp' in import_data_dict and import_data_dict['fig_imp'] is not None:
-        # Save the figure to a temporary buffer
-        img_buf = io.BytesIO()
-        
-        if save_figure_to_buffer(import_data_dict['fig_imp'], img_buf):
-            img_buf.seek(0)
-            
-            # Convert to PIL Image to get dimensions
-            img = Image.open(img_buf)
-            width, height = img.size
-            
-            # Calculate aspect ratio and set width to fit page
-            page_width = pdf.w - 2*pdf.l_margin
-            img_width = min(page_width, 180)
-            img_height = img_width * height / width
-            
-            # Save the BytesIO object to a temporary file
-            temp_img_path = "temp_import_figure.png"
-            with open(temp_img_path, 'wb') as temp_file:
-                temp_file.write(img_buf.getvalue())
-            
-            # Add the image to the PDF using the temporary file
-            pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
-            
-            # Clean up the temporary file
-            try:
-                os.remove(temp_img_path)
-            except:
-                pass
-    
-    # Add export data table
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 11)
-    pdf.cell(0, 10, "Export Data", 0, 1)
-    
-    # Add export figure if available
-    if 'fig_export' in export_data_dict and export_data_dict['fig_export'] is not None:
-        # Save the figure to a temporary buffer
-        img_buf = io.BytesIO()
-        
-        if save_figure_to_buffer(export_data_dict['fig_export'], img_buf):
-            img_buf.seek(0)
-            
-            # Convert to PIL Image to get dimensions
-            img = Image.open(img_buf)
-            width, height = img.size
-            
-            # Calculate aspect ratio and set width to fit page
-            page_width = pdf.w - 2*pdf.l_margin
-            img_width = min(page_width, 180)
-            img_height = img_width * height / width
-            
-            # Save the BytesIO object to a temporary file
-            temp_img_path = "temp_export_figure.png"
-            with open(temp_img_path, 'wb') as temp_file:
-                temp_file.write(img_buf.getvalue())
-            
-            # Add the image to the PDF using the temporary file
-            pdf.image(temp_img_path, x=None, y=None, w=img_width, h=img_height)
-            
-            # Clean up the temporary file
-            try:
-                os.remove(temp_img_path)
-            except:
-                pass
-    
-    # Add validation stamp
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, "Authentication & Validation", 0, 1, 'C')
-    pdf.ln(5)
-    
-    # Create validation stamp
-    pdf.set_font('Arial', 'B', 12)
-    pdf.set_fill_color(240, 240, 240)
-    pdf.cell(0, 10, "ECO AI.ly Validation Stamp", 0, 1, 'C', True)
-    pdf.ln(5)
-    
-    # Add validation details
-    pdf.set_font('Arial', '', 10)
-    validation_text = (
-        f"Report ID: ECO-{datetime.now().strftime('%Y%m%d')}-{os.urandom(4).hex().upper()}\n"
-        f"Validation Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-        f"Data Source: Portuguese Electricity Grid Import Export Monitoring\n"
-        f"Validation Method: Automated data integrity verification\n"
-        f"Verified By: ECO AI.ly Import Export Intelligence Platform\n\n"
-        f"This report has been automatically generated and validated by ECO AI.ly's import export intelligence platform. "
-        f"The data presented in this report has been verified for accuracy and integrity. "
-        f"This stamp certifies that the information contained herein represents an accurate assessment "
-        f"of import export data for the Portuguese electricity grid during the specified period."
-    )
-    
-    pdf.multi_cell(0, 5, validation_text)
-    
-    # Add digital signature box
-    pdf.ln(10)
-    pdf.set_draw_color(0, 0, 0)
-    pdf.rect(pdf.w/2 - 40, pdf.get_y(), 80, 30)
-    
-    pdf.set_font('Arial', 'I', 8)
-    pdf.set_xy(pdf.w/2 - 40, pdf.get_y() + 15)
-    pdf.cell(80, 10, "Digital Signature", 0, 0, 'C')
     
     # Save PDF to a temporary file
     temp_pdf_path = "temp_report.pdf"
