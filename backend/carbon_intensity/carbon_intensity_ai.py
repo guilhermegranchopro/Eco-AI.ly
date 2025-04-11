@@ -5,85 +5,46 @@ import pandas as pd
 import joblib
 import tensorflow as tf
 from backend.api import fetch_carbon_intensity_history
+from backend.carbon_intensity.carbon_intensity_utils import get_bg_color_CI, colored_metric, when_to_consume_energy_CI
 
-def get_bg_color_CI(value):
-    """
-    Returns a hex color string interpolated between green (#00FF00) and red (#FF0000).
-    0 -> green, 5 -> red.
-    """
-    # Clamp value between 0 and 5
-    value = max(0, min(5, value))
-    fraction = value / 5.0
-    red = int(255 * fraction)
-    green = int(255 * (1 - fraction))
-    blue = 0
-    return f"#{red:02X}{green:02X}{blue:02X}"
+@st.cache_resource
+def load_model_and_scalers():
+    """Cache the model and scalers to avoid reloading them on every prediction"""
+    try:
+        # Load model with custom_objects to handle any custom components
+        model = tf.keras.models.load_model('backend/carbon_intensity/models/model_carbon_intensity.keras', compile=False)
+        # Recompile the model with default settings
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        
+        # Load scalers
+        labelling_scaler = joblib.load('backend/carbon_intensity/models/labelling_scaler_CI.pkl')
+        main_scaler = joblib.load('backend/carbon_intensity/models/scaler_carbon_intensity.pkl')
+        
+        return model, labelling_scaler, main_scaler
+    except Exception as e:
+        st.error(f"Error loading model or scalers: {str(e)}")
+        return None, None, None
 
-def colored_metric(label, value, bg_color):
-    """
-    Renders a custom metric with a colored background using st.components.v1.html.
-    Adds a fixed transparency level to the background color.
-    """
-    # Set transparency level (alpha) to 0.6 (60% opacity)
-    transparency = 0.6
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def fetch_and_process_data():
+    """Cache the data fetching and processing"""
+    data_ci = fetch_carbon_intensity_history(zone="PT")
+    if not data_ci or not data_ci.get("history"):
+        return None
+    
+    historico_carbon = data_ci["history"]
+    df_ci = pd.DataFrame(historico_carbon)
+    df_ci['datetime'] = pd.to_datetime(df_ci['datetime'])
+    df_ci = df_ci.sort_values(by='datetime', ascending=True)
+    
+    if 'carbonIntensity' not in df_ci.columns:
+        return None
 
-    # Convert hex color to RGBA with transparency
-    if bg_color.startswith("#") and len(bg_color) == 7:  # Ensure it's a valid hex color
-        red = int(bg_color[1:3], 16)
-        green = int(bg_color[3:5], 16)
-        blue = int(bg_color[5:7], 16)
-        bg_color = f"rgba({red}, {green}, {blue}, {transparency})"
-
-    if value == 0:
-        value_displayed = "< 118"
-        relative_value = "The Best!"
-    elif value == 1:
-        value_displayed = "118 - 202"
-        relative_value = "Good!"
-    elif value == 2:
-        value_displayed = "202 - 286"
-        relative_value = "Ok!"
-    elif value == 3:
-        value_displayed = "286 - 369"
-        relative_value = "Bad!"
-    elif value == 4:
-        value_displayed = "369 - 452"
-        relative_value = "Very Bad!"
-    elif value == 5:
-        value_displayed = "> 452"
-        relative_value = "The Worst!"
-
-    html = f"""
-    <div style="
-         background-color: {bg_color} !important;
-         border-radius: 10px;
-         padding: 16px;
-         width: 90%;
-         text-align: center;
-         color: #FFFFFF;
-         font-family: Arial, sans-serif;
-         margin-bottom: 1rem;
-         ">
-         <div style="font-size: 16px; font-weight: 600;">{label}</div>
-         <div style="font-size: 36px; font-weight: 700; margin-top: 4px;">{value_displayed}</div>
-         <div style="font-size: 18px; font-weight: 500; margin-top: 8px;">{relative_value}</div>
-    </div>
-    """
-    components.html(html, height=150)
-
-    return value_displayed, relative_value
-
-def when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI):
-    if prediction_class_carbon > mode_labelling_CI and mode_labelling_CI < 3:
-        return "success", "**Use energy now!**"
-    elif prediction_class_carbon < mode_labelling_CI and prediction_class_carbon < 3:
-        return "warning", "**Use energy later!**"
-    elif prediction_class_carbon == mode_labelling_CI and mode_labelling_CI < 3 or prediction_class_carbon < 3:
-        return "success", "**Use energy whenever!**"
-    elif prediction_class_carbon <= 3 and mode_labelling_CI <= 3:
-        return "error", "**Bad timming!**"
-    else:
-        return "error", "**Better wait!**"
+    # Take the last 24 hours of data
+    df_ci = df_ci[['datetime', 'carbonIntensity']].tail(24).reset_index(drop=True)
+    df_ci.rename(columns={'carbonIntensity': 'Carbon Intensity gCO₂eq/kWh (LCA)'}, inplace=True)
+    
+    return df_ci
 
 def render_ai_predictions_CI():
     """
@@ -96,43 +57,17 @@ def render_ai_predictions_CI():
     st.markdown("---")
     st.subheader("Carbon Intensity AI Model")
     
-    # ----- Carbon Intensity Prediction -----
-    data_ci = fetch_carbon_intensity_history(zone="PT")
-    if not data_ci or not data_ci.get("history"):
+    # Load cached model and scalers
+    model_carbon, labelling_scaler_carbon, scaler_carbon = load_model_and_scalers()
+    if None in (model_carbon, labelling_scaler_carbon, scaler_carbon):
+        return None, None, None, None
+    
+    # Fetch and process cached data
+    df_ci = fetch_and_process_data()
+    if df_ci is None:
         st.error("No carbon intensity data available.")
-        return
-    
-    historico_carbon = data_ci["history"]
-    df_ci = pd.DataFrame(historico_carbon)
-    df_ci['datetime'] = pd.to_datetime(df_ci['datetime'])
-    df_ci = df_ci.sort_values(by='datetime', ascending=True)
-    if 'carbonIntensity' not in df_ci.columns:
-        st.error("API data does not contain 'carbonIntensity'.")
-        return
+        return None, None, None, None
 
-    # Take the last 24 hours of data
-    df_ci = df_ci[['datetime', 'carbonIntensity']].tail(24).reset_index(drop=True)
-    df_ci.rename(columns={'carbonIntensity': 'Carbon Intensity gCO₂eq/kWh (LCA)'}, inplace=True)
-
-    # Load the labelling scaler and transform the data
-    labelling_scaler_carbon = joblib.load('backend/carbon_intensity/models/labelling_scaler_CI.pkl')
-    #print("Labelling Scaler CI Details:")
-    #print(f"Scale: {labelling_scaler_carbon.scale_}")
-    #print(f"Min: {labelling_scaler_carbon.min_}")
-    
-    # Calculate value intervals for each class from 0 to 5
-    #intervals = []
-    #for i in range(6):
-    #    lower_bound = labelling_scaler_carbon.inverse_transform([[i]])[0][0]
-    #    upper_bound = labelling_scaler_carbon.inverse_transform([[i + 1]])[0][0] if i < 5 else None
-    #    intervals.append((lower_bound, upper_bound))
-    
-    #for i, (lower, upper) in enumerate(intervals):
-    #    if upper is not None:
-    #        print(f"Class {i}: {lower:.2f} to {upper:.2f}")
-    #    else:
-    #        print(f"Class {i}: {lower:.2f} and above")
-    
     # Ensure data is 1D for the labelling scaler
     carbon_intensity_values = df_ci['Carbon Intensity gCO₂eq/kWh (LCA)'].values
     df_labelling = labelling_scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
@@ -140,23 +75,16 @@ def render_ai_predictions_CI():
     mode_labelling_CI = pd.Series(df_labelling.flatten()).mode()[0]
     mode_labelling_CI = int(mode_labelling_CI)
     
-    # Load the main scaler and transform the data
-    scaler_carbon = joblib.load('backend/carbon_intensity/models/scaler_carbon_intensity.pkl')
+    # Transform data for prediction
     df_ci['scaled'] = scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
-    
-    # Reshape for LSTM model (samples, time steps, features)
     X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
     
-    # Load and use the model
+    # Make prediction
     try:
-        # Load model with custom_objects to handle any custom components
-        model_carbon = tf.keras.models.load_model('backend/carbon_intensity/models/model_carbon_intensity.keras', compile=False)
-        # Recompile the model with default settings
-        model_carbon.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         prediction_ci = model_carbon.predict(X_ci, verbose=0)
         prediction_class_carbon = int(np.argmax(prediction_ci, axis=1)[0])
     except Exception as e:
-        st.error(f"Error loading or using the model: {str(e)}")
+        st.error(f"Error making prediction: {str(e)}")
         return None, None, None, None
     
     # Map predictions to background colors
