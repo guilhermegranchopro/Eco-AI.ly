@@ -1,6 +1,6 @@
 # Core dependencies for model inference and data processing
 pandas==2.2.2
-numpy==2.0.2
+numpy==1.26.4
 matplotlib==3.10.0
 seaborn==0.13.2
 scikit-learn==1.6.1
