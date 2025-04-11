@@ -19,6 +19,8 @@ def create_renewable_percentage_report_download_button(data, charts=None, title=
         title (str, optional): Title of the report
     """
 
+    st.markdown("---")
+
     col1, col2, col3 = st.columns([2, 1, 2])
 
     with col2:

@@ -18,42 +18,45 @@ def create_carbon_intensity_report_download_button(data, charts=None, title="Car
         charts (dict, optional): Dictionary of figures/charts to include in the report
         title (str, optional): Title of the report
     """
+
     st.markdown("---")
-    st.subheader("**Download your report!**")
 
-    # Show a progress message
-    with st.spinner("Preparing your report..."):
-        # Create PDF report
-        pdf_buffer = generate_carbon_intensity_pdf_report(data, charts, title)
+    col1, col2, col3 = st.columns([2, 1, 2])
 
-    # Create a styled download button
-    st.markdown("""
-    <div style='text-align: center; margin-top: 50px;'>
-        <style>
-            .stDownloadButton button {
-                background-color: #4CAF50;
-                color: white;
-                padding: 10px 20px;
-                border-radius: 5px;
-                border: none;
-                font-size: 16px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-            .stDownloadButton button:hover {
-                background-color: #45a049;
-            }
-        </style>
-    </div>
-    """, unsafe_allow_html=True)
+    with col2:
+        # Show a progress message
+        with st.spinner("Preparing your report..."):
+            # Create PDF report
+            pdf_buffer = generate_carbon_intensity_pdf_report(data, charts, title)
 
-    # Create download button for the PDF
-    st.download_button(
-        "📥 Download Report", 
-        data=pdf_buffer,
-        file_name=f"carbon_intensity_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-        mime="application/pdf",
-        help="Download a comprehensive report of the carbon intensity data with ECO AI.ly validation"
+        # Create a styled download button
+        st.markdown("""
+        <div style='text-align: center; margin-top: 50px;'>
+            <style>
+                .stDownloadButton button {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    border: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                .stDownloadButton button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Create download button for the PDF
+        st.download_button(
+            "📥 Download Report", 
+            data=pdf_buffer,
+            file_name=f"carbon_intensity_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+            mime="application/pdf",
+            help="Download a comprehensive report of the carbon intensity data with ECO AI.ly validation"
     )
 
 def generate_carbon_intensity_pdf_report(data, charts=None, title="Carbon Intensity Portugal Overview"):

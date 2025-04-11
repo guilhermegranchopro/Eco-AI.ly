@@ -20,6 +20,8 @@ def create_import_export_report_download_button(import_data_dict, export_data_di
         title (str, optional): Title of the report
     """
 
+    st.markdown("---")
+
     col1, col2, col3 = st.columns([2, 1, 2])
 
     with col2:

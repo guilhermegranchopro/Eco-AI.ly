@@ -18,6 +18,9 @@ def create_production_consumption_report_download_button(import_data_dict, expor
         charts (dict, optional): Dictionary of figures/charts to include in the report
         title (str, optional): Title of the report
     """
+
+    st.markdown("---")
+    
     col1, col2, col3 = st.columns([2, 1, 2])
 
     with col2:
