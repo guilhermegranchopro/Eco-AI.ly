@@ -1,61 +1,142 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
-# Set up the page configuration at the very top.
+# Set up the page configuration
 st.set_page_config(
-    page_title="Eco AI.ly",
-    page_icon="🌿",  # Alternatively, you can use an emoji if needed.
+    page_title="Eco AI.ly - Sustainable Predictions",
+    page_icon="🌿",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
+# Custom CSS for better styling
+st.markdown("""
+    <style>
+    .main-header {
+        font-size: 2.5rem;
+        color: #2E7D32;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .sub-header {
+        font-size: 1.8rem;
+        color: #1B5E20;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    .feature-card {
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        border: 1px solid #E0E0E0;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Main title and header
-st.title("Eco AI.ly")
+st.markdown('<h1 class="main-header">Eco AI.ly</h1>', unsafe_allow_html=True)
+st.markdown('<h2 style="text-align: center; color: #4CAF50;">Sustainable Predictions Powered by AI</h2>', unsafe_allow_html=True)
 
-# Display the logo at the top (adjust width as needed)
-st.image("assets/images/logo.png", width=600)
+# Display the logo
+col1, col2, col3 = st.columns([1,2,1])
+with col2:
+    st.image("assets/images/logo.png", width=800)
 
-st.header("Sustainable Predictions Powered by AI")
+# Introduction Section
+st.markdown("""
+    <div class="feature-card">
+        <h3 style="color: #2E7D32;">Welcome to Eco AI.ly</h3>
+        <p>Your innovative platform at the intersection of <strong>Artificial Intelligence</strong> and <strong>Sustainability</strong>. 
+        We empower decision-makers with accurate, real-time predictions on environmental metrics, enabling a greener future for all.</p>
+    </div>
+""", unsafe_allow_html=True)
+
+# Key Features Section
+st.markdown('<h2 class="sub-header">Our Key Features</h2>', unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #2E7D32;">Predictive Analytics</h3>
+            <p>• Real-time energy consumption forecasts<br>
+               • Environmental impact predictions<br>
+               • Trend analysis and pattern recognition</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #2E7D32;">Data Visualization</h3>
+            <p>• Interactive dashboards<br>
+               • Dynamic charts and graphs<br>
+               • Customizable data views</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #2E7D32;">AI-Powered Insights</h3>
+            <p>• Machine learning models<br>
+               • Pattern recognition<br>
+               • Automated reporting</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Platform Overview
+st.markdown('<h2 class="sub-header">Explore Our Platform</h2>', unsafe_allow_html=True)
 
 st.markdown("""
-Welcome to **Eco AI.ly**, your innovative platform at the intersection of **Artificial Intelligence** and **Sustainability**.  
-Our mission is to empower decision-makers with accurate, real-time predictions on environmental metrics, enabling a greener future for all.
+    <div class="feature-card">
+        <h3 style="color: #2E7D32;">Portugal Data Dashboard</h3>
+        <p>• Comprehensive energy consumption metrics<br>
+           • Real-time data updates<br>
+           • Historical trend analysis<br>
+           • Export and import statistics</p>
+    </div>
+""", unsafe_allow_html=True)
 
-## What is Eco AI.ly?
+# Technology Stack
+st.markdown('<h2 class="sub-header">Our Technology Stack</h2>', unsafe_allow_html=True)
 
-**Eco AI.ly** is a cutting-edge startup that leverages advanced AI models to forecast key environmental parameters. We are committed to:
-- **Predictive Analytics:** Harnessing state-of-the-art AI to predict energy and environmental trends.
-- **Sustainability:** Providing data-driven insights that help in making environmentally conscious decisions.
-- **Innovation:** Merging technology with sustainability to create impactful solutions.
+col1, col2 = st.columns(2)
 
-## Explore Our Platform
+with col1:
+    st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #2E7D32;">Backend Technologies</h3>
+            <p>• Python & TensorFlow for AI models<br>
+               • Advanced data processing pipelines<br>
+               • Real-time data integration</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-Our platform is built using **Streamlit**, delivering an interactive dashboard that organizes information into three main pages:
+with col2:
+    st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #2E7D32;">Frontend Technologies</h3>
+            <p>• Streamlit for interactive dashboards<br>
+               • Modern visualization libraries<br>
+               • Responsive design</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-### Home
-- **Overview:** Learn about our mission, vision, and the innovative tools we offer.
-- **Details:** Get an in-depth introduction to how Eco AI.ly is transforming environmental monitoring and predictions using AI.
+# Call to Action
+st.markdown("""
+    <div style="text-align: center; margin: 2rem 0;">
+        <h2 style="color: #2E7D32;">Ready to Make a Difference?</h2>
+        <p>Join us in our mission to create a sustainable future through AI-powered insights.</p>
+    </div>
+""", unsafe_allow_html=True)
 
-### Portugal Data
-- **Interactive Visualizations:** Dive into real-time, interactive data visualizations focused on Portugal.
-- **Energy Breakdown:** View detailed pie charts showing energy import, production, export, and consumption.
-- **AI Predictions:** Explore predictions made by our models regarding environmental metrics.
-
-### Model Stats
-- **Model Performance:** Review precomputed statistics such as loss curves, accuracy metrics, and confusion matrices.
-- **Validation Metrics:** Understand the performance and reliability of our AI models through detailed validation results.
-
-## Our Technology Stack
-
-- **AI Models:** Built with **TensorFlow**, our AI models provide robust predictions.
-- **Streamlit:** Our dynamic dashboard is powered by Streamlit for interactive, real-time data visualization.
-- **APIs:** We integrate with leading data providers to deliver up-to-date information to our users.
-
-## Join Us on Our Journey
-
-At Eco AI.ly, we believe that by harnessing the power of AI, we can revolutionize how we approach sustainability and environmental awareness.  
-Explore our platform, interact with our visualizations, and see firsthand how technology can drive a sustainable future.
-
-*Together, let's harness the power of AI to protect our planet!*
-""")
+# Footer
+st.markdown("""
+    <div style="text-align: center; margin-top: 3rem; padding: 1rem; border-top: 1px solid #E0E0E0;">
+        <p>© 2024 Eco AI.ly - Empowering Sustainable Decisions with AI</p>
+    </div>
+""", unsafe_allow_html=True)
 
 
