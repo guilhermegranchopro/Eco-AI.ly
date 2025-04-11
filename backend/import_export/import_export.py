@@ -56,7 +56,13 @@ def aggregate_export(history, time_hours, now):
     return export_breakdown_total, export_total_sum, limite
 
 def format_label(label):
-    """Formats the label: if fully uppercase, keeps it; otherwise, capitalizes the first letter."""
+    """Formats the label: if fully uppercase, keeps it; otherwise, capitalizes the first letter.
+    Also translates country codes like 'ES' to their full names like 'Spain'."""
+    # Translate country codes to full names
+    if label == "ES":
+        return "Spain"
+    
+    # Keep the original formatting logic
     return label if label.isupper() else label.capitalize()
 
 # -----------------------------
