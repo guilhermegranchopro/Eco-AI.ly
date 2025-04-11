@@ -7,6 +7,7 @@ from backend.api import fetch_power_breakdown_history
 # -----------------------------
 # Aggregation Functions
 # -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def aggregate_import(history, time_hours, now):
     """
     Aggregates 'powerImportBreakdown' and 'powerImportTotal'
@@ -31,6 +32,7 @@ def aggregate_import(history, time_hours, now):
         import_total_sum += val_total
     return import_breakdown_total, import_total_sum, limite
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def aggregate_export(history, time_hours, now):
     """
     Aggregates 'powerExportBreakdown' and 'powerExportTotal'
@@ -65,6 +67,7 @@ def format_label(label):
 # -----------------------------
 # Helper Plotting Function using Plotly Express
 # -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt, chart_title, time_hours):
     """
     Creates and returns an interactive Plotly pie chart for a given breakdown.
@@ -101,6 +104,7 @@ def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt,
 # -----------------------------
 # Metrics Panel Function
 # -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def render_metrics_panel(import_data_dict, export_data_dict):
     """
     Renders a detailed metrics panel below the pie charts with various statistics
@@ -190,6 +194,20 @@ def render_metrics_panel(import_data_dict, export_data_dict):
                 st.metric("Dominant Export Source", format_label(dominant_export))
 
 # -----------------------------
+# Data Fetching Function
+# -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def fetch_and_process_data(time_hours):
+    """
+    Fetches and processes the power breakdown history data with caching.
+    Returns the processed data and current datetime.
+    """
+    data = fetch_power_breakdown_history(zone="PT")
+    historico = data.get("history", [])
+    now_dt = datetime.now(timezone.utc)
+    return historico, now_dt
+
+# -----------------------------
 # Main Render Function
 # -----------------------------
 def render_pie_charts2():
@@ -207,10 +225,8 @@ def render_pie_charts2():
     except Exception:
         time_hours = 1
 
-    # Fetch API history data
-    data = fetch_power_breakdown_history(zone="PT")
-    historico = data.get("history", [])
-    now_dt = datetime.now(timezone.utc)
+    # Fetch API history data with caching
+    historico, now_dt = fetch_and_process_data(time_hours)
     
     # Create two columns: left for Import and Production; right for Export and Consumption
     col1, col2 = st.columns(2)

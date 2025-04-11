@@ -11,14 +11,20 @@ def set_page_config_once():
         st.set_page_config(page_title="Eco AI.ly", page_icon="🌿", layout="wide")
         st.session_state["page_config_done"] = True
 
-def main():
+@st.cache_data(ttl=3600)  # Cache for 1 hour (static content)
+def get_expansion_message_cached():
+    """
+    Cached function to get the expansion message
+    """
+    return get_expansion_message()
 
+def main():
+    # Set page config only once at the beginning
     set_page_config_once()
 
     tab1, tab2, tab3 = st.tabs(["Portugal Overview", "Other Countries", "Info"])
 
     with tab1:
-        set_page_config_once()
         # Set the title and header for the app
         st.title("Portugal Data Dashboard")
         st.header("Environmental Data and Predictions for Portugal")
@@ -30,14 +36,11 @@ def main():
         create_import_export_report_download_button(import_data_dict, export_data_dict)
 
     with tab2:
-        set_page_config_once()
         st.subheader("Other Countries")
-        st.markdown(get_expansion_message())
+        st.markdown(get_expansion_message_cached())
 
     with tab3:
-        set_page_config_once()
         render_import_export_info()
-
 
 if __name__ == "__main__":
     main()

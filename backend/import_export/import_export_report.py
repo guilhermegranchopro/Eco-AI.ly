@@ -61,6 +61,7 @@ def create_import_export_report_download_button(import_data_dict, export_data_di
         )
         
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts=None, title="Import Export Portugal Overview"):
     """
     Generates a PDF report for import export data with ECO AI.ly validation.
@@ -195,7 +196,7 @@ def generate_import_export_pdf_report(import_data_dict, export_data_dict, charts
     total_export = sum(export_total.values()) if isinstance(export_total, dict) else export_sum
     
     # Get time range from the selectbox options
-    time_range = "Last 24 Hours"  # Default value
+    time_range = "Last 24 Hours"
     if time_hours and isinstance(time_hours, list) and len(time_hours) > 0:
         hours = time_hours[0]
         if hours == 24:

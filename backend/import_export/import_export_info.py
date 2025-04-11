@@ -1,5 +1,6 @@
 import streamlit as st
 
+@st.cache_data(ttl=3600)  # Cache for 1 hour since this content rarely changes
 def render_import_export_info():
     """
     Renders comprehensive information about the Import vs Export page,
