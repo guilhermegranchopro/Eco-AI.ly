@@ -31,14 +31,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Main title and header
-st.markdown('<h1 class="main-header">Eco AI.ly</h1>', unsafe_allow_html=True)
-st.markdown('<h2 style="text-align: center; color: #4CAF50;">Sustainable Predictions Powered by AI</h2>', unsafe_allow_html=True)
-
 # Display the logo
-col1, col2, col3 = st.columns([1,2,1])
+col1, col2, col3 = st.columns([0.5,3,0.5])
 with col2:
-    st.image("assets/images/logo.png", width=800)
+    st.image("assets/images/logo.png", width=1600)
 
 # Introduction Section
 st.markdown("""
