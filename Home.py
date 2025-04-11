@@ -26,9 +26,7 @@ st.markdown("""
     }
     .feature-card {
         padding: 1.5rem;
-        border-radius: 10px;
         margin: 1rem 0;
-        border: 1px solid #E0E0E0;
     }
     </style>
 """, unsafe_allow_html=True)
