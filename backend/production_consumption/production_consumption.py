@@ -7,6 +7,17 @@ from backend.api import fetch_power_breakdown_history
 # -----------------------------
 # Aggregation Functions
 # -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def fetch_and_process_data(time_hours):
+    """
+    Fetches and processes the power breakdown history data with caching.
+    Returns the processed data and current datetime.
+    """
+    data = fetch_power_breakdown_history(zone="PT")
+    historico = data.get("history", [])
+    now_dt = datetime.now(timezone.utc)
+    return historico, now_dt
+
 def aggregate_production(history, time_hours, now):
     """
     Aggregates 'powerProductionBreakdown' and 'powerProductionTotal'
@@ -62,6 +73,7 @@ def format_label(label):
 # -----------------------------
 # Helper Plotting Function using Plotly Express
 # -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt, chart_title, time_hours):
     """
     Creates and returns an interactive Plotly pie chart for a given breakdown.
@@ -98,6 +110,7 @@ def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt,
 # -----------------------------
 # Metrics Panel Function
 # -----------------------------
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def render_metrics_panel(production_data_dict, consumption_data_dict):
     """
     Renders a panel with detailed metrics about power production and consumption.
@@ -218,6 +231,7 @@ def render_metrics_panel(production_data_dict, consumption_data_dict):
 def render_pie_charts():
     st.subheader("Power Data Breakdown")
     
+    # Move the selectbox outside of any cached function
     time_range = st.selectbox(
         "Select time range for Power Breakdown:",
         ["Last 24 Hours", "Last 12 Hours", "Last 6 Hours", "Last 3 Hours", "Last 1 Hour"],
@@ -230,10 +244,8 @@ def render_pie_charts():
     except Exception:
         time_hours = 1
 
-    # Fetch API history data
-    data = fetch_power_breakdown_history(zone="PT")
-    historico = data.get("history", [])
-    now_dt = datetime.now(timezone.utc)
+    # Fetch API history data with caching
+    historico, now_dt = fetch_and_process_data(time_hours)
     
     # Create two columns: left for Import and Production; right for Export and Consumption
     col1, col2 = st.columns(2)

@@ -1,5 +1,6 @@
 import streamlit as st
 
+@st.cache_data(ttl=3600)  # Cache for 1 hour (static content)
 def render_production_consumption_info():
     """
     Renders comprehensive information about the Production vs Consumption page,

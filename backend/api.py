@@ -1,10 +1,12 @@
 import os
 import requests
 from dotenv import load_dotenv
+import streamlit as st
 
 # Load environment variables from the .env file
 load_dotenv()
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def fetch_carbon_intensity_history(zone: str = "PT") -> dict:
     """
     Fetches the power breakdown history data for the specified zone (default: Portugal)
@@ -31,6 +33,7 @@ def fetch_carbon_intensity_history(zone: str = "PT") -> dict:
         print(f"Error fetching power breakdown history: {e}")
         return {}
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def fetch_power_breakdown_history(zone: str = "PT") -> dict:
     """
     Fetches the power breakdown history data for the specified zone (default: Portugal)

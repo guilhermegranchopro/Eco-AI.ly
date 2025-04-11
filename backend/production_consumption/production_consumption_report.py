@@ -59,6 +59,7 @@ def create_production_consumption_report_download_button(import_data_dict, expor
             help="Download a comprehensive report of the production consumption data with ECO AI.ly validation"
         )
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def generate_production_consumption_pdf_report(import_data_dict, export_data_dict, charts=None, title="Production Consumption Portugal Overview"):
     """
     Generates a PDF report for production consumption data with ECO AI.ly validation.
@@ -193,7 +194,7 @@ def generate_production_consumption_pdf_report(import_data_dict, export_data_dic
     total_consumption = sum(cons_total.values()) if isinstance(cons_total, dict) else cons_sum
     
     # Get time range from the selectbox options
-    time_range = "Last 24 Hours"  # Default value
+    time_range = "Last 24 Hours"
     if time_hours and isinstance(time_hours, list) and len(time_hours) > 0:
         hours = time_hours[0]
         if hours == 24:
