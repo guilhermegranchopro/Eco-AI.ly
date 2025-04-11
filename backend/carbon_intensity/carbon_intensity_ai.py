@@ -75,15 +75,15 @@ def colored_metric(label, value, bg_color):
 
 def when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI):
     if prediction_class_carbon > mode_labelling_CI and mode_labelling_CI < 3:
-        return "Use energy now!"
+        return "success", "**Use energy now!**"
     elif prediction_class_carbon < mode_labelling_CI and prediction_class_carbon < 3:
-        return "Use energy later!"
+        return "warning", "**Use energy later!**"
     elif prediction_class_carbon == mode_labelling_CI and mode_labelling_CI < 3 or prediction_class_carbon < 3:
-        return "Use energy whenever!"
+        return "success", "**Use energy whenever!**"
     elif prediction_class_carbon <= 3 and mode_labelling_CI <= 3:
-        return "Bad timming!"
+        return "error", "**Bad timming!**"
     else:
-        return "Better wait!"
+        return "error", "**Better wait!**"
 
 def render_ai_predictions_CI():
     """
@@ -114,83 +114,84 @@ def render_ai_predictions_CI():
     df_ci = df_ci[['datetime', 'carbonIntensity']].tail(24).reset_index(drop=True)
     df_ci.rename(columns={'carbonIntensity': 'Carbon Intensity gCO₂eq/kWh (LCA)'}, inplace=True)
 
+    # Load the labelling scaler and transform the data
+    labelling_scaler_carbon = joblib.load('backend/carbon_intensity/models/labelling_scaler_CI.pkl')
+    #print("Labelling Scaler CI Details:")
+    #print(f"Scale: {labelling_scaler_carbon.scale_}")
+    #print(f"Min: {labelling_scaler_carbon.min_}")
+    
+    # Calculate value intervals for each class from 0 to 5
+    #intervals = []
+    #for i in range(6):
+    #    lower_bound = labelling_scaler_carbon.inverse_transform([[i]])[0][0]
+    #    upper_bound = labelling_scaler_carbon.inverse_transform([[i + 1]])[0][0] if i < 5 else None
+    #    intervals.append((lower_bound, upper_bound))
+    
+    #for i, (lower, upper) in enumerate(intervals):
+    #    if upper is not None:
+    #        print(f"Class {i}: {lower:.2f} to {upper:.2f}")
+    #    else:
+    #        print(f"Class {i}: {lower:.2f} and above")
+    
+    # Ensure data is 1D for the labelling scaler
+    carbon_intensity_values = df_ci['Carbon Intensity gCO₂eq/kWh (LCA)'].values
+    df_labelling = labelling_scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
+    df_labelling = np.round(df_labelling)
+    mode_labelling_CI = pd.Series(df_labelling.flatten()).mode()[0]
+    mode_labelling_CI = int(mode_labelling_CI)
+    
+    # Load the main scaler and transform the data
+    scaler_carbon = joblib.load('backend/carbon_intensity/models/scaler_carbon_intensity.pkl')
+    df_ci['scaled'] = scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
+    
+    # Reshape for LSTM model (samples, time steps, features)
+    X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
+    
+    # Load and use the model
     try:
-        # Load the labelling scaler and transform the data
-        labelling_scaler_carbon = joblib.load('backend/carbon_intensity/models/labelling_scaler_CI.pkl')
-        #print("Labelling Scaler CI Details:")
-        #print(f"Scale: {labelling_scaler_carbon.scale_}")
-        #print(f"Min: {labelling_scaler_carbon.min_}")
-        
-        # Calculate value intervals for each class from 0 to 5
-        #intervals = []
-        #for i in range(6):
-        #    lower_bound = labelling_scaler_carbon.inverse_transform([[i]])[0][0]
-        #    upper_bound = labelling_scaler_carbon.inverse_transform([[i + 1]])[0][0] if i < 5 else None
-        #    intervals.append((lower_bound, upper_bound))
-        
-        #for i, (lower, upper) in enumerate(intervals):
-        #    if upper is not None:
-        #        print(f"Class {i}: {lower:.2f} to {upper:.2f}")
-        #    else:
-        #        print(f"Class {i}: {lower:.2f} and above")
-        
-        # Ensure data is 1D for the labelling scaler
-        carbon_intensity_values = df_ci['Carbon Intensity gCO₂eq/kWh (LCA)'].values
-        df_labelling = labelling_scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
-        df_labelling = np.round(df_labelling)
-        mode_labelling_CI = pd.Series(df_labelling.flatten()).mode()[0]
-        mode_labelling_CI = int(mode_labelling_CI)
-        
-        # Load the main scaler and transform the data
-        scaler_carbon = joblib.load('backend/carbon_intensity/models/scaler_carbon_intensity.pkl')
-        df_ci['scaled'] = scaler_carbon.transform(carbon_intensity_values.reshape(-1, 1))
-        
-        # Reshape for LSTM model (samples, time steps, features)
-        X_ci = df_ci['scaled'].values.reshape(1, 24, 1)
-        
-        # Load and use the model
-        model_carbon = tf.keras.models.load_model('backend/carbon_intensity/models/model_carbon_intensity.keras')
-        prediction_ci = model_carbon.predict(X_ci)
+        # Load model with custom_objects to handle any custom components
+        model_carbon = tf.keras.models.load_model('backend/carbon_intensity/models/model_carbon_intensity.keras', compile=False)
+        # Recompile the model with default settings
+        model_carbon.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        prediction_ci = model_carbon.predict(X_ci, verbose=0)
         prediction_class_carbon = int(np.argmax(prediction_ci, axis=1)[0])
-        
-        # Map predictions to background colors
-        bg_color_carbon = get_bg_color_CI(prediction_class_carbon)
-        bg_color_current = get_bg_color_CI(mode_labelling_CI)
-        
-        # Create three columns: current value, arrow, prediction
-        col_current, col_arrow, col_prediction = st.columns([1, 0.4, 1])
-        with col_current:
-            value_displayed_now, relative_value_now = colored_metric("Last 24 hours (gCO₂eq/kWh)", mode_labelling_CI, bg_color_current)
-        with col_arrow:
-            # Determine arrow direction based on the values
-            if prediction_class_carbon > mode_labelling_CI:
-                arrow = "↑"
-                arrow_color = "#dc3545"  # green
-                timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
-                arbitrage_bool = True
-            elif prediction_class_carbon < mode_labelling_CI:
-                arrow = "↓"
-                arrow_color = "#28a745"  # red
-                timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
-                arbitrage_bool = True
-            else:
-                arrow = "→"
-                arrow_color = "#6c757d"  # gray
-                timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
-                arbitrage_bool = False
-            st.markdown(
-                f"<h1 style='text-align: center; color: {arrow_color}; margin-top: 5px; font-size: 70px; line-height: 50px;'>{arrow}</h1>",
-                unsafe_allow_html=True
-            )
-            st.write(timming_message)
-
-        with col_prediction:
-            value_displayed_next, relative_value_next = colored_metric("Next 24 Hours (gCO₂eq/kWh)", prediction_class_carbon, bg_color_carbon)
-    except FileNotFoundError as e:
-        st.error(f"Model file not found: {e}")
     except Exception as e:
-        st.error(f"Error loading or using models: {e}")
-        st.error(f"Error details: {str(e)}")
+        st.error(f"Error loading or using the model: {str(e)}")
+        return None, None, None, None
+    
+    # Map predictions to background colors
+    bg_color_carbon = get_bg_color_CI(prediction_class_carbon)
+    bg_color_current = get_bg_color_CI(mode_labelling_CI)
+    
+    # Create three columns: current value, arrow, prediction
+    col_current, col_arrow, col_prediction = st.columns([1, 0.4, 1])
+    with col_current:
+        value_displayed_now, relative_value_now = colored_metric("Last 24 hours (gCO₂eq/kWh)", mode_labelling_CI, bg_color_current)
+    with col_arrow:
+        # Determine arrow direction based on the values
+        if prediction_class_carbon > mode_labelling_CI:
+            arrow = "↑"
+            arrow_color = "#dc3545"  # green
+        elif prediction_class_carbon < mode_labelling_CI:
+            arrow = "↓"
+            arrow_color = "#28a745"  # red
+        else:
+            arrow = "→"
+            arrow_color = "#6c757d"  # gray
+        st.markdown(
+            f"<h1 style='text-align: center; color: {arrow_color}; margin-top: 5px; font-size: 70px; line-height: 50px;'>{arrow}</h1>",
+            unsafe_allow_html=True
+        )
+    with col_prediction:
+        value_displayed_next, relative_value_next = colored_metric("Next 24 Hours (gCO₂eq/kWh)", prediction_class_carbon, bg_color_carbon)
+    
+    st_to_use, timming_message = when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI)
+    if st_to_use == "success":
+        st.success(timming_message)
+    elif st_to_use == "warning":
+        st.warning(timming_message)
+    elif st_to_use == "error":
+        st.error(timming_message)
 
     return value_displayed_now, relative_value_now, value_displayed_next, relative_value_next
 

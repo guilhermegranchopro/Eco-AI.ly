@@ -15,10 +15,8 @@ def average_carbon_intensity(value_displayed_now, value_displayed_next):
         tuple: A tuple containing two lists, each with the separated values
     """
     # Split the strings by spaces
-    now_values = value_displayed_now.split(" ")
-    print(now_values)   
+    now_values = value_displayed_now.split(" ") 
     next_values = value_displayed_next.split(" ")
-    print(next_values)
 
     if len(now_values)==3:
         average_carbon_intensity_now = (float(now_values[0]) + float(now_values[2])) / 2
@@ -66,15 +64,15 @@ def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
     if carbon_now > carbon_next:
         saved_carbon = carbon_now - carbon_next
         saved_carbon_intensity = average_carbon_intensity_now - average_carbon_intensity_next
-        recommendation_message = "Focus your energy spending on the future because for the next 24 hours the carbon intensity will be lower."
+        recommendation_message = "**Focus your energy spending on the future because for the next 24 hours the carbon intensity will be lower!**"
     elif carbon_now < carbon_next:
         saved_carbon = carbon_next - carbon_now
         saved_carbon_intensity = average_carbon_intensity_next - average_carbon_intensity_now
-        recommendation_message = "Focus your energy spending on the now, because for the next 24 hours the carbon intensity will be higher."
+        recommendation_message = "**Focus your energy spending on the now, because for the next 24 hours the carbon intensity will be higher!**"
     else:
         saved_carbon = 0
         saved_carbon_intensity = 0
-        recommendation_message = "Currently there are no visible upsite on programing your energy consumption."
+        recommendation_message = "**Currently there are no visible upsite on programing your energy consumption.**"
 
     # Calculate potential savings
     st.markdown("### Potential Savings")
