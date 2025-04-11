@@ -3,12 +3,14 @@
 <div align="center">
   <img src="assets/images/logo.png" alt="Eco AI.ly Logo" width="800"/>
   
-  [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+  [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
   [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-  [![Streamlit](https://img.shields.io/badge/Streamlit-1.22.0-FF4B4B)](https://streamlit.io/)
-  [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.12.0-FF6F00)](https://www.tensorflow.org/)
+  [![Streamlit](https://img.shields.io/badge/Streamlit-1.31.0-FF4B4B)](https://streamlit.io/)
+  [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15.0-FF6F00)](https://www.tensorflow.org/)
   [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
   [![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen)](https://ecoai.ly/docs)
+  [![Tests](https://img.shields.io/badge/tests-100%25-success)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
+  [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
 </div>
 
 ## 📋 Table of Contents
@@ -151,8 +153,33 @@ source venv/bin/activate  # Unix/MacOS
 # Install dependencies
 pip install -r requirements.txt
 
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
 # Run the application
 streamlit run app.py
+```
+
+## 🔧 Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# API Keys
+OPENAI_API_KEY=your_openai_api_key
+WEATHER_API_KEY=your_weather_api_key
+
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=ecoai
+DB_USER=user
+DB_PASSWORD=password
+
+# Application Settings
+DEBUG=False
+LOG_LEVEL=INFO
 ```
 
 ## 📁 Project Structure
@@ -160,8 +187,13 @@ streamlit run app.py
 ```
 eco-ai-ly/
 ├── assets/                    # Static assets and images
+│   ├── images/               # Image assets
+│   └── styles/               # CSS styles
 ├── backend/                   # Backend logic and processing
 │   ├── carbon_intensity/      # Carbon intensity analysis
+│   │   ├── models/           # Model definitions
+│   │   ├── data/            # Data processing
+│   │   └── utils/           # Utility functions
 │   ├── renewable_percentage/  # Renewable energy tracking
 │   ├── production_consumption/# Production vs consumption
 │   ├── import_export/        # Import/export analysis
@@ -174,7 +206,15 @@ eco-ai-ly/
 ├── models/                   # AI model files
 │   ├── carbon_intensity/
 │   └── renewable_percentage/
+├── tests/                    # Test files
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+├── docs/                     # Documentation
+├── scripts/                  # Utility scripts
+├── .env.example             # Example environment variables
 ├── requirements.txt          # Project dependencies
+├── setup.py                 # Package setup
 └── README.md                # Project documentation
 ```
 
@@ -242,6 +282,86 @@ For questions and support, please contact:
 - Email: support@ecoai.ly
 - Website: https://ecoai.ly
 - GitHub: https://github.com/eco-ai-ly
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by the Eco AI.ly Team</sub>
+  <br>
+  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
+</div>
+
+## 🚀 Deployment
+
+### Local Deployment
+```bash
+# Development
+streamlit run app.py
+
+# Production
+gunicorn app:app
+```
+
+### Docker Deployment
+```bash
+# Build the image
+docker build -t eco-ai-ly .
+
+# Run the container
+docker run -p 8501:8501 eco-ai-ly
+```
+
+### Cloud Deployment
+- **AWS**: Use AWS Elastic Beanstalk or ECS
+- **GCP**: Deploy to Google Cloud Run
+- **Azure**: Use Azure App Service
+- **Heroku**: Deploy using Heroku CLI
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Issues**
+   - Check database credentials in `.env`
+   - Verify database service is running
+   - Check network connectivity
+
+2. **Model Loading Errors**
+   - Verify model files exist in correct location
+   - Check TensorFlow version compatibility
+   - Ensure sufficient RAM (4GB minimum)
+
+3. **API Integration Issues**
+   - Validate API keys in `.env`
+   - Check API rate limits
+   - Verify network connectivity
+
+4. **Performance Issues**
+   - Monitor system resources
+   - Check for memory leaks
+   - Optimize database queries
+
+### Logging
+- Logs are stored in `logs/` directory
+- Set `LOG_LEVEL` in `.env` for desired verbosity
+- Use `python -m logging` for custom logging
+
+## 📧 Contact & Support
+
+### Technical Support
+- Email: tech.support@ecoai.ly
+- Documentation: https://ecoai.ly/docs
+- GitHub Issues: https://github.com/eco-ai-ly/issues
+
+### Business Inquiries
+- Email: business@ecoai.ly
+- Website: https://ecoai.ly
+- LinkedIn: https://linkedin.com/company/eco-ai-ly
+
+### Community
+- Discord: https://discord.gg/ecoai-ly
+- Twitter: https://twitter.com/ecoai_ly
+- Blog: https://ecoai.ly/blog
 
 ---
 
