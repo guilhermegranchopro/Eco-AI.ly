@@ -6,9 +6,9 @@ def render_carbon_intensity_info():
     and detailed information about Eco AI.ly's carbon intensity tracking features.
     """
     st.markdown("""
-    # Carbon Intensity: Understanding and Optimizing Your Energy Impact
+    # 🌍 Carbon Intensity: Understanding and Optimizing Your Energy Impact
     
-    ## What is Carbon Intensity?
+    ## 🔍 What is Carbon Intensity?
     
     Carbon intensity is a critical environmental metric that measures the amount of carbon dioxide (CO₂) emitted per unit of electricity generated, typically expressed in grams of CO₂ per kilowatt-hour (gCO₂/kWh). This metric provides a direct measure of how "clean" or "dirty" your electricity is at any given moment.
     
@@ -16,10 +16,10 @@ def render_carbon_intensity_info():
     
     When electricity is generated, different energy sources produce varying amounts of CO₂:
     
-    - **Renewable sources** (solar, wind, hydro): Produce minimal to zero CO₂ emissions
-    - **Nuclear power**: Produces very low CO₂ emissions during operation
-    - **Natural gas**: Produces moderate CO₂ emissions (approximately 400-500 gCO₂/kWh)
-    - **Coal**: Produces high CO₂ emissions (approximately 800-1000 gCO₂/kWh)
+    - 🌞 **Renewable sources** (solar, wind, hydro): Produce minimal to zero CO₂ emissions
+    - ⚛️ **Nuclear power**: Produces very low CO₂ emissions during operation
+    - 🔥 **Natural gas**: Produces moderate CO₂ emissions (approximately 400-500 gCO₂/kWh)
+    - 🏭 **Coal**: Produces high CO₂ emissions (approximately 800-1000 gCO₂/kWh)
     
     The carbon intensity of your electricity grid represents the weighted average of all these sources based on their current contribution to the energy mix. This mix constantly changes throughout the day and year based on:
     
@@ -40,7 +40,7 @@ def render_carbon_intensity_info():
     5. **Very Bad!** (369-452 gCO₂/kWh): Very high carbon intensity, significant environmental impact
     6. **The Worst!** (> 452 gCO₂/kWh): Extremely high carbon intensity, maximum environmental impact
     
-    ## Why Carbon Intensity Matters
+    ## 🎯 Why Carbon Intensity Matters
     
     Understanding carbon intensity is crucial for several reasons:
     
@@ -68,9 +68,9 @@ def render_carbon_intensity_info():
     - **Energy Efficiency**: Helps prioritize energy-saving measures during high carbon intensity periods
     - **Renewable Energy Investment**: Guides decisions about installing solar panels or other renewable systems
     
-    ## Eco AI.ly's Carbon Intensity Tools and Features
+    ## 🛠️ Eco AI.ly's Carbon Intensity Tools and Features
     
-    ### 1. Real-Time Carbon Intensity Monitoring
+    ### 1. 📈 Real-Time Carbon Intensity Monitoring
     
     Our platform provides comprehensive time series data showing Portugal's carbon intensity trends in real-time:
     
@@ -86,7 +86,7 @@ def render_carbon_intensity_info():
     - Understand seasonal variations
     - Compare current values with historical data
     
-    ### 2. AI-Powered Carbon Intensity Predictions
+    ### 2. 🤖 AI-Powered Carbon Intensity Predictions
     
     Leveraging advanced machine learning models, we offer sophisticated prediction capabilities:
     
@@ -181,7 +181,7 @@ def render_carbon_intensity_info():
     - **Home Energy Management**: Adjust thermostat settings and other home systems based on carbon intensity
     - **Environmental Awareness**: Develop a deeper understanding of your personal carbon footprint
     
-    ## The Future of Carbon Intensity Tracking
+    ## 🔮 The Future of Carbon Intensity Tracking
     
     Eco AI.ly is continuously evolving to provide even more powerful carbon intensity insights:
     
