@@ -46,6 +46,9 @@ def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
     st.markdown("---")
     st.subheader("Arbitrage Opportunity")
     
+    # Initialize energy_kwh with a default value
+    energy_kwh = 0.0
+    
     if value_displayed_now != value_displayed_next:
         # Energy consumption input
         energy_kwh = st.number_input(
