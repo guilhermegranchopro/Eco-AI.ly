@@ -41,12 +41,12 @@ def display_model_stats(model_name: str, base_path: str):
     test_accuracy_file = os.path.join(base_path, "test_accuracy.txt")
     test_loss_file = os.path.join(base_path, "test_loss.txt")
     
-    # Display images centered with a smaller width and add spacing between them
-    st.image(loss_img, caption="Loss Plot", width=750)
+    # Display images with proper caption and use_container_width
+    st.image(loss_img, caption="Loss Plot", use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)  # Add space
-    st.image(accuracy_img, caption="Accuracy Plot", width=750)
+    st.image(accuracy_img, caption="Accuracy Plot", use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)  # Add space
-    st.image(confusion_img, caption="Confusion Matrix", width=750)
+    st.image(confusion_img, caption="Confusion Matrix", use_container_width=True)
     
     # Load and display test metrics
     test_accuracy = load_text(test_accuracy_file)
