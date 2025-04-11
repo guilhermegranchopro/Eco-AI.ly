@@ -15,15 +15,18 @@ def set_page_config_once():
         st.set_page_config(page_title="Eco AI.ly", page_icon="🌿", layout="wide")
         st.session_state["page_config_done"] = True
 
-def main():
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def get_cached_expansion_message():
+    """Cache the expansion message to avoid redundant API calls"""
+    return get_expansion_message()
 
+def main():
     set_page_config_once()
 
     # Top navigation tabs
     tab1, tab2, tab3, tab4 = st.tabs(["Portugal Overview", "Other Countries", "Model Stats", "Info"])
 
     with tab1:
-        set_page_config_once()
         # Set the title and header for the app
         st.title("Portugal Data Dashboard")
         st.header("Environmental Data and Predictions for Portugal")
@@ -40,18 +43,14 @@ def main():
         # Render Section 6: Renewable Percentage Report
         create_renewable_percentage_report_download_button([value_displayed_now, relative_value_now, value_displayed_next, relative_value_next], df_rp_last24)
 
-
     with tab2:
-        set_page_config_once()
         st.subheader("Other Countries")
-        st.markdown(get_expansion_message())
+        st.markdown(get_cached_expansion_message())
 
     with tab3:
-        set_page_config_once()
         rend_model_stats_RP()
 
     with tab4:
-        set_page_config_once()
         render_renewable_percentage_info()
 
 

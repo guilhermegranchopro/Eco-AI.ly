@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, timezone
 
+@st.cache_data
 def average_renewable_percentage(value_displayed_now, value_displayed_next):
     """
     Separates the input strings by spaces and returns the separated values.
@@ -15,7 +16,7 @@ def average_renewable_percentage(value_displayed_now, value_displayed_next):
         tuple: A tuple containing two lists, each with the separated values
     """
     # Split the strings by spaces
-    now_values = value_displayed_now.split(" ") 
+    now_values = value_displayed_now.split(" ")
     next_values = value_displayed_next.split(" ")
 
     for i in range(len(now_values)):
@@ -43,7 +44,7 @@ def average_renewable_percentage(value_displayed_now, value_displayed_next):
         average_renewable_percentage_next = (float(next_values[1]) + 100) / 2
     else:
         st.error("Invalid input for now_values")
-
+        
     return average_renewable_percentage_now, average_renewable_percentage_next
 
 def render_arbitrage_opportunity_RP(value_displayed_now, value_displayed_next):
@@ -54,8 +55,8 @@ def render_arbitrage_opportunity_RP(value_displayed_now, value_displayed_next):
     st.markdown("---")
     st.subheader("Arbitrage Opportunity")
     
+    # Use cached function for calculations
     average_renewable_percentage_now, average_renewable_percentage_next = average_renewable_percentage(value_displayed_now, value_displayed_next)
-
 
     if average_renewable_percentage_now > average_renewable_percentage_next:
         saved_renewable_percentage = average_renewable_percentage_now - average_renewable_percentage_next
@@ -86,6 +87,8 @@ def render_arbitrage_opportunity_RP(value_displayed_now, value_displayed_next):
         st.success(recommendation_message)
     else:
         st.warning(recommendation_message)
+        
+    return saved_renewable_percentage
 
 def get_bg_color_RP(value):
     """
