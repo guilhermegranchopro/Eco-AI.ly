@@ -5,6 +5,7 @@ from backend.carbon_intensity.carbon_intensity_model_stats import rend_model_sta
 from backend.other_countries import get_expansion_message
 from backend.carbon_intensity.carbon_intensity_info import render_carbon_intensity_info
 from backend.carbon_intensity.carbon_intensity_report import create_carbon_intensity_report_download_button
+from backend.carbon_intensity.carbon_intensity_arbitrage import render_arbitrage_opportunity_CI
 # -----------------------------
 # Helper Functions
 # -----------------------------
@@ -28,6 +29,9 @@ def main():
 
         # Render Section 3: AI Model Predictions
         value_displayed_now, relative_value_now, value_displayed_next, relative_value_next = render_ai_predictions_CI()
+        
+        # Render Section: Arbitrage Opportunity
+        arbitrage_value = render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next)
         
         # Render Section 2: Time Series Data
         df_ci_last24 = render_time_series_CI()

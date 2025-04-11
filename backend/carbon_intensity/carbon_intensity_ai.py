@@ -183,10 +183,7 @@ def render_ai_predictions_CI():
                 unsafe_allow_html=True
             )
             st.write(timming_message)
-            if arbitrage_bool:
-                st.write("Arbitrage oportunity!")
-            else:
-                st.write("No arbitrage oportunity.")
+
         with col_prediction:
             value_displayed_next, relative_value_next = colored_metric("Next 24 Hours (gCO₂eq/kWh)", prediction_class_carbon, bg_color_carbon)
     except FileNotFoundError as e:

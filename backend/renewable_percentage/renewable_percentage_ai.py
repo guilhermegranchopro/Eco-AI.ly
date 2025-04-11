@@ -184,10 +184,7 @@ def render_ai_predictions_RP():
                 unsafe_allow_html=True
             )
             st.write(timming_message)
-            if arbitrage_bool:
-                st.write("Arbitrage oportunity!")
-            else:
-                st.write("No arbitrage oportunity.")
+
         with col_prediction:
             value_displayed_next, relative_value_next = colored_metric("Next 24 hours", prediction_class_renewable, bg_color_renewable)
     except FileNotFoundError as e:
