@@ -96,6 +96,123 @@ def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt,
     return fig
 
 # -----------------------------
+# Metrics Panel Function
+# -----------------------------
+def render_metrics_panel(production_data_dict, consumption_data_dict):
+    """
+    Renders a panel with detailed metrics about power production and consumption.
+    This panel appears below the pie charts and provides additional insights.
+    """
+    st.subheader("Power Metrics Dashboard")
+    
+    # Extract data from dictionaries
+    prod_total = production_data_dict.get("prod_total", {})
+    prod_sum = production_data_dict.get("prod_sum", 0)
+    limite_prod = production_data_dict.get("limite_prod")
+    time_hours = production_data_dict.get("time_hours", 1)
+    now_dt = production_data_dict.get("now_dt")
+    
+    cons_total = consumption_data_dict.get("cons_total", {})
+    cons_sum = consumption_data_dict.get("cons_sum", 0)
+    limite_cons = consumption_data_dict.get("limite_cons")
+    
+    # Calculate additional metrics
+    # 1. Production efficiency (if we have fossil fuels and renewables)
+    fossil_fuels = sum(val for key, val in prod_total.items() if "coal" in key.lower() or "gas" in key.lower() or "oil" in key.lower())
+    renewables = sum(val for key, val in prod_total.items() if "hydro" in key.lower() or "solar" in key.lower() or "wind" in key.lower() or "biomass" in key.lower())
+    total_production = sum(prod_total.values())
+    
+    renewable_percentage = (renewables / total_production * 100) if total_production > 0 else 0
+    
+    # 2. Consumption per capita (estimated)
+    # Assuming Portugal's population is approximately 10.3 million
+    population = 10300000
+    consumption_per_capita = (cons_sum / population) if population > 0 else 0
+    
+    # 3. Net energy balance
+    net_energy_balance = prod_sum - cons_sum
+    
+    # 4. Energy self-sufficiency
+    energy_sufficiency = (prod_sum / cons_sum * 100) if cons_sum > 0 else 0
+    
+    # 5. Largest production source
+    largest_production_source = max(prod_total.items(), key=lambda x: x[1])[0] if prod_total else "None"
+    largest_production_value = prod_total.get(largest_production_source, 0) if largest_production_source != "None" else 0
+    
+    # 6. Largest consumption source
+    largest_consumption_source = max(cons_total.items(), key=lambda x: x[1])[0] if cons_total else "None"
+    largest_consumption_value = cons_total.get(largest_consumption_source, 0) if largest_consumption_source != "None" else 0
+    
+    # 7. Average hourly production and consumption
+    avg_hourly_production = prod_sum / time_hours if time_hours > 0 else 0
+    avg_hourly_consumption = cons_sum / time_hours if time_hours > 0 else 0
+    
+    # 8. Peak production and consumption times (if we had time series data)
+    # This would require additional processing of the history data
+    
+    # Display metrics in a grid layout
+    st.write(f"**Time Period:** {limite_prod.strftime('%d/%m/%Y %H:%M')} - {now_dt.strftime('%d/%m/%Y %H:%M')} (UTC)")
+    
+    # Create three columns for metrics
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric("Total Production", f"{prod_sum:.2f} MWh", f"{avg_hourly_production:.2f} MWh/hour")
+        st.metric("Renewable Energy %", f"{renewable_percentage:.1f}%")
+        st.metric("Largest Production Source", format_label(largest_production_source), f"{largest_production_value:.2f} MWh")
+        
+    with col2:
+        st.metric("Total Consumption", f"{cons_sum:.2f} MWh", f"{avg_hourly_consumption:.2f} MWh/hour")
+        st.metric("Consumption per Capita", f"{consumption_per_capita:.4f} MWh/person")
+        st.metric("Largest Consumption Source", format_label(largest_consumption_source), f"{largest_consumption_value:.2f} MWh")
+        
+    with col3:
+        st.metric("Net Energy Balance", f"{net_energy_balance:.2f} MWh", 
+                 "Surplus" if net_energy_balance > 0 else "Deficit")
+        st.metric("Energy Self-Sufficiency", f"{energy_sufficiency:.1f}%")
+        
+    # Additional detailed breakdown
+    st.subheader("Detailed Breakdown")
+    
+    # Create two columns for detailed breakdowns
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.write("**Production Sources**")
+        if prod_total:
+            # Create a DataFrame for the production breakdown
+            prod_df = pd.DataFrame({
+                'Source': [format_label(key) for key in prod_total.keys()],
+                'Value (MWh)': [val for val in prod_total.values()],
+                'Percentage': [val / total_production * 100 if total_production > 0 else 0 for val in prod_total.values()]
+            })
+            prod_df = prod_df.sort_values('Value (MWh)', ascending=False)
+            st.dataframe(prod_df, use_container_width=True)
+        else:
+            st.write("No production data available")
+            
+    with col2:
+        st.write("**Consumption Sources**")
+        if cons_total:
+            # Create a DataFrame for the consumption breakdown
+            cons_df = pd.DataFrame({
+                'Source': [format_label(key) for key in cons_total.keys()],
+                'Value (MWh)': [val for val in cons_total.values()],
+                'Percentage': [val / cons_sum * 100 if cons_sum > 0 else 0 for val in cons_total.values()]
+            })
+            cons_df = cons_df.sort_values('Value (MWh)', ascending=False)
+            st.dataframe(cons_df, use_container_width=True)
+        else:
+            st.write("No consumption data available")
+    
+    # Add a note about data interpretation
+    st.info("""
+    **Note:** These metrics are calculated based on the selected time range. 
+    The renewable energy percentage is an estimate based on the categorization of energy sources.
+    Consumption per capita is calculated using an estimated population of 10.3 million for Portugal.
+    """)
+
+# -----------------------------
 # Main Render Function
 # -----------------------------
 def render_pie_charts():
@@ -154,6 +271,9 @@ def render_pie_charts():
             "time_hours": time_hours,
             "now_dt": now_dt
         }
+    
+    # Render the metrics panel below the pie charts
+    render_metrics_panel(production_data_dict, consumption_data_dict)
 
     return production_data_dict, consumption_data_dict
 

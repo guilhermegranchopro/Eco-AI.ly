@@ -96,6 +96,97 @@ def plot_breakdown_chart_interactive(breakdown_total, total_sum, limite, now_dt,
     return fig
 
 # -----------------------------
+# Metrics Panel Function
+# -----------------------------
+def render_metrics_panel(import_data_dict, export_data_dict):
+    """
+    Renders a detailed metrics panel below the pie charts with various statistics
+    about power import and export data.
+    """
+    st.subheader("Detailed Power Metrics")
+    
+    # Extract data from dictionaries
+    imp_total = import_data_dict["imp_total"]
+    imp_sum = import_data_dict["imp_sum"]
+    limite_imp = import_data_dict["limite_imp"]
+    time_hours = import_data_dict["time_hours"]
+    now_dt = import_data_dict["now_dt"]
+    
+    export_total = export_data_dict["export_total"]
+    export_sum = export_data_dict["export_sum"]
+    limite_export = export_data_dict["limite_export"]
+    
+    # Calculate time period
+    timeframe_str = f"{limite_imp.strftime('%d/%m %H:%M')} - {now_dt.strftime('%d/%m %H:%M')} (UTC)"
+    
+    # Create metrics container
+    with st.container():
+        st.markdown(f"**Time Period:** {timeframe_str} ({time_hours} hours)")
+        
+        # Create three columns for metrics
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown("### Import Metrics")
+            st.metric("Total Import", f"{imp_sum:.2f} MWh")
+            
+            # Calculate average hourly import
+            avg_hourly_import = imp_sum / time_hours if time_hours > 0 else 0
+            st.metric("Average Hourly Import", f"{avg_hourly_import:.2f} MWh/h")
+            
+            # Calculate percentage of each source
+            if imp_sum > 0:
+                st.markdown("#### Import by Source")
+                for source, value in imp_total.items():
+                    percentage = (value / imp_sum) * 100
+                    st.metric(format_label(source), f"{value:.2f} MWh", f"{percentage:.1f}%")
+        
+        with col2:
+            st.markdown("### Export Metrics")
+            st.metric("Total Export", f"{export_sum:.2f} MWh")
+            
+            # Calculate average hourly export
+            avg_hourly_export = export_sum / time_hours if time_hours > 0 else 0
+            st.metric("Average Hourly Export", f"{avg_hourly_export:.2f} MWh/h")
+            
+            # Calculate percentage of each source
+            if export_sum > 0:
+                st.markdown("#### Export by Source")
+                for source, value in export_total.items():
+                    percentage = (value / export_sum) * 100
+                    st.metric(format_label(source), f"{value:.2f} MWh", f"{percentage:.1f}%")
+        
+        with col3:
+            st.markdown("### Balance Metrics")
+            
+            # Calculate net import/export
+            net_balance = imp_sum - export_sum
+            st.metric("Net Import/Export", f"{net_balance:.2f} MWh", 
+                     "Import" if net_balance > 0 else "Export")
+            
+            # Calculate import/export ratio
+            import_export_ratio = imp_sum / export_sum if export_sum > 0 else float('inf')
+            st.metric("Import/Export Ratio", f"{import_export_ratio:.2f}")
+            
+            # Calculate total energy flow
+            total_energy_flow = imp_sum + export_sum
+            st.metric("Total Energy Flow", f"{total_energy_flow:.2f} MWh")
+            
+            # Calculate energy efficiency (if applicable)
+            if total_energy_flow > 0:
+                efficiency = min(imp_sum, export_sum) / total_energy_flow
+                st.metric("Energy Efficiency", f"{efficiency:.2%}")
+            
+            # Calculate dominant source
+            if imp_total:
+                dominant_import = max(imp_total.items(), key=lambda x: x[1])[0]
+                st.metric("Dominant Import Source", format_label(dominant_import))
+            
+            if export_total:
+                dominant_export = max(export_total.items(), key=lambda x: x[1])[0]
+                st.metric("Dominant Export Source", format_label(dominant_export))
+
+# -----------------------------
 # Main Render Function
 # -----------------------------
 def render_pie_charts2():
@@ -155,6 +246,8 @@ def render_pie_charts2():
             "now_dt": now_dt
         }
 
+    # Render the metrics panel below the pie charts
+    render_metrics_panel(import_data_dict, export_data_dict)
 
     return import_data_dict, export_data_dict
 
