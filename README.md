@@ -169,37 +169,62 @@ LOG_LEVEL=INFO
 
 ```
 eco-ai-ly/
-├── assets/                    # Static assets and images
-│   ├── images/               # Image assets
-│   └── styles/               # CSS styles
-├── backend/                   # Backend logic and processing
-│   ├── carbon_intensity/      # Carbon intensity analysis
-│   │   ├── models/           # Model definitions
-│   │   ├── data/            # Data processing
-│   │   └── utils/           # Utility functions
-│   ├── renewable_percentage/  # Renewable energy tracking
-│   ├── production_consumption/# Production vs consumption
-│   ├── import_export/        # Import/export analysis
-│   └── api/                  # API integrations
-├── pages/                    # Streamlit pages
-│   ├── 1_Carbon_Intensity.py
-│   ├── 2_Renewable_Percentage.py
-│   ├── 3_Production_VS_Consumption.py
-│   └── 4_Import_VS_Export.py
-├── models/                   # AI model files
-│   ├── carbon_intensity/
-│   └── renewable_percentage/
-├── tests/                    # Test files
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-├── docs/                     # Documentation
-├── scripts/                  # Utility scripts
-├── .env.example             # Example environment variables
-├── requirements.txt          # Project dependencies
-├── setup.py                 # Package setup
-└── README.md                # Project documentation
+├── .devcontainer/           # Development container configuration
+├── assets/                  # Static assets and resources
+│   ├── images/             # Image assets and logos
+│   └── styles/             # CSS and styling files
+├── backend/                 # Core backend functionality
+│   ├── api.py              # API integration and endpoints
+│   ├── other_countries.py  # International data handling
+│   ├── carbon_intensity/   # Carbon intensity analysis
+│   │   ├── models/        # ML model definitions
+│   │   ├── data/         # Data processing scripts
+│   │   └── utils/        # Helper functions
+│   ├── renewable_percentage/  # Renewable energy analysis
+│   │   ├── models/        # ML model definitions
+│   │   ├── data/         # Data processing scripts
+│   │   └── utils/        # Helper functions
+│   ├── production_consumption/  # Production vs consumption analysis
+│   │   ├── models/        # ML model definitions
+│   │   ├── data/         # Data processing scripts
+│   │   └── utils/        # Helper functions
+│   └── import_export/     # Import/export analysis
+│       ├── models/        # ML model definitions
+│       ├── data/         # Data processing scripts
+│       └── utils/        # Helper functions
+├── pages/                  # Streamlit application pages
+│   ├── 1_Carbon_Intensity.py           # Carbon intensity dashboard
+│   ├── 2_Renewable_Percentage.py       # Renewable percentage dashboard
+│   ├── 3_Production_VS_Consumption.py  # Production vs consumption dashboard
+│   └── 4_Import_VS_Export.py          # Import vs export dashboard
+├── venv/                   # Python virtual environment
+├── .env                    # Environment variables
+├── .gitignore             # Git ignore rules
+├── Home.py                # Main application entry point
+├── LICENSE                # Project license
+├── README.md              # Project documentation
+├── requirements.txt       # Python dependencies
+└── secrets.toml          # Streamlit secrets configuration
 ```
+
+Each major component serves a specific purpose:
+
+- **.devcontainer/**: Contains configuration for development containers, ensuring consistent development environments
+- **assets/**: Houses all static resources including images and styling files
+- **backend/**: Core application logic organized by feature:
+  - `api.py`: Handles external API integrations
+  - `other_countries.py`: Manages international data processing
+  - Feature-specific modules (carbon_intensity, renewable_percentage, etc.) each containing:
+    - `models/`: Machine learning model definitions
+    - `data/`: Data processing and transformation scripts
+    - `utils/`: Helper functions and utilities
+- **pages/**: Streamlit application pages, each providing a specific dashboard view
+- **Configuration Files**:
+  - `.env`: Environment variables for application configuration
+  - `secrets.toml`: Streamlit-specific secrets management
+  - `requirements.txt`: Python package dependencies
+  - `.gitignore`: Git version control configuration
+- **Home.py**: Main application entry point and dashboard
 
 ## 🎯 Usage
 
