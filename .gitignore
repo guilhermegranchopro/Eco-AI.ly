@@ -83,6 +83,7 @@ Thumbs.db
 
 # Streamlit cache and settings
 .streamlit/
+secrets.toml
 
 # Data files (if you prefer not to version large datasets)
 data/
