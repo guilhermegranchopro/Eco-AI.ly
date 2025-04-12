@@ -13,23 +13,6 @@
   [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
 </div>
 
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Project Structure](#project-structure)
-- [Usage](#usage)
-- [API Documentation](#api-documentation)
-- [Technical Architecture](#technical-architecture)
-- [AI Models](#ai-models)
-- [Data Sources](#data-sources)
-- [Development](#development)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
 ## 🌟 Overview
 
 Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models and interactive visualizations to help users monitor and make informed decisions about environmental metrics, with a particular focus on energy consumption, renewable energy production, carbon intensity, and cross-border energy exchange.
@@ -279,16 +262,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📧 Contact
 
 For questions and support, please contact:
-- Email: support@ecoai.ly
-- Website: https://ecoai.ly
-- GitHub: https://github.com/eco-ai-ly
+- Email: guilhermegranchopro@gmail.com
+- Website: https://ecoaily.streamlit.app/
+- GitHub: https://github.com/guilhermegranchopro
 
 ---
 
 <div align="center">
   <sub>Built with ❤️ by the Eco AI.ly Team</sub>
   <br>
-  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
+  <sub>© 2025 Eco AI.ly. All rights reserved.</sub>
 </div>
 
 ## 🚀 Deployment
@@ -349,13 +332,13 @@ docker run -p 8501:8501 eco-ai-ly
 ## 📧 Contact & Support
 
 ### Technical Support
-- Email: tech.support@ecoai.ly
+- Email: guilhermegranchopro@gmail.com
 - Documentation: https://ecoai.ly/docs
-- GitHub Issues: https://github.com/eco-ai-ly/issues
+- GitHub Issues: https://github.com/guilhermegranchopro/issues
 
 ### Business Inquiries
-- Email: business@ecoai.ly
-- Website: https://ecoai.ly
+- Email: guilhermegranchopro@gmail.com
+- Website: https://ecoaily.streamlit.app/
 - LinkedIn: https://linkedin.com/company/eco-ai-ly
 
 ### Community
