@@ -1,16 +1,16 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # Set up the page configuration
 st.set_page_config(
     page_title="Eco AI.ly - Sustainable Predictions",
     page_icon="🌿",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
 # Consolidated CSS for better styling
-st.markdown("""
+st.markdown(
+    """
     <style>
     .main-header { font-size: 2.5rem; color: #2E7D32; text-align: center; margin-bottom: 1rem; }
     .sub-header { font-size: 1.8rem; color: #1B5E20; margin-top: 2rem; margin-bottom: 1rem; }
@@ -19,10 +19,12 @@ st.markdown("""
     .cta-section { text-align: center; margin: 2rem 0; }
     .footer { text-align: center; margin-top: 3rem; padding: 1rem; border-top: 1px solid #E0E0E0; }
     </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # Display the logo
-col1, col2, col3 = st.columns([0.5,3,0.5])
+col1, col2, col3 = st.columns([0.5, 3, 0.5])
 with col2:
     st.image("assets/images/logo.png", width=1600)
 
@@ -93,5 +95,3 @@ content = """
 
 # Render all content at once
 st.markdown(content, unsafe_allow_html=True)
-
-

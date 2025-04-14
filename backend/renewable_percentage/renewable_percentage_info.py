@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def render_renewable_percentage_info():
     """
     Renders comprehensive information about renewable percentage, the purpose of the page,
@@ -227,8 +228,10 @@ def render_renewable_percentage_info():
     By understanding and acting on renewable percentage data, you're taking an important step toward reducing greenhouse gas emissions and combating climate change. Together, we can accelerate the transition to a clean energy future for generations to come.
     """)
 
+
 def main():
     render_renewable_percentage_info()
+
 
 if __name__ == "__main__":
     main()

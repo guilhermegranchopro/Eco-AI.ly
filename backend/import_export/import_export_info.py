@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 @st.cache_data(ttl=3600)  # Cache for 1 hour since this content rarely changes
 def render_import_export_info():
     """
@@ -257,8 +258,10 @@ def render_import_export_info():
     By understanding the dynamics of energy imports and exports, you're taking an important step toward more sustainable energy use. Together, we can work toward a future where energy flows efficiently across borders, supporting both economic development and environmental protection.
     """)
 
+
 def main():
     render_import_export_info()
+
 
 if __name__ == "__main__":
     main()

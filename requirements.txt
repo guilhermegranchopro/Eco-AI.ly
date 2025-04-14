@@ -8,7 +8,9 @@ tensorflow==2.16.1
 joblib==1.4.2
 plotly==5.13.0
 fpdf==1.7.2
+
 # Dependencies for data visualization and analysis
+ruff==0.11.5
 
 # Additional dependencies for the Streamlit app and testing
 streamlit>=1.16.0
