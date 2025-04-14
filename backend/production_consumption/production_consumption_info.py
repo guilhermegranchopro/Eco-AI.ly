@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 @st.cache_data(ttl=3600)  # Cache for 1 hour (static content)
 def render_production_consumption_info():
     """
@@ -235,11 +236,10 @@ def render_production_consumption_info():
     By understanding the relationship between energy production and consumption, you're taking an important step toward more sustainable energy use. Together, we can work toward a future where energy is generated cleanly and used efficiently.
     """)
 
+
 def main():
     render_production_consumption_info()
 
+
 if __name__ == "__main__":
     main()
-
-
-

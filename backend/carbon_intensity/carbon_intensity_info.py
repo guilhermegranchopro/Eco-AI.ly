@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def render_carbon_intensity_info():
     """
     Renders comprehensive information about carbon intensity, the purpose of the page,
@@ -208,8 +209,10 @@ def render_carbon_intensity_info():
     By understanding and acting on carbon intensity data, you're taking an important step toward reducing greenhouse gas emissions and combating climate change. Together, we can create a more sustainable energy future for generations to come.
     """)
 
+
 def main():
     render_carbon_intensity_info()
+
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
-import streamlit as st
 import streamlit.components.v1 as components
+
 
 def get_bg_color_CI(value):
     """
@@ -13,6 +13,7 @@ def get_bg_color_CI(value):
     green = int(255 * (1 - fraction))
     blue = 0
     return f"#{red:02X}{green:02X}{blue:02X}"
+
 
 def colored_metric(label, value, bg_color):
     """
@@ -68,6 +69,7 @@ def colored_metric(label, value, bg_color):
 
     return value_displayed, relative_value
 
+
 def when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI):
     """
     Determines the best time to consume energy based on carbon intensity predictions.
@@ -80,9 +82,13 @@ def when_to_consume_energy_CI(prediction_class_carbon, mode_labelling_CI):
         return "success", "**Use energy now!**"
     elif prediction_class_carbon < mode_labelling_CI and prediction_class_carbon < 3:
         return "warning", "**Use energy later!**"
-    elif prediction_class_carbon == mode_labelling_CI and mode_labelling_CI < 3 or prediction_class_carbon < 3:
+    elif (
+        prediction_class_carbon == mode_labelling_CI
+        and mode_labelling_CI < 3
+        or prediction_class_carbon < 3
+    ):
         return "success", "**Use energy whenever!**"
     elif prediction_class_carbon <= 3 and mode_labelling_CI <= 3:
         return "error", "**Bad timing!**"
     else:
-        return "error", "**Better wait!**" 
+        return "error", "**Better wait!**"

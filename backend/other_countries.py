@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 @st.cache_data(ttl=3600)  # Cache for 1 hour (static content)
 def get_expansion_message():
     """

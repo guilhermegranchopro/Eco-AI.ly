@@ -1,42 +1,43 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta, timezone
+
 
 def average_carbon_intensity(value_displayed_now, value_displayed_next):
     """
     Separates the input strings by spaces and returns the separated values.
-    
+
     Args:
         value_displayed_now (str): The first string to separate
         value_displayed_next (str): The second string to separate
-        
+
     Returns:
         tuple: A tuple containing two lists, each with the separated values
     """
     # Split the strings by spaces
-    now_values = value_displayed_now.split(" ") 
+    now_values = value_displayed_now.split(" ")
     next_values = value_displayed_next.split(" ")
 
-    if len(now_values)==3:
+    if len(now_values) == 3:
         average_carbon_intensity_now = (float(now_values[0]) + float(now_values[2])) / 2
-    elif len(now_values)==2 and now_values[0] == "<":
+    elif len(now_values) == 2 and now_values[0] == "<":
         average_carbon_intensity_now = float(now_values[1]) / 2
-    elif len(now_values)==2 and now_values[0] == ">":
-        average_carbon_intensity_now = float(now_values[1]) * 1.05 
+    elif len(now_values) == 2 and now_values[0] == ">":
+        average_carbon_intensity_now = float(now_values[1]) * 1.05
     else:
         st.error("Invalid input for now_values")
 
-    if len(next_values)==3:
-        average_carbon_intensity_next = (float(next_values[0]) + float(next_values[2])) / 2
-    elif len(next_values)==2 and next_values[0] == "<":
+    if len(next_values) == 3:
+        average_carbon_intensity_next = (
+            float(next_values[0]) + float(next_values[2])
+        ) / 2
+    elif len(next_values) == 2 and next_values[0] == "<":
         average_carbon_intensity_next = float(next_values[1]) / 2
-    elif len(next_values)==2 and next_values[0] == ">":
+    elif len(next_values) == 2 and next_values[0] == ">":
         average_carbon_intensity_next = float(next_values[1]) * 1.05
     else:
         st.error("Invalid input for now_values")
 
     return average_carbon_intensity_now, average_carbon_intensity_next
+
 
 def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
     """
@@ -45,33 +46,39 @@ def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
     """
     st.markdown("---")
     st.subheader("Arbitrage Opportunity")
-    
+
     # Initialize energy_kwh with a default value
     energy_kwh = 0.0
-    
+
     if value_displayed_now != value_displayed_next:
         # Energy consumption input
         energy_kwh = st.number_input(
-            "Energy Consumption (kWh)", 
+            "Energy Consumption (kWh)",
             min_value=0.00,
             max_value=10000.00,
             value=115.53,
             step=10.00,
-            help="Enter the amount of energy you plan to consume in kilowatt-hours"
+            help="Enter the amount of energy you plan to consume in kilowatt-hours",
         )
 
-    average_carbon_intensity_now, average_carbon_intensity_next = average_carbon_intensity(value_displayed_now, value_displayed_next)
+    average_carbon_intensity_now, average_carbon_intensity_next = (
+        average_carbon_intensity(value_displayed_now, value_displayed_next)
+    )
 
     carbon_now = average_carbon_intensity_now * energy_kwh
     carbon_next = average_carbon_intensity_next * energy_kwh
 
     if carbon_now > carbon_next:
         saved_carbon = carbon_now - carbon_next
-        saved_carbon_intensity = average_carbon_intensity_now - average_carbon_intensity_next
+        saved_carbon_intensity = (
+            average_carbon_intensity_now - average_carbon_intensity_next
+        )
         recommendation_message = "**Focus your energy spending on the future because for the next 24 hours the carbon intensity will be lower!**"
     elif carbon_now < carbon_next:
         saved_carbon = carbon_next - carbon_now
-        saved_carbon_intensity = average_carbon_intensity_next - average_carbon_intensity_now
+        saved_carbon_intensity = (
+            average_carbon_intensity_next - average_carbon_intensity_now
+        )
         recommendation_message = "**Focus your energy spending on the now, because for the next 24 hours the carbon intensity will be higher!**"
     else:
         saved_carbon = 0
@@ -81,28 +88,29 @@ def render_arbitrage_opportunity_CI(value_displayed_now, value_displayed_next):
     if saved_carbon > 0:
         # Calculate potential savings
         st.markdown("### Carbon Intensity Upside")
-            
+
         # Display results
         col3, col4 = st.columns(2)
-        
+
         with col3:
             st.metric(
-                "Carbon Intensity Lifecycle", 
+                "Carbon Intensity Lifecycle",
                 f"{saved_carbon_intensity:.2f} gCO₂eq/kWh",
             )
-        
+
         with col4:
             st.metric(
-                "Carbon Emissions", 
+                "Carbon Emissions",
                 f"{saved_carbon:.2f} gCO₂eq",
             )
-            
+
     # Recommendation
     st.markdown("**Recommendation**")
     if saved_carbon > 0:
         st.success(recommendation_message)
     else:
         st.warning(recommendation_message)
+
 
 def get_bg_color_CI(value):
     """
@@ -117,6 +125,7 @@ def get_bg_color_CI(value):
     blue = 0
     return f"#{red:02X}{green:02X}{blue:02X}"
 
+
 def colored_metric(label, value, bg_color):
     """
     Renders a custom metric with a colored background using st.components.v1.html.
@@ -124,13 +133,13 @@ def colored_metric(label, value, bg_color):
     """
     # Set transparency level (alpha) to 0.6 (60% opacity)
     transparency = 0.6
-    
+
     # Convert hex color to RGBA with transparency
     r = int(bg_color[1:3], 16)
     g = int(bg_color[3:5], 16)
     b = int(bg_color[5:7], 16)
     rgba_color = f"rgba({r}, {g}, {b}, {transparency})"
-    
+
     # Create HTML for the colored metric
     html = f"""
     <div style="
@@ -144,6 +153,6 @@ def colored_metric(label, value, bg_color):
         <div style="font-size: 24px; font-weight: bold;">{value}</div>
     </div>
     """
-    
+
     # Render the HTML
     st.components.v1.html(html, height=80)
