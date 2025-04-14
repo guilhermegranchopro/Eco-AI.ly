@@ -13,23 +13,6 @@
   [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
 </div>
 
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Project Structure](#project-structure)
-- [Usage](#usage)
-- [API Documentation](#api-documentation)
-- [Technical Architecture](#technical-architecture)
-- [AI Models](#ai-models)
-- [Data Sources](#data-sources)
-- [Development](#development)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
 ## 🌟 Overview
 
 Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models and interactive visualizations to help users monitor and make informed decisions about environmental metrics, with a particular focus on energy consumption, renewable energy production, carbon intensity, and cross-border energy exchange.
@@ -186,37 +169,62 @@ LOG_LEVEL=INFO
 
 ```
 eco-ai-ly/
-├── assets/                    # Static assets and images
-│   ├── images/               # Image assets
-│   └── styles/               # CSS styles
-├── backend/                   # Backend logic and processing
-│   ├── carbon_intensity/      # Carbon intensity analysis
-│   │   ├── models/           # Model definitions
-│   │   ├── data/            # Data processing
-│   │   └── utils/           # Utility functions
-│   ├── renewable_percentage/  # Renewable energy tracking
-│   ├── production_consumption/# Production vs consumption
-│   ├── import_export/        # Import/export analysis
-│   └── api/                  # API integrations
-├── pages/                    # Streamlit pages
-│   ├── 1_Carbon_Intensity.py
-│   ├── 2_Renewable_Percentage.py
-│   ├── 3_Production_VS_Consumption.py
-│   └── 4_Import_VS_Export.py
-├── models/                   # AI model files
-│   ├── carbon_intensity/
-│   └── renewable_percentage/
-├── tests/                    # Test files
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-├── docs/                     # Documentation
-├── scripts/                  # Utility scripts
-├── .env.example             # Example environment variables
-├── requirements.txt          # Project dependencies
-├── setup.py                 # Package setup
-└── README.md                # Project documentation
+├── .devcontainer/           # Development container configuration
+├── assets/                  # Static assets and resources
+│   ├── images/             # Image assets and logos
+│   └── styles/             # CSS and styling files
+├── backend/                 # Core backend functionality
+│   ├── api.py              # API integration and endpoints
+│   ├── other_countries.py  # International data handling
+│   ├── carbon_intensity/   # Carbon intensity analysis
+│   │   ├── models/        # ML model definitions
+│   │   ├── data/         # Data processing scripts
+│   │   └── utils/        # Helper functions
+│   ├── renewable_percentage/  # Renewable energy analysis
+│   │   ├── models/        # ML model definitions
+│   │   ├── data/         # Data processing scripts
+│   │   └── utils/        # Helper functions
+│   ├── production_consumption/  # Production vs consumption analysis
+│   │   ├── models/        # ML model definitions
+│   │   ├── data/         # Data processing scripts
+│   │   └── utils/        # Helper functions
+│   └── import_export/     # Import/export analysis
+│       ├── models/        # ML model definitions
+│       ├── data/         # Data processing scripts
+│       └── utils/        # Helper functions
+├── pages/                  # Streamlit application pages
+│   ├── 1_Carbon_Intensity.py           # Carbon intensity dashboard
+│   ├── 2_Renewable_Percentage.py       # Renewable percentage dashboard
+│   ├── 3_Production_VS_Consumption.py  # Production vs consumption dashboard
+│   └── 4_Import_VS_Export.py          # Import vs export dashboard
+├── venv/                   # Python virtual environment
+├── .env                    # Environment variables
+├── .gitignore             # Git ignore rules
+├── Home.py                # Main application entry point
+├── LICENSE                # Project license
+├── README.md              # Project documentation
+├── requirements.txt       # Python dependencies
+└── secrets.toml          # Streamlit secrets configuration
 ```
+
+Each major component serves a specific purpose:
+
+- **.devcontainer/**: Contains configuration for development containers, ensuring consistent development environments
+- **assets/**: Houses all static resources including images and styling files
+- **backend/**: Core application logic organized by feature:
+  - `api.py`: Handles external API integrations
+  - `other_countries.py`: Manages international data processing
+  - Feature-specific modules (carbon_intensity, renewable_percentage, etc.) each containing:
+    - `models/`: Machine learning model definitions
+    - `data/`: Data processing and transformation scripts
+    - `utils/`: Helper functions and utilities
+- **pages/**: Streamlit application pages, each providing a specific dashboard view
+- **Configuration Files**:
+  - `.env`: Environment variables for application configuration
+  - `secrets.toml`: Streamlit-specific secrets management
+  - `requirements.txt`: Python package dependencies
+  - `.gitignore`: Git version control configuration
+- **Home.py**: Main application entry point and dashboard
 
 ## 🎯 Usage
 
@@ -279,94 +287,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📧 Contact
 
 For questions and support, please contact:
-- Email: support@ecoai.ly
-- Website: https://ecoai.ly
-- GitHub: https://github.com/eco-ai-ly
+- Email: guilhermegranchopro@gmail.com
+- Website: https://ecoaily.streamlit.app/
+- GitHub: https://github.com/guilhermegranchopro
 
 ---
 
 <div align="center">
   <sub>Built with ❤️ by the Eco AI.ly Team</sub>
   <br>
-  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
-</div>
-
-## 🚀 Deployment
-
-### Local Deployment
-```bash
-# Development
-streamlit run app.py
-
-# Production
-gunicorn app:app
-```
-
-### Docker Deployment
-```bash
-# Build the image
-docker build -t eco-ai-ly .
-
-# Run the container
-docker run -p 8501:8501 eco-ai-ly
-```
-
-### Cloud Deployment
-- **AWS**: Use AWS Elastic Beanstalk or ECS
-- **GCP**: Deploy to Google Cloud Run
-- **Azure**: Use Azure App Service
-- **Heroku**: Deploy using Heroku CLI
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **Database Connection Issues**
-   - Check database credentials in `.env`
-   - Verify database service is running
-   - Check network connectivity
-
-2. **Model Loading Errors**
-   - Verify model files exist in correct location
-   - Check TensorFlow version compatibility
-   - Ensure sufficient RAM (4GB minimum)
-
-3. **API Integration Issues**
-   - Validate API keys in `.env`
-   - Check API rate limits
-   - Verify network connectivity
-
-4. **Performance Issues**
-   - Monitor system resources
-   - Check for memory leaks
-   - Optimize database queries
-
-### Logging
-- Logs are stored in `logs/` directory
-- Set `LOG_LEVEL` in `.env` for desired verbosity
-- Use `python -m logging` for custom logging
-
-## 📧 Contact & Support
-
-### Technical Support
-- Email: tech.support@ecoai.ly
-- Documentation: https://ecoai.ly/docs
-- GitHub Issues: https://github.com/eco-ai-ly/issues
-
-### Business Inquiries
-- Email: business@ecoai.ly
-- Website: https://ecoai.ly
-- LinkedIn: https://linkedin.com/company/eco-ai-ly
-
-### Community
-- Discord: https://discord.gg/ecoai-ly
-- Twitter: https://twitter.com/ecoai_ly
-- Blog: https://ecoai.ly/blog
-
----
-
-<div align="center">
-  <sub>Built with ❤️ by the Eco AI.ly Team</sub>
-  <br>
-  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
+  <sub>© 2025 Eco AI.ly. All rights reserved.</sub>
 </div>
