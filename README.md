@@ -1,4 +1,4 @@
-# Eco AI.ly 🌱
+# Eo AI.ly 🌱
 
 <div align="center">
   <img src="assets/images/logo.png" alt="Eco AI.ly Logo" width="800"/>
