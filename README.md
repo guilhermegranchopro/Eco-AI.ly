@@ -5,13 +5,14 @@
   
   [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
   [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-  [![Streamlit](https://img.shields.io/badge/Streamlit-1.31.0-FF4B4B)](https://streamlit.io/)
-  [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15.0-FF6F00)](https://www.tensorflow.org/)
+  [![Streamlit](https://img.shields.io/badge/Streamlit-1.16.0-FF4B4B)](https://streamlit.io/)
+  [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16.1-FF6F00)](https://www.tensorflow.org/)
   [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
   [![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen)](https://ecoai.ly/docs)
   [![Tests](https://img.shields.io/badge/tests-100%25-success)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
   [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
   [![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
+  [![Ruff](https://img.shields.io/badge/Ruff-0.11.5-blue)](https://github.com/astral-sh/ruff)
 </div>
 
 ## 🌟 Overview
@@ -130,9 +131,9 @@ git clone https://github.com/eco-ai-ly/eco-ai-ly.git
 cd eco-ai-ly
 
 # Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # Unix/MacOS
-.\venv\Scripts\activate   # Windows
+python -m venv .venv
+source .venv/bin/activate  # Unix/MacOS
+.\.venv\Scripts\activate   # Windows
 
 # Install dependencies
 pip install -r requirements.txt
@@ -142,7 +143,7 @@ cp .env.example .env
 # Edit .env with your configuration
 
 # Run the application
-streamlit run app.py
+streamlit run Home.py
 ```
 
 ## 🔧 Environment Variables
@@ -198,21 +199,22 @@ eco-ai-ly/
 │   ├── 2_Renewable_Percentage.py       # Renewable percentage dashboard
 │   ├── 3_Production_VS_Consumption.py  # Production vs consumption dashboard
 │   └── 4_Import_VS_Export.py          # Import vs export dashboard
-├── venv/                   # Python virtual environment
+├── .venv/                  # Python virtual environment
 ├── .env                    # Environment variables
 ├── .gitignore             # Git ignore rules
 ├── Home.py                # Main application entry point
 ├── LICENSE                # Project license
 ├── README.md              # Project documentation
 ├── requirements.txt       # Python dependencies
-└── secrets.toml          # Streamlit secrets configuration
+├── pyproject.toml         # Project configuration
+└── uv.lock               # Dependency lock file
 ```
 
 ## 🎯 Usage
 
 1. Start the application:
 ```bash
-streamlit run app.py
+streamlit run Home.py
 ```
 
 2. Navigate to `http://localhost:8501` in your web browser
@@ -252,14 +254,11 @@ streamlit run app.py
 python -m pytest tests/
 ```
 
-### Code Formatting
+### Code Formatting and Linting
 ```bash
-black .
-```
-
-### Linting
-```bash
-flake8 .
+# Using Ruff for both formatting and linting
+ruff format .
+ruff check .
 ```
 
 ## 📝 License
