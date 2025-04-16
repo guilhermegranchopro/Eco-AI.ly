@@ -11,6 +11,7 @@
   [![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen)](https://ecoai.ly/docs)
   [![Tests](https://img.shields.io/badge/tests-100%25-success)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
   [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
+  [![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
 </div>
 
 ## 🌟 Overview
@@ -108,7 +109,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.10 or higher
 - pip (Python package installer)
 - Git
 - 4GB RAM minimum
@@ -125,7 +126,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/eco-ai-ly.git
+git clone https://github.com/eco-ai-ly/eco-ai-ly.git
 cd eco-ai-ly
 
 # Create and activate virtual environment
@@ -207,25 +208,6 @@ eco-ai-ly/
 └── secrets.toml          # Streamlit secrets configuration
 ```
 
-Each major component serves a specific purpose:
-
-- **.devcontainer/**: Contains configuration for development containers, ensuring consistent development environments
-- **assets/**: Houses all static resources including images and styling files
-- **backend/**: Core application logic organized by feature:
-  - `api.py`: Handles external API integrations
-  - `other_countries.py`: Manages international data processing
-  - Feature-specific modules (carbon_intensity, renewable_percentage, etc.) each containing:
-    - `models/`: Machine learning model definitions
-    - `data/`: Data processing and transformation scripts
-    - `utils/`: Helper functions and utilities
-- **pages/**: Streamlit application pages, each providing a specific dashboard view
-- **Configuration Files**:
-  - `.env`: Environment variables for application configuration
-  - `secrets.toml`: Streamlit-specific secrets management
-  - `requirements.txt`: Python package dependencies
-  - `.gitignore`: Git version control configuration
-- **Home.py**: Main application entry point and dashboard
-
 ## 🎯 Usage
 
 1. Start the application:
@@ -296,5 +278,5 @@ For questions and support, please contact:
 <div align="center">
   <sub>Built with ❤️ by the Eco AI.ly Team</sub>
   <br>
-  <sub>© 2025 Eco AI.ly. All rights reserved.</sub>
+  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
 </div>
