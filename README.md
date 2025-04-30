@@ -1,7 +1,7 @@
 # Eco AI.ly 🌱
 
 <div align="center">
-  <img src="assets/images/logo.png" alt="Eco AI.ly Logo" width="800"/>
+  <img src="branding/eco_ai.ly/Captura de ecrã 2025-01-22 105858.png" alt="Eco AI.ly Logo" width="800"/>
   
   [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
   [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
