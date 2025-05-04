@@ -5,4 +5,4 @@ pandas
 numpy
 scikit-learn
 joblib
-tensorflow = 2.18
+tensorflow == 2.18
