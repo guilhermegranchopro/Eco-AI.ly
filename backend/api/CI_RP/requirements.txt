@@ -1,0 +1,8 @@
+### requirements.txt
+fastapi
+requests
+pandas
+numpy
+scikit-learn
+joblib
+tensorflow = 2.18
