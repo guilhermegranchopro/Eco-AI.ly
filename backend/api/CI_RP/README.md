@@ -39,11 +39,11 @@ ELECTRICITYMAP_API_KEY=czG7nq1wv9OHi1phrXUn
 # Optional defaults:
 # ELECTRICITYMAP_BASE_URL=https://api.electricitymap.org/v3
 # ELECTRICITYMAP_REGION=PT
-```
+```bash
 
 ## Project Structure
 
-```
+```MD031
 my-energy-api/
 ├── .env
 ├── .gitignore
