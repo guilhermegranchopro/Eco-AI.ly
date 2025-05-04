@@ -36,18 +36,18 @@ def _fetch_history(endpoint: str, field: str) -> pd.DataFrame:
     resp.raise_for_status()
     data = resp.json()["history"]
     df = pd.DataFrame(data)
-    df['datetime'] = pd.to_datetime(df['datetime'])
-    df = df.sort_values('datetime').tail(24)
-    df = df[['datetime', field]].rename(columns={field: 'value'})
+    df["datetime"] = pd.to_datetime(df["datetime"])
+    df = df.sort_values("datetime").tail(24)
+    df = df[["datetime", field]].rename(columns={field: "value"})
     return df
 
 
 def get_power_breakdown() -> dict:
     # Fetch raw
     df = _fetch_history("power-breakdown/history", "renewablePercentage")
-    raw = df.to_dict(orient='records')
+    raw = df.to_dict(orient="records")
     # Normalize
-    values = df['value'].values.reshape(-1,1)
+    values = df["value"].values.reshape(-1, 1)
     scaled = _scaler_rp.transform(values).flatten()
     # Predict class
     inp = scaled.reshape(1, 24, 1)
@@ -58,8 +58,8 @@ def get_power_breakdown() -> dict:
 
 def get_carbon_intensity() -> dict:
     df = _fetch_history("carbon-intensity/history", "carbonIntensity")
-    raw = df.to_dict(orient='records')
-    values = df['value'].values.reshape(-1,1)
+    raw = df.to_dict(orient="records")
+    values = df["value"].values.reshape(-1, 1)
     scaled = _scaler_ci.transform(values).flatten()
     inp = scaled.reshape(1, 24, 1)
     preds = _model_ci.predict(inp)
