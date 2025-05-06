@@ -1,21 +1,37 @@
-### app/main.py
 from fastapi import FastAPI, HTTPException
-from app.utils import get_power_breakdown, get_carbon_intensity
+from app.utils import get_renewable_percentage, get_carbon_intensity
 
 app = FastAPI(title="Energy Forecast API")
 
-
-@app.get("/api/renewable-percentage")
+@app.get(
+    "/api/renewable-percentage",
+    summary="🔋 Renewable Percentage Forecast",
+    description="Fetches last 24h renewablePercentage data, normalizes it, and returns history, scaled inputs, and a 0–5 prediction class.",
+    tags=["Renewable Percentage"],
+)
 async def renewable_percentage():
     try:
-        return get_power_breakdown()
+        return get_renewable_percentage()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-@app.get("/api/carbon-intensity")
+@app.get(
+    "/api/carbon-intensity",
+    summary="🌍 Carbon Intensity Forecast",
+    description="Fetches last 24h carbonIntensity data, normalizes it, and returns history, scaled inputs, and a 0–5 prediction class.",
+    tags=["Carbon Intensity"],
+)
 async def carbon_intensity():
     try:
         return get_carbon_intensity()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=8080,
+        reload=True
+    )
