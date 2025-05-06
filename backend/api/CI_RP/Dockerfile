@@ -12,5 +12,8 @@ ENV PATH=/root/.local/bin:$PATH
 COPY app ./app
 COPY models ./models
 
+# Tell Docker (and readers) that the container listens on 8080
+EXPOSE 8080
+
 # Entrypoint
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
