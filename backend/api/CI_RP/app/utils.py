@@ -12,12 +12,12 @@ BASE_URL = os.getenv("ELECTRICITYMAP_BASE_URL", "https://api.electricitymap.org/
 REGION = os.getenv("ELECTRICITYMAP_REGION", "PT")
 
 # Paths to your saved models & scalers (mount these into container)
-SCALER_RP_PATH = os.getenv("SCALER_RP_PATH", "./models/renewable_percentage/scaler_carbon_intensity.pkl")
-SCALER_CI_PATH = os.getenv("SCALER_CI_PATH", "./models/carbon_intensity/scaler_carbon_intensity.pkl")
-LABELLER_RP_PATH = os.getenv("LABELLER_RP_PATH", "./models/renewable_percentage/labelling_scaler_RP.pkl")
-LABELLER_CI_PATH = os.getenv("LABELLER_CI_PATH", "./models/carbon_intensity/labelling_scaler_CI.pkl")
-MODEL_RP_PATH = os.getenv("MODEL_RP_PATH", "./models/renewable_percentage/model_renewable_percentage.keras")
-MODEL_CI_PATH = os.getenv("MODEL_CI_PATH", "./models/carbon_intensity/model_carbon_intensity.keras")
+RP_PATH = "../models/renewable_percentage"
+CI_PATH = "../models/carbon_intensity"
+SCALER_RP_PATH = os.getenv(RP_PATH, "scaler_renewable_percentage.pkl")
+SCALER_CI_PATH = os.getenv(CI_PATH, "scaler_carbon_intensity.pkl")
+MODEL_RP_PATH = os.getenv(RP_PATH, "model_renewable_percentage.keras")
+MODEL_CI_PATH = os.getenv(CI_PATH, "model_carbon_intensity.keras")
 
 # Load scalers and models once
 _scaler_rp = joblib.load(SCALER_RP_PATH)
