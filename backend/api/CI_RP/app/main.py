@@ -5,8 +5,8 @@ from app.utils import get_power_breakdown, get_carbon_intensity
 app = FastAPI(title="Energy Forecast API")
 
 
-@app.get("/api/power-breakdown")
-async def power_breakdown():
+@app.get("/api/renewable-percentage")
+async def renewable_percentage():
     try:
         return get_power_breakdown()
     except Exception as e:
