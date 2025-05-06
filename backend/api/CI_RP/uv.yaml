@@ -1,0 +1,17 @@
+# uv by Astrall project configuration
+tasks:
+  start:
+    cmd: uvicorn app.main:app --reload
+    desc: Run local dev server
+  build:
+    cmd: docker build -t guilhermegrancho/carbon-intensity_renewable-percentage:latest .
+    desc: Build Docker image
+  push:
+    cmd: docker push guilhermegrancho/carbon-intensity_renewable-percentage:latest
+    desc: Push image to Docker Hub
+  deploy:
+    cmd: gcloud run deploy my-energy-api --image docker.io/guilhermegrancho/carbon-intensity_renewable-percentage:latest --region europe-west1 --allow-unauthenticated
+    desc: Deploy to Google Cloud Run
+  test:
+    cmd: pytest
+    desc: Run tests
