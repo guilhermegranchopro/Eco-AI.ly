@@ -27,7 +27,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: your-dockerhub-username/your-api-service:latest
+          tags: guilhermegrancho/carbon-intensity_renewable-percentage:latest
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
@@ -37,6 +37,6 @@ jobs:
         run: |
           gcloud run deploy my-energy-api \
             --region europe-west1 \
-            --image docker.io/your-dockerhub-username/your-api-service:latest \
+            --image docker.io/guilhermegrancho/carbon-intensity_renewable-percentage:latest \
             --platform managed \
             --allow-unauthenticated
