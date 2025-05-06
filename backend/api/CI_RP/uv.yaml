@@ -1,0 +1,17 @@
+# uv by Astrall project configuration
+tasks:
+  start:
+    cmd: uvicorn app.main:app --reload
+    desc: Run local dev server
+  build:
+    cmd: docker build -t your-dockerhub-username/your-api-service:latest .
+    desc: Build Docker image
+  push:
+    cmd: docker push your-dockerhub-username/your-api-service:latest
+    desc: Push image to Docker Hub
+  deploy:
+    cmd: gcloud run deploy my-energy-api --image docker.io/your-dockerhub-username/your-api-service:latest --region europe-west1 --allow-unauthenticated
+    desc: Deploy to Google Cloud Run
+  test:
+    cmd: pytest
+    desc: Run tests
