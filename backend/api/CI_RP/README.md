@@ -1,74 +1,93 @@
 # Energy Forecast API
 
-A lightweight, cost‑optimized FastAPI service that predicts carbon intensity and renewable energy percentage for Portugal (PT) based on live data from the ElectricityMaps API. It exposes two endpoints for live history data, normalized model inputs, and LSTM‑based prediction classes.
+A lightweight, cost-optimized FastAPI service that fetches live data from ElectricityMaps for Portugal (PT) and runs two LSTM models to forecast:
+
+* **Renewable Percentage** (`/api/renewable-percentage`): percentage of renewable energy over the last 24 hours, normalized and classified (0–5).
+* **Carbon Intensity** (`/api/carbon-intensity`): carbon intensity over the last 24 hours (gCO₂eq/kWh), normalized and classified (0–5).
+
+Interactive API docs are available at `/docs` when running the service.
+
+---
 
 ## Features
 
-* **Power Breakdown**: Fetches the last 24 hours of renewable percentage history and returns:
+* **Live Data Fetch**: Pulls historical data (24 h) via ElectricityMaps API.
+* **Normalization**: Applies MinMaxScaler to model inputs.
+* **Prediction**: Runs pretrained TensorFlow LSTM models and returns a forecast class.
+* **Single Service**: Both endpoints hosted in one FastAPI app.
+* **Self-Documenting**: Swagger UI with rich metadata, summaries, and response schemas.
+* **Secure**: All secrets are loaded from a gitignored `.env` file.
+* **CI/CD**: GitHub Actions pipeline for tests, container build, Docker Hub push, and Cloud Run deploy.
+* **Developer Tooling**: `uv.yaml` tasks via **uv by Astrall** for dev, build, push, deploy, and tests.
 
-  * raw history data (timestamps & values)
-  * normalized input sequence for the model
-  * predicted class (0–5 scale)
-
-* **Carbon Intensity**: Fetches the last 24 hours of carbon intensity history and returns:
-
-  * raw history data (timestamps & values)
-  * normalized input sequence for the model
-  * predicted class (0–5 scale)
-
-* **Secure**: API key never committed; loaded from `.env` at runtime.
-
-* **Tested & CI/CD**: GitHub Actions pipeline runs lint/tests, builds Docker image, pushes to Docker Hub, and deploys to Google Cloud Run.
-
-* **Dev‑friendly**: `uv by Astrall` tasks for local development, Docker build/push, deploy, and tests.
+---
 
 ## Prerequisites
 
-* **Python 3.9+**
-* **Docker** (for container builds)
-* **GitHub account** (for CI/CD secrets)
-* **Google Cloud project** with Cloud Run enabled
-* **Docker Hub account**
+* Python 3.9+
+* Docker (for building images locally)
+* GitHub account with repository secrets set
+* Google Cloud project with Cloud Run enabled
+* Docker Hub account
+
+---
 
 ## Environment Variables
 
-Create a file named `.env` in the project root (already in `.gitignore`):
+Create a `.env` file at the project root (already included in `.gitignore`):
 
 ```dotenv
+# ElectricityMaps API key
 ELECTRICITYMAP_API_KEY=czG7nq1wv9OHi1phrXUn
-# Optional defaults:
-# ELECTRICITYMAP_BASE_URL=https://api.electricitymap.org/v3
-# ELECTRICITYMAP_REGION=PT
-```bash
+# Optional overrides (defaults shown)
+ELECTRICITYMAP_BASE_URL=https://api.electricitymap.org/v3
+ELECTRICITYMAP_REGION=PT
+
+# Model & scaler paths (if you moved the files)
+SCALER_RP_PATH=models/renewable_percentage/scaler_renewable_percentage.pkl
+MODEL_RP_PATH=models/renewable_percentage/model_renewable_percentage.keras
+SCALER_CI_PATH=models/carbon_intensity/scaler_carbon_intensity.pkl
+MODEL_CI_PATH=models/carbon_intensity/model_carbon_intensity.keras
+```
+
+---
 
 ## Project Structure
 
-```MD031
+```
 my-energy-api/
-├── .env
+├── .env                   # Environment variables (gitignored)
 ├── .gitignore
 ├── app/
-│   ├── main.py      # FastAPI application
-│   ├── utils.py     # data fetch, preprocessing, model load/predict
-│   └── models/      # model & scaler artifacts
-├── requirements.txt
+│   ├── main.py            # FastAPI endpoints
+│   ├── utils.py           # Data fetch, preprocessing, model load & predict
+│   └── models/            # Subfolders with model & scaler artifacts
+│       ├── renewable_percentage/
+│       │   ├── model_renewable_percentage.keras
+│       │   └── scaler_renewable_percentage.pkl
+│       └── carbon_intensity/
+│           ├── model_carbon_intensity.keras
+│           └── scaler_carbon_intensity.pkl
+├── requirements.txt       # Python dependencies
 ├── Dockerfile
-├── uv.yaml          # uv by Astrall task definitions
+├── uv.yaml                # uv by Astrall task definitions
 └── .github/
     └── workflows/
-        └── deploy.yml
+        └── deploy.yml     # GitHub Actions CI/CD pipeline
 ```
+
+---
 
 ## Getting Started
 
-### 1. Clone the repository
+### 1. Clone the repo
 
 ```bash
-git clone https://github.com/<your‑username>/my-energy-api.git
+git clone https://github.com/<your-username>/my-energy-api.git
 cd my-energy-api
 ```
 
-### 2. Install dependencies
+### 2. Install Python deps
 
 ```bash
 python -m venv .venv
@@ -80,51 +99,57 @@ pip install -r requirements.txt
 ### 3. Run locally
 
 ```bash
-uv start         # starts FastAPI with autoreload
-# or:
+uv start        # Uses uv by Astrall: uvcorn with reload
+# or directly:
 uvicorn app.main:app --reload
 ```
 
-Open your browser at `http://localhost:8080/api/power-breakdown` or `/api/carbon-intensity`.
+Open [http://localhost:8080/docs](http://localhost:8080/docs) to explore endpoints.
 
-### 4. Using Docker
-
-Build and run with Docker:
+### 4. Docker workflow
 
 ```bash
+# Build image
 docker build -t your-dockerhub-username/energy-api:latest .
+
+# Run container
 docker run --env-file .env -p 8080:8080 your-dockerhub-username/energy-api:latest
 ```
 
 ### 5. uv by Astrall Tasks
 
-All tasks defined in `uv.yaml`:
+All tasks are defined in `uv.yaml`:
 
-```bash
-uv start    # start local server
-uv build    # build Docker image
-uv push     # push image to Docker Hub
-uv deploy   # deploy to Google Cloud Run
-uv test     # run pytest
-```
+* `uv start`  — run local dev server
+* `uv build`  — build Docker image
+* `uv push`   — push image to Docker Hub
+* `uv deploy` — deploy to Google Cloud Run
+* `uv test`   — run tests with pytest
+
+---
 
 ## CI/CD (GitHub Actions)
 
-Secrets to configure in GitHub:
+### Repository Secrets
 
 * `ELECTRICITYMAP_API_KEY`
-* `DOCKERHUB_USERNAME` & `DOCKERHUB_TOKEN`
-* `GCP_PROJECT` & `GCP_SA_KEY`
+* `DOCKERHUB_USERNAME`
+* `DOCKERHUB_TOKEN`
+* `GCP_PROJECT`
+* `GCP_SA_KEY`
 
-On push to `main`, the pipeline:
+The `deploy.yml` workflow performs:
 
-1. Installs dependencies & runs tests
-2. Builds & pushes Docker image to Docker Hub
-3. Authenticates with GCP & deploys to Cloud Run
+1. Checkout & install Python deps
+2. Run tests
+3. Build & push Docker image
+4. Authenticate GCP & deploy to Cloud Run
+
+---
 
 ## Deployment
 
-After pushing a new Docker tag, manual deploy:
+To manually deploy a new version:
 
 ```bash
 gcloud run deploy my-energy-api \
@@ -133,14 +158,17 @@ gcloud run deploy my-energy-api \
   --allow-unauthenticated
 ```
 
+---
+
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/foo`)
-3. Commit your changes (`git commit -am 'Add feature'`)
-4. Push to the branch (`git push origin feature/foo`)
-5. Open a Pull Request
+1. Fork the repo
+2. Create a feature branch
+3. Commit & push
+4. Open a Pull Request
+
+---
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
