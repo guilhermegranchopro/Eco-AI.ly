@@ -7,7 +7,7 @@ app = FastAPI(title="Energy Forecast API")
 @app.get(
     "/api/renewable-percentage",
     summary="🔋 Renewable Percentage Forecast",
-    description="Fetches last 24h renewablePercentage data, normalizes it, and returns history, scaled inputs, and a 0–5 prediction class.",
+    description="Fetches last 24h Renewable Percentage data, normalizes it, and returns history, scaled inputs, and a 0–5 prediction class.",
     tags=["Renewable Percentage"],
 )
 async def renewable_percentage():
@@ -19,7 +19,7 @@ async def renewable_percentage():
 @app.get(
     "/api/carbon-intensity",
     summary="🌍 Carbon Intensity Forecast",
-    description="Fetches last 24h carbonIntensity data, normalizes it, and returns history, scaled inputs, and a 0–5 prediction class.",
+    description="Fetches last 24h Carbon Intensity data, normalizes it, and returns history, scaled inputs, and a 0–5 prediction class.",
     tags=["Carbon Intensity"],
 )
 async def carbon_intensity():
