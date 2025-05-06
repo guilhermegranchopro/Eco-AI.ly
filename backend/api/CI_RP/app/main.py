@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from app.utils import get_renewable_percentage, get_carbon_intensity
+import uvicorn
 
 app = FastAPI(title="Energy Forecast API")
 
@@ -28,7 +29,6 @@ async def carbon_intensity():
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",
