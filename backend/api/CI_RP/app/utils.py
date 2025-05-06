@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import joblib
 import tensorflow as tf
-from datetime import datetime
 
 # Load secrets from env
 API_KEY = os.getenv("ELECTRICITYMAP_API_KEY")
