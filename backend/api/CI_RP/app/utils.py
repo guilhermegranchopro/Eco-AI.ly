@@ -12,20 +12,16 @@ REGION = os.getenv("ELECTRICITYMAP_REGION", "PT")
 
 # Paths to your saved models & scalers (mount these into container)
 SCALER_RP_PATH = os.getenv(
-    "SCALER_RP_PATH",
-    "./models/renewable_percentage/scaler_renewable_percentage.pkl"
+    "SCALER_RP_PATH", "./models/renewable_percentage/scaler_renewable_percentage.pkl"
 )
 SCALER_CI_PATH = os.getenv(
-    "SCALER_CI_PATH",
-    "./models/carbon_intensity/scaler_carbon_intensity.pkl"
+    "SCALER_CI_PATH", "./models/carbon_intensity/scaler_carbon_intensity.pkl"
 )
 MODEL_RP_PATH = os.getenv(
-    "MODEL_RP_PATH",
-    "./models/renewable_percentage/model_renewable_percentage.keras"
+    "MODEL_RP_PATH", "./models/renewable_percentage/model_renewable_percentage.keras"
 )
 MODEL_CI_PATH = os.getenv(
-    "MODEL_CI_PATH",
-    "./models/carbon_intensity/model_carbon_intensity.keras"
+    "MODEL_CI_PATH", "./models/carbon_intensity/model_carbon_intensity.keras"
 )
 
 # Load scalers and models once
@@ -42,16 +38,16 @@ def _fetch_history(endpoint: str, field: str) -> pd.DataFrame:
     resp.raise_for_status()
     data = resp.json()["history"]
     df = pd.DataFrame(data)
-    df['datetime'] = pd.to_datetime(df['datetime'])
-    df = df.sort_values('datetime').tail(24)
-    df = df[['datetime', field]].rename(columns={field: 'value'})
+    df["datetime"] = pd.to_datetime(df["datetime"])
+    df = df.sort_values("datetime").tail(24)
+    df = df[["datetime", field]].rename(columns={field: "value"})
     return df
 
 
 def get_renewable_percentage() -> dict:
     df = _fetch_history("power-breakdown/history", "renewablePercentage")
-    raw = df.to_dict(orient='records')
-    values = df['value'].values.reshape(-1,1)
+    raw = df.to_dict(orient="records")
+    values = df["value"].values.reshape(-1, 1)
     scaled = _scaler_rp.transform(values).flatten().tolist()
     inp = np.array(scaled).reshape(1, 24, 1)
     preds = _model_rp.predict(inp)
@@ -61,8 +57,8 @@ def get_renewable_percentage() -> dict:
 
 def get_carbon_intensity() -> dict:
     df = _fetch_history("carbon-intensity/history", "carbonIntensity")
-    raw = df.to_dict(orient='records')
-    values = df['value'].values.reshape(-1,1)
+    raw = df.to_dict(orient="records")
+    values = df["value"].values.reshape(-1, 1)
     scaled = _scaler_ci.transform(values).flatten().tolist()
     inp = np.array(scaled).reshape(1, 24, 1)
     preds = _model_ci.predict(inp)
