@@ -2,24 +2,25 @@
 
 <div align="center">
   <img src="branding/eco_ai.ly/Captura de ecrã 2025-01-22 105858.png" alt="Eco AI.ly Logo" width="800"/>
-  
-  [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
-  [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-  [![Streamlit](https://img.shields.io/badge/Streamlit-1.16.0-FF4B4B)](https://streamlit.io/)
-  [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16.1-FF6F00)](https://www.tensorflow.org/)
-  [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-  [![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen)](https://ecoai.ly/docs)
-  [![Tests](https://img.shields.io/badge/tests-100%25-success)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
-  [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
-  [![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
-  [![Ruff](https://img.shields.io/badge/Ruff-0.11.5-blue)](https://github.com/astral-sh/ruff)
 </div>
+
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.16.0-FF4B4B)](https://streamlit.io/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16.1-FF6F00)](https://www.tensorflow.org/)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen)](https://ecoai.ly/docs)
+[![Tests](https://img.shields.io/badge/tests-100%25-success)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
+[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/eco-ai-ly/eco-ai-ly/actions)
+[![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
+[![Ruff](https://img.shields.io/badge/Ruff-0.11.5-blue)](https://github.com/astral-sh/ruff)
 
 ## 🌟 Overview
 
 Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models and interactive visualizations to help users monitor and make informed decisions about environmental metrics, with a particular focus on energy consumption, renewable energy production, carbon intensity, and cross-border energy exchange.
 
 ### Key Benefits
+
 - 🔍 Real-time environmental monitoring
 - 🤖 AI-powered predictions and insights
 - 📊 Interactive data visualization
@@ -32,6 +33,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 ## ✨ Features
 
 ### Interactive Dashboard
+
 - **Carbon Intensity Analytics**
   - Real-time carbon intensity monitoring
   - 24-hour forecasting with AI model
@@ -69,6 +71,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
   - Energy balance tracking
 
 ### AI Models
+
 - **Carbon Intensity Prediction**
   - LSTM-based architecture
   - 90.9% test accuracy
@@ -88,6 +91,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
   - Model statistics dashboard
 
 ### Reporting System
+
 - **Automated PDF Generation**
   - ECO AI.ly authentication
   - Detailed metrics
@@ -98,6 +102,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
   - Data validation stamps
 
 ### Data Visualization
+
 - **Interactive Charts**
   - Real-time updates
   - Time range selection
@@ -110,6 +115,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Python 3.10 or higher
 - pip (Python package installer)
 - Git
@@ -117,11 +123,14 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 - 2GB free disk space
 
 ### Quick Start
-1. Clone the repository
-2. Set up your environment
-3. Install dependencies
-4. Run the application
-5. Access the dashboard
+
+1. Clone the repository.
+2. Navigate to the Streamlit frontend directory.
+3. Set up your Python virtual environment.
+4. Install dependencies.
+5. Configure environment variables.
+6. Run the Streamlit application.
+7. Access the dashboard in your browser.
 
 ## 💻 Installation
 
@@ -130,25 +139,30 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 git clone https://github.com/eco-ai-ly/eco-ai-ly.git
 cd eco-ai-ly
 
+# Navigate to the Streamlit frontend directory
+cd frontend/streamlit
+
 # Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Unix/MacOS
-.\.venv\Scripts\activate   # Windows
+# For Windows:
+# .\.venv\Scripts\activate
 
-# Install dependencies
+# Install dependencies (ensure requirements.txt is in frontend/streamlit)
 pip install -r requirements.txt
 
-# Set up environment variables
-cp .env.example .env
+# Set up environment variables (in frontend/streamlit directory)
+# Copy .env.example to .env if .env.example exists in frontend/streamlit
+# cp .env.example .env 
 # Edit .env with your configuration
 
-# Run the application
+# Run the application (from frontend/streamlit directory)
 streamlit run Home.py
 ```
 
 ## 🔧 Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+Create a `.env` file in the `frontend/streamlit/` directory with the following variables (if applicable, based on your `.env.example`):
 
 ```env
 # API Keys
@@ -170,55 +184,46 @@ LOG_LEVEL=INFO
 ## 📁 Project Structure
 
 ```
-eco-ai-ly/
-├── .devcontainer/           # Development container configuration
-├── assets/                  # Static assets and resources
-│   ├── images/             # Image assets and logos
-│   └── styles/             # CSS and styling files
-├── backend/                 # Core backend functionality
-│   ├── api.py              # API integration and endpoints
-│   ├── other_countries.py  # International data handling
-│   ├── carbon_intensity/   # Carbon intensity analysis
-│   │   ├── models/        # ML model definitions
-│   │   ├── data/         # Data processing scripts
-│   │   └── utils/        # Helper functions
-│   ├── renewable_percentage/  # Renewable energy analysis
-│   │   ├── models/        # ML model definitions
-│   │   ├── data/         # Data processing scripts
-│   │   └── utils/        # Helper functions
-│   ├── production_consumption/  # Production vs consumption analysis
-│   │   ├── models/        # ML model definitions
-│   │   ├── data/         # Data processing scripts
-│   │   └── utils/        # Helper functions
-│   └── import_export/     # Import/export analysis
-│       ├── models/        # ML model definitions
-│       ├── data/         # Data processing scripts
-│       └── utils/        # Helper functions
-├── pages/                  # Streamlit application pages
-│   ├── 1_Carbon_Intensity.py           # Carbon intensity dashboard
-│   ├── 2_Renewable_Percentage.py       # Renewable percentage dashboard
-│   ├── 3_Production_VS_Consumption.py  # Production vs consumption dashboard
-│   └── 4_Import_VS_Export.py          # Import vs export dashboard
-├── .venv/                  # Python virtual environment
-├── .env                    # Environment variables
-├── .gitignore             # Git ignore rules
-├── Home.py                # Main application entry point
-├── LICENSE                # Project license
-├── README.md              # Project documentation
-├── requirements.txt       # Python dependencies
-├── pyproject.toml         # Project configuration
-└── uv.lock               # Dependency lock file
+Eco-AI.ly/
+├── LICENSE
+├── README.md
+├── backend/                 # Main backend services and APIs
+│   ├── api/
+│   │   └── CI_RP/
+│   └── mvp/
+│       ├── carbon_intensity/
+│       ├── power_breakdown/
+│       └── renewable_percentage/
+├── branding/                # Branding assets
+│   ├── carbon_sensei/
+│   └── eco_ai.ly/           # Logos and images
+├── frontend/                # Frontend applications
+│   ├── next/                # Next.js frontend (if applicable)
+│   │   └── main.py          # Example file
+│   │   └── ...
+│   └── streamlit/           # Streamlit dashboard application
+│       ├── Home.py          # Main Streamlit application entry point
+│       ├── README.md        # Streamlit specific README
+│       ├── assets/          # Static assets for Streamlit (images, styles)
+│       ├── backend/         # Helper modules for Streamlit frontend
+│       ├── pages/           # Individual Streamlit pages
+│       ├── requirements.txt # Python dependencies for Streamlit app
+│       ├── pyproject.toml   # Project configuration for Streamlit app (if used)
+│       └── ...              # Other Streamlit app files (.env.example, etc.)
+└── .devcontainer/           # Development container configuration (if used)
 ```
 
 ## 🎯 Usage
 
-1. Start the application:
-```bash
-streamlit run Home.py
-```
+1. Ensure you are in the `frontend/streamlit` directory.
+2. Start the application:
 
-2. Navigate to `http://localhost:8501` in your web browser
-3. Use the sidebar to access different features:
+   ```bash
+   streamlit run Home.py
+   ```
+
+3. Navigate to `http://localhost:8501` in your web browser.
+4. Use the sidebar to access different features:
    - Carbon Intensity Analysis
    - Renewable Percentage Tracking
    - Production vs Consumption
@@ -226,7 +231,10 @@ streamlit run Home.py
 
 ## 🤖 AI Models
 
+Details about the AI models used in the Streamlit application.
+
 ### Carbon Intensity Model
+
 - Architecture: LSTM Neural Network
 - Input: 24-hour historical data
 - Output: 6-class classification
@@ -234,6 +242,7 @@ streamlit run Home.py
 - Features: Real-time inference, uncertainty estimation
 
 ### Renewable Percentage Model
+
 - Architecture: LSTM Neural Network
 - Input: 24-hour historical data
 - Output: 6-class classification
@@ -241,6 +250,9 @@ streamlit run Home.py
 - Features: Real-time predictions, confidence scoring
 
 ## 📊 Data Sources
+
+The Streamlit application utilizes data from:
+
 - Real-time power grid data
 - Historical energy production
 - Cross-border energy exchange
@@ -249,16 +261,28 @@ streamlit run Home.py
 
 ## 🛠️ Development
 
+(Assuming these commands are run from the project root or relevant subdirectories)
+
 ### Running Tests
+
 ```bash
-python -m pytest tests/
+python -m pytest tests/ 
+# (Adjust path to tests if they exist elsewhere, e.g., frontend/streamlit/tests/)
 ```
 
 ### Code Formatting and Linting
+
+Using Ruff (typically run from the project root or `frontend/streamlit`):
+
 ```bash
-# Using Ruff for both formatting and linting
 ruff format .
 ruff check .
+```
+
+Using Black (if preferred, typically run from the project root or `frontend/streamlit`):
+
+```bash
+black .
 ```
 
 ## 📝 License
@@ -268,14 +292,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📧 Contact
 
 For questions and support, please contact:
-- Email: guilhermegranchopro@gmail.com
-- Website: https://ecoaily.streamlit.app/
-- GitHub: https://github.com/guilhermegranchopro
+
+- Email: [guilhermegranchopro@gmail.com](mailto:guilhermegranchopro@gmail.com)
+- Website: [https://ecoaily.streamlit.app/](https://ecoaily.streamlit.app/)
+- GitHub Project: [https://github.com/eco-ai-ly/eco-ai-ly](https://github.com/eco-ai-ly/eco-ai-ly)
+- Personal GitHub: [https://github.com/guilhermegranchopro](https://github.com/guilhermegranchopro)
+
 
 ---
 
 <div align="center">
   <sub>Built with ❤️ by the Eco AI.ly Team</sub>
-  <br>
-  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
+  <br/>
+  <sub>© 2025 Eco AI.ly. All rights reserved.</sub>
 </div>
