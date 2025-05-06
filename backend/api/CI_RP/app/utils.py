@@ -12,8 +12,8 @@ BASE_URL = os.getenv("ELECTRICITYMAP_BASE_URL", "https://api.electricitymap.org/
 REGION = os.getenv("ELECTRICITYMAP_REGION", "PT")
 
 # Paths to your saved models & scalers (mount these into container)
-RP_PATH = "../models/renewable_percentage"
-CI_PATH = "../models/carbon_intensity"
+RP_PATH = "models/renewable_percentage"
+CI_PATH = "models/carbon_intensity"
 SCALER_RP_PATH = os.getenv(RP_PATH, "scaler_renewable_percentage.pkl")
 SCALER_CI_PATH = os.getenv(CI_PATH, "scaler_carbon_intensity.pkl")
 MODEL_RP_PATH = os.getenv(RP_PATH, "model_renewable_percentage.keras")
