@@ -19,14 +19,6 @@ SCALER_CI_PATH = os.getenv(
     "SCALER_CI_PATH",
     "./models/carbon_intensity/scaler_carbon_intensity.pkl"
 )
-LABELLER_RP_PATH = os.getenv(
-    "LABELLER_RP_PATH",
-    "./models/renewable_percentage/labelling_scaler_RP.pkl"
-)
-LABELLER_CI_PATH = os.getenv(
-    "LABELLER_CI_PATH",
-    "./models/carbon_intensity/labelling_scaler_CI.pkl"
-)
 MODEL_RP_PATH = os.getenv(
     "MODEL_RP_PATH",
     "./models/renewable_percentage/model_renewable_percentage.keras"
@@ -39,8 +31,6 @@ MODEL_CI_PATH = os.getenv(
 # Load scalers and models once
 _scaler_rp = joblib.load(SCALER_RP_PATH)
 _scaler_ci = joblib.load(SCALER_CI_PATH)
-_labeller_rp = joblib.load(LABELLER_RP_PATH)
-_labeller_ci = joblib.load(LABELLER_CI_PATH)
 _model_rp = tf.keras.models.load_model(MODEL_RP_PATH)
 _model_ci = tf.keras.models.load_model(MODEL_CI_PATH)
 
