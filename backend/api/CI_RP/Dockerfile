@@ -16,4 +16,4 @@ COPY app ./app
 # Copy your models directory (locally mount or include in build)
 COPY models ./models
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
