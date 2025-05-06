@@ -1,5 +1,6 @@
 ### requirements.txt
 fastapi
+uvicorn
 requests
 pandas
 numpy
