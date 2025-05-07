@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import joblib
 import tensorflow as tf
+import os
 from backend.api import fetch_carbon_intensity_history
 from backend.carbon_intensity.carbon_intensity_utils import (
     get_bg_color_CI,
@@ -15,9 +16,15 @@ from backend.carbon_intensity.carbon_intensity_utils import (
 def load_model_and_scalers():
     """Cache the model and scalers to avoid reloading them on every prediction"""
     try:
+        # compute the folder that Home.py lives in
+        HERE = os.path.dirname(__file__)  
+
+        # point at assets/images/logo.png inside the same folder
+        logo_path = os.path.join(HERE, "models", "model_carbon_intensity.keras")
+        
         # Load model with custom_objects to handle any custom components
         model = tf.keras.models.load_model(
-            "backend/carbon_intensity/models/model_carbon_intensity.keras",
+            logo_path,
             compile=False,
         )
         # Recompile the model with default settings
