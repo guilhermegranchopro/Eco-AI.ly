@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 # Set up the page configuration
 st.set_page_config(
@@ -26,7 +27,11 @@ st.markdown(
 # Display the logo
 col1, col2, col3 = st.columns([0.5, 3, 0.5])
 with col2:
-    st.image("assets/images/logo.png", width=1600)
+    # compute the folder that Home.py lives in
+    HERE = os.path.dirname(__file__)
+    # point at assets/images/logo.png inside the same folder
+    logo_path = os.path.join(HERE, "assets", "images", "logo.png")
+    st.image(logo_path, width=1600)
 
 # Consolidated content sections
 content = """
