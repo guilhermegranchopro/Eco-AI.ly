@@ -20,11 +20,11 @@ def load_model_and_scalers():
         HERE = os.path.dirname(__file__)  
 
         # point at assets/images/logo.png inside the same folder
-        logo_path = os.path.join(HERE, "models", "model_carbon_intensity.keras")
+        model_path = os.path.join(HERE, "models", "model_carbon_intensity.keras")
         
         # Load model with custom_objects to handle any custom components
         model = tf.keras.models.load_model(
-            logo_path,
+            model_path,
             compile=False,
         )
         # Recompile the model with default settings

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import joblib
 import tensorflow as tf
+import os
 from backend.api import fetch_power_breakdown_history
 
 
@@ -25,9 +26,14 @@ def get_bg_color_RP(value):
 def load_model_and_scalers():
     """Cache the model and scalers to avoid reloading them on every prediction"""
     try:
+        # compute the folder that renewable_percentage_ai.py lives in
+        HERE = os.path.dirname(__file__)
+        # point at assets/images/logo.png inside the same folder
+        model_path = os.path.join(HERE, "models", "model_renewable_percentage.keras")
+
         # Load model with custom_objects to handle any custom components
         model = tf.keras.models.load_model(
-            "backend/renewable_percentage/models/model_renewable_percentage.keras",
+            model_path,
             compile=False,
         )
         # Recompile the model with default settings
@@ -37,10 +43,10 @@ def load_model_and_scalers():
 
         # Load scalers
         labelling_scaler = joblib.load(
-            "backend/renewable_percentage/models/labelling_scaler_RP.pkl"
+            os.path.join(HERE, "models", "labelling_scaler_RP.pkl")
         )
         main_scaler = joblib.load(
-            "backend/renewable_percentage/models/scaler_renewable_percentage.pkl"
+            os.path.join(HERE, "models", "scaler_renewable_percentage.pkl")
         )
 
         return model, labelling_scaler, main_scaler
