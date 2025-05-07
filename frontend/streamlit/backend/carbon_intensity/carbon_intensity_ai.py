@@ -32,12 +32,12 @@ def load_model_and_scalers():
             optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
         )
 
-        # Load scalers
+        # Load scalers using relative paths
         labelling_scaler = joblib.load(
-            "backend/carbon_intensity/models/labelling_scaler_CI.pkl"
+            os.path.join(HERE, "models", "labelling_scaler_CI.pkl")
         )
         main_scaler = joblib.load(
-            "backend/carbon_intensity/models/scaler_carbon_intensity.pkl"
+            os.path.join(HERE, "models", "scaler_carbon_intensity.pkl")
         )
 
         return model, labelling_scaler, main_scaler
