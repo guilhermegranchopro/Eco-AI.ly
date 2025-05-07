@@ -189,8 +189,10 @@ def rend_model_stats_CI():
     6. **The Worst!** (> 452 gCO₂/kWh): Extremely high carbon intensity
     """)
 
+    HERE = os.path.dirname(os.path.abspath(__file__))
+
     # Set base paths for each model's statistics
-    carbon_base_path = os.path.join("backend", "carbon_intensity", "model_stats")
+    carbon_base_path = os.path.join(HERE, "model_stats")
 
     # Display model stats with clean visuals
     display_model_stats("Carbon Intensity", carbon_base_path)
