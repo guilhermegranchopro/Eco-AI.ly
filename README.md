@@ -74,8 +74,8 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 
 - **Live Data & Predictions**: Fetches live historical data (past 24 hours) from ElectricityMaps for Portugal (PT).
 - **Endpoints**:
-    - `/api/renewable-percentage`: Forecasts the renewable energy percentage, returning a normalized and classified value (0–5).
-    - `/api/carbon-intensity`: Forecasts carbon intensity (in gCO₂eq/kWh), returning a normalized and classified value (0–5).
+  - `/api/renewable-percentage`: Forecasts the renewable energy percentage, returning a normalized and classified value (0–5).
+  - `/api/carbon-intensity`: Forecasts carbon intensity (in gCO₂eq/kWh), returning a normalized and classified value (0–5).
 - **Technology**: Built with FastAPI, integrating pre-trained LSTM models for predictions.
 - **Documentation**: Interactive API documentation (Swagger UI) is available at the `/docs` endpoint when the API service is running.
 - **Deployment**: Designed for containerization using Docker and deployment to cloud platforms like Google Cloud Run. For more details, see the `backend/api/CI_RP/README.md`.
@@ -134,22 +134,22 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 
 ### Quick Start
 
-1.  Clone the repository.
-2.  **For the Streamlit Frontend:**
-    a.  Navigate to the `frontend/streamlit` directory.
-    b.  Set up your Python virtual environment.
-    c.  Install dependencies from `frontend/streamlit/requirements.txt`.
-    d.  Configure environment variables (see `frontend/streamlit/.env.example` or create a `.env` file).
-    e.  Run the Streamlit application using `streamlit run Home.py`.
-3.  **For the Backend API Service:**
-    a.  Navigate to the `backend/api/CI_RP` directory.
-    b.  Follow the detailed setup and run instructions in `backend/api/CI_RP/README.md`. This typically involves:
-        i.  Setting up a Python virtual environment.
-        ii. Installing dependencies from `backend/api/CI_RP/requirements.txt`.
-        iii.Configuring environment variables (e.g., `ELECTRICITYMAP_API_KEY` in a `.env` file).
-        iv. Running the service using Uvicorn (e.g., `uvicorn app.main:app --reload`) or via Docker.
-4.  Access the Streamlit dashboard in your browser (default: `http://localhost:8501`).
-5.  Access the API documentation (Swagger UI) for the backend service (default: `http://localhost:8000/docs`, if the API is running on port 8000).
+1. Clone the repository.
+2. **For the Streamlit Frontend:**
+   a.  Navigate to the `frontend/streamlit` directory.
+   b.  Set up your Python virtual environment.
+   c.  Install dependencies from `frontend/streamlit/requirements.txt`.
+   d.  Configure environment variables (see `frontend/streamlit/.env.example` or create a `.env` file).
+   e.  Run the Streamlit application using `streamlit run Home.py`.
+3. **For the Backend API Service:**
+   a.  Navigate to the `backend/api/CI_RP` directory.
+   b.  Follow the detailed setup and run instructions in `backend/api/CI_RP/README.md`. This typically involves:
+       i.  Setting up a Python virtual environment.
+       ii. Installing dependencies from `backend/api/CI_RP/requirements.txt`.
+       iii.Configuring environment variables (e.g., `ELECTRICITYMAP_API_KEY` in a `.env` file).
+       iv. Running the service using Uvicorn (e.g., `uvicorn app.main:app --reload`) or via Docker.
+4. Access the Streamlit dashboard in your browser (default: `http://localhost:8501`).
+5. Access the API documentation (Swagger UI) for the backend service (default: `http://localhost:8000/docs`, if the API is running on port 8000).
 
 ## 💻 Installation
 
@@ -188,11 +188,12 @@ streamlit run Home.py
 For detailed installation and operational instructions for the backend API service, please consult the dedicated README file: `backend/api/CI_RP/README.md`.
 
 The general steps include:
-1.  Navigating to the `backend/api/CI_RP` directory.
-2.  Creating and activating a Python virtual environment.
-3.  Installing Python dependencies listed in `backend/api/CI_RP/requirements.txt`.
-4.  Setting up necessary environment variables (e.g., API keys) in a `.env` file within the `backend/api/CI_RP` directory, based on `backend/api/CI_RP/.env.example`.
-5.  Running the FastAPI application using an ASGI server like Uvicorn, or by building and running the provided Docker container.
+
+1. Navigating to the `backend/api/CI_RP` directory.
+2. Creating and activating a Python virtual environment.
+3. Installing Python dependencies listed in `backend/api/CI_RP/requirements.txt`.
+4. Setting up necessary environment variables (e.g., API keys) in a `.env` file within the `backend/api/CI_RP` directory, based on `backend/api/CI_RP/.env.example`.
+5. Running the FastAPI application using an ASGI server like Uvicorn, or by building and running the provided Docker container.
 
 ## 🔧 Environment Variables
 
@@ -218,7 +219,9 @@ LOG_LEVEL=INFO
 ```
 
 ### Backend API (`backend/api/CI_RP/.env`)
+
 Refer to `backend/api/CI_RP/README.md` and its associated `.env.example` for the specific environment variables required by the API service. Key variables typically include:
+
 ```env
 # ElectricityMaps API key
 ELECTRICITYMAP_API_KEY=your_electricitymaps_api_key
@@ -291,25 +294,29 @@ Eco-AI.ly/
 ## 🎯 Usage
 
 ### Streamlit Frontend
-1.  Ensure you are in the `frontend/streamlit` directory.
-2.  Activate your virtual environment.
-3.  Start the application:
-    ```bash
-    streamlit run Home.py
-    ```
-4.  Navigate to `http://localhost:8501` (or the address shown in your terminal) in your web browser.
-5.  Use the sidebar to navigate through the different analysis dashboards:
-    - Carbon Intensity Analysis
-    - Renewable Percentage Tracking
-    - Production vs Consumption
-    - Import vs Export
+
+1. Ensure you are in the `frontend/streamlit` directory.
+2. Activate your virtual environment.
+3. Start the application:
+
+   ```bash
+   streamlit run Home.py
+   ```
+
+4. Navigate to `http://localhost:8501` (or the address shown in your terminal) in your web browser.
+5. Use the sidebar to navigate through the different analysis dashboards:
+   - Carbon Intensity Analysis
+   - Renewable Percentage Tracking
+   - Production vs Consumption
+   - Import vs Export
 
 ### FastAPI Backend API
+
 - The API service is designed to be run continuously (e.g., using Uvicorn or Docker).
 - Endpoints are accessed via standard HTTP requests (GET, POST, etc.) from client applications or tools like `curl` or Postman.
 - The primary endpoints are:
-    - `GET /api/renewable-percentage`
-    - `GET /api/carbon-intensity`
+  - `GET /api/renewable-percentage`
+  - `GET /api/carbon-intensity`
 - Interactive API documentation (Swagger UI) is available at the `/docs` path of the running API (e.g., `http://localhost:8000/docs`). This interface allows you to explore and test the API endpoints directly from your browser.
 - For detailed information on API usage, request/response formats, and specific parameters, please refer to the `backend/api/CI_RP/README.md` and the live Swagger documentation.
 
@@ -334,7 +341,9 @@ Details about the AI models used in the Streamlit application and the backend AP
 - Features: Real-time predictions, confidence scoring
 
 ### MVP Notebooks (`backend/mvp/`)
+
 The Jupyter notebooks located in the `backend/mvp/` directory were instrumental in the initial phases of the project for:
+
 - **Data Exploration and Preprocessing**: Understanding the structure and characteristics of energy data.
 - **Model Prototyping**: Experimenting with different machine learning models, including LSTMs for time series forecasting (e.g., `Live_Predictions_LSTM_Renewable_Percentage.ipynb`).
 - **Feature Engineering**: Identifying and creating relevant features for the predictive models.
@@ -349,6 +358,7 @@ Development practices apply across the project, whether working on the Streamlit
 (Commands are typically run from the project root, or specific subdirectories like `frontend/streamlit` or `backend/api/CI_RP` as appropriate)
 
 ### Running Tests
+
 ```bash
 # Example: Running pytest from the project root (if tests are structured there)
 python -m pytest tests/ 
