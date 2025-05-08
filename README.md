@@ -17,7 +17,7 @@
 
 ## 🌟 Overview
 
-Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models and interactive visualizations to help users monitor and make informed decisions about environmental metrics, with a particular focus on energy consumption, renewable energy production, carbon intensity, and cross-border energy exchange.
+Eco AI.ly is an innovative startup project that combines artificial intelligence with environmental monitoring to drive sustainability and environmental awareness. Our platform leverages state-of-the-art predictive models, data analytics pipelines (initially developed in Jupyter Notebooks within the `backend/mvp/` directory, focusing on areas like live LSTM predictions for renewable percentage and power breakdown analysis), and interactive visualizations to help users monitor and make informed decisions about environmental metrics. Key areas include energy consumption, renewable energy production, carbon intensity, and cross-border energy exchange. The project also features a dedicated backend API service for delivering these predictions.
 
 ### Key Benefits
 
@@ -32,7 +32,7 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 
 ## ✨ Features
 
-### Interactive Dashboard
+### Interactive Dashboard (Streamlit Frontend)
 
 - **Carbon Intensity Analytics**
   - Real-time carbon intensity monitoring
@@ -69,6 +69,16 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
   - PDF report generation
   - Time-based analysis
   - Energy balance tracking
+
+### Backend API Service (FastAPI)
+
+- **Live Data & Predictions**: Fetches live historical data (past 24 hours) from ElectricityMaps for Portugal (PT).
+- **Endpoints**:
+    - `/api/renewable-percentage`: Forecasts the renewable energy percentage, returning a normalized and classified value (0–5).
+    - `/api/carbon-intensity`: Forecasts carbon intensity (in gCO₂eq/kWh), returning a normalized and classified value (0–5).
+- **Technology**: Built with FastAPI, integrating pre-trained LSTM models for predictions.
+- **Documentation**: Interactive API documentation (Swagger UI) is available at the `/docs` endpoint when the API service is running.
+- **Deployment**: Designed for containerization using Docker and deployment to cloud platforms like Google Cloud Run. For more details, see the `backend/api/CI_RP/README.md`.
 
 ### AI Models
 
@@ -124,18 +134,31 @@ Eco AI.ly is an innovative startup project that combines artificial intelligence
 
 ### Quick Start
 
-1. Clone the repository.
-2. Navigate to the Streamlit frontend directory.
-3. Set up your Python virtual environment.
-4. Install dependencies.
-5. Configure environment variables.
-6. Run the Streamlit application.
-7. Access the dashboard in your browser.
+1.  Clone the repository.
+2.  **For the Streamlit Frontend:**
+    a.  Navigate to the `frontend/streamlit` directory.
+    b.  Set up your Python virtual environment.
+    c.  Install dependencies from `frontend/streamlit/requirements.txt`.
+    d.  Configure environment variables (see `frontend/streamlit/.env.example` or create a `.env` file).
+    e.  Run the Streamlit application using `streamlit run Home.py`.
+3.  **For the Backend API Service:**
+    a.  Navigate to the `backend/api/CI_RP` directory.
+    b.  Follow the detailed setup and run instructions in `backend/api/CI_RP/README.md`. This typically involves:
+        i.  Setting up a Python virtual environment.
+        ii. Installing dependencies from `backend/api/CI_RP/requirements.txt`.
+        iii.Configuring environment variables (e.g., `ELECTRICITYMAP_API_KEY` in a `.env` file).
+        iv. Running the service using Uvicorn (e.g., `uvicorn app.main:app --reload`) or via Docker.
+4.  Access the Streamlit dashboard in your browser (default: `http://localhost:8501`).
+5.  Access the API documentation (Swagger UI) for the backend service (default: `http://localhost:8000/docs`, if the API is running on port 8000).
 
 ## 💻 Installation
 
+This project comprises two main components: the Streamlit frontend and the FastAPI backend.
+
+### Streamlit Frontend
+
 ```bash
-# Clone the repository
+# Clone the repository (if not already done)
 git clone https://github.com/eco-ai-ly/eco-ai-ly.git
 cd eco-ai-ly
 
@@ -152,15 +175,28 @@ source .venv/bin/activate  # Unix/MacOS
 pip install -r requirements.txt
 
 # Set up environment variables (in frontend/streamlit directory)
-# Copy .env.example to .env if .env.example exists in frontend/streamlit
-# cp .env.example .env 
-# Edit .env with your configuration
+# Create a .env file if needed, based on .env.example or specific requirements.
+# Example: cp .env.example .env (if an example file exists)
+# Edit .env with your configuration (e.g., API keys, database settings)
 
 # Run the application (from frontend/streamlit directory)
 streamlit run Home.py
 ```
 
+### FastAPI Backend API
+
+For detailed installation and operational instructions for the backend API service, please consult the dedicated README file: `backend/api/CI_RP/README.md`.
+
+The general steps include:
+1.  Navigating to the `backend/api/CI_RP` directory.
+2.  Creating and activating a Python virtual environment.
+3.  Installing Python dependencies listed in `backend/api/CI_RP/requirements.txt`.
+4.  Setting up necessary environment variables (e.g., API keys) in a `.env` file within the `backend/api/CI_RP` directory, based on `backend/api/CI_RP/.env.example`.
+5.  Running the FastAPI application using an ASGI server like Uvicorn, or by building and running the provided Docker container.
+
 ## 🔧 Environment Variables
+
+### Streamlit Frontend (`frontend/streamlit/.env`)
 
 Create a `.env` file in the `frontend/streamlit/` directory with the following variables (if applicable, based on your `.env.example`):
 
@@ -181,59 +217,107 @@ DEBUG=False
 LOG_LEVEL=INFO
 ```
 
+### Backend API (`backend/api/CI_RP/.env`)
+Refer to `backend/api/CI_RP/README.md` and its associated `.env.example` for the specific environment variables required by the API service. Key variables typically include:
+```env
+# ElectricityMaps API key
+ELECTRICITYMAP_API_KEY=your_electricitymaps_api_key
+
+# Optional overrides for ElectricityMaps API (defaults are usually provided)
+# ELECTRICITYMAP_BASE_URL=https://api.electricitymap.org/v3
+# ELECTRICITYMAP_REGION=PT
+
+# Paths to machine learning models and scalers (defaults are usually provided)
+# SCALER_RP_PATH=models/renewable_percentage/scaler_renewable_percentage.pkl
+# MODEL_RP_PATH=models/renewable_percentage/model_renewable_percentage.keras
+# SCALER_CI_PATH=models/carbon_intensity/scaler_carbon_intensity.pkl
+# MODEL_CI_PATH=models/carbon_intensity/model_carbon_intensity.keras
+```
+
 ## 📁 Project Structure
 
 ```
 Eco-AI.ly/
 ├── LICENSE
-├── README.md
-├── backend/                 # Main backend services and APIs
-│   ├── api/
-│   │   └── CI_RP/
-│   └── mvp/
-│       ├── carbon_intensity/
-│       ├── power_breakdown/
-│       └── renewable_percentage/
-├── branding/                # Branding assets
-│   ├── carbon_sensei/
-│   └── eco_ai.ly/           # Logos and images
+├── README.md                # This file - Main project documentation
+├── backend/                 # Backend services, models, and data processing
+│   ├── api/                 # API services
+│   │   └── CI_RP/           # FastAPI for Carbon Intensity & Renewable Percentage
+│   │       ├── app/         # FastAPI application source code
+│   │       │   ├── main.py  # FastAPI endpoints definition
+│   │       │   ├── utils.py # Utility functions (data fetching, preprocessing, model loading)
+│   │       │   └── models/  # Directory for pre-trained ML models and scalers
+│   │       │       ├── renewable_percentage/
+│   │       │       │   ├── model_renewable_percentage.keras
+│   │       │       │   └── scaler_renewable_percentage.pkl
+│   │       │       └── carbon_intensity/
+│   │       │           ├── model_carbon_intensity.keras
+│   │       │           └── scaler_carbon_intensity.pkl
+│   │       ├── Dockerfile   # Docker configuration for the API service
+│   │       ├── README.md    # Detailed README for the API service
+│   │       ├── requirements.txt # Python dependencies for the API
+│   │       └── .env.example # Example environment variables for the API
+│   └── mvp/                 # Minimum Viable Product: Jupyter notebooks, initial models, data exploration
+│       ├── carbon_intensity/  # Notebooks related to carbon intensity analysis/modeling
+│       │   └── ...          # (e.g., Live_Predictions_LSTM_Carbon_Intensity.ipynb)
+│       ├── power_breakdown/ # Notebooks for power import/export analysis
+│       │   ├── Power_Export_Breakdown.ipynb
+│       │   └── Power_Import_Breakdown.ipynb
+│       └── renewable_percentage/ # Notebooks for renewable percentage analysis/modeling
+│           └── Live_Predictions_LSTM_Renewable_Percentage.ipynb
+├── branding/                # Branding assets (logos, color palettes, images)
+│   ├── carbon_sensei/       # Assets for Carbon Sensei sub-brand (if applicable)
+│   └── eco_ai.ly/           # Main Eco AI.ly logos and visual assets
 ├── frontend/                # Frontend applications
-│   ├── next/                # Next.js frontend (if applicable)
+│   ├── next/                # Next.js frontend (placeholder or future development)
 │   │   └── main.py          # Example file
 │   │   └── ...
 │   └── streamlit/           # Streamlit dashboard application
 │       ├── Home.py          # Main Streamlit application entry point
-│       ├── README.md        # Streamlit specific README
-│       ├── assets/          # Static assets for Streamlit (images, styles)
-│       ├── backend/         # Helper modules for Streamlit frontend
-│       ├── pages/           # Individual Streamlit pages
-│       ├── requirements.txt # Python dependencies for Streamlit app
-│       ├── pyproject.toml   # Project configuration for Streamlit app (if used)
-│       └── ...              # Other Streamlit app files (.env.example, etc.)
-└── .devcontainer/           # Development container configuration (if used)
+│       ├── README.md        # Streamlit application-specific README
+│       ├── assets/          # Static assets for Streamlit (images, custom styles)
+│       ├── backend/         # Helper modules and backend logic specific to Streamlit
+│       ├── pages/           # Individual pages/modules of the Streamlit dashboard
+│       ├── requirements.txt # Python dependencies for the Streamlit application
+│       ├── pyproject.toml   # Project configuration for Streamlit (e.g., for linters/formatters)
+│       └── .env.example     # Example environment variables for the Streamlit app
+├── .devcontainer/           # Development container configuration (e.g., for VS Code Remote - Containers)
+├── .gitignore               # Specifies intentionally untracked files that Git should ignore
+├── requirements.txt         # Root level Python dependencies (if any, typically for dev tools)
+├── pyproject.toml           # Root level project configuration (e.g., for Ruff, Black)
+└── uv.lock                  # Dependency lock file (if using uv package manager at root)
 ```
 
 ## 🎯 Usage
 
-1. Ensure you are in the `frontend/streamlit` directory.
-2. Start the application:
+### Streamlit Frontend
+1.  Ensure you are in the `frontend/streamlit` directory.
+2.  Activate your virtual environment.
+3.  Start the application:
+    ```bash
+    streamlit run Home.py
+    ```
+4.  Navigate to `http://localhost:8501` (or the address shown in your terminal) in your web browser.
+5.  Use the sidebar to navigate through the different analysis dashboards:
+    - Carbon Intensity Analysis
+    - Renewable Percentage Tracking
+    - Production vs Consumption
+    - Import vs Export
 
-   ```bash
-   streamlit run Home.py
-   ```
-
-3. Navigate to `http://localhost:8501` in your web browser.
-4. Use the sidebar to access different features:
-   - Carbon Intensity Analysis
-   - Renewable Percentage Tracking
-   - Production vs Consumption
-   - Import vs Export
+### FastAPI Backend API
+- The API service is designed to be run continuously (e.g., using Uvicorn or Docker).
+- Endpoints are accessed via standard HTTP requests (GET, POST, etc.) from client applications or tools like `curl` or Postman.
+- The primary endpoints are:
+    - `GET /api/renewable-percentage`
+    - `GET /api/carbon-intensity`
+- Interactive API documentation (Swagger UI) is available at the `/docs` path of the running API (e.g., `http://localhost:8000/docs`). This interface allows you to explore and test the API endpoints directly from your browser.
+- For detailed information on API usage, request/response formats, and specific parameters, please refer to the `backend/api/CI_RP/README.md` and the live Swagger documentation.
 
 ## 🤖 AI Models
 
-Details about the AI models used in the Streamlit application.
+Details about the AI models used in the Streamlit application and the backend API.
 
-### Carbon Intensity Model
+### Carbon Intensity Model (used in API and potentially by Streamlit via API)
 
 - Architecture: LSTM Neural Network
 - Input: 24-hour historical data
@@ -241,7 +325,7 @@ Details about the AI models used in the Streamlit application.
 - Test Accuracy: 90.9%
 - Features: Real-time inference, uncertainty estimation
 
-### Renewable Percentage Model
+### Renewable Percentage Model (used in API and potentially by Streamlit via API)
 
 - Architecture: LSTM Neural Network
 - Input: 24-hour historical data
@@ -249,25 +333,30 @@ Details about the AI models used in the Streamlit application.
 - Test Accuracy: 90.9%
 - Features: Real-time predictions, confidence scoring
 
-## 📊 Data Sources
+### MVP Notebooks (`backend/mvp/`)
+The Jupyter notebooks located in the `backend/mvp/` directory were instrumental in the initial phases of the project for:
+- **Data Exploration and Preprocessing**: Understanding the structure and characteristics of energy data.
+- **Model Prototyping**: Experimenting with different machine learning models, including LSTMs for time series forecasting (e.g., `Live_Predictions_LSTM_Renewable_Percentage.ipynb`).
+- **Feature Engineering**: Identifying and creating relevant features for the predictive models.
+- **Proof-of-Concept Analysis**: Validating the feasibility of predicting carbon intensity and renewable energy percentages, and analyzing power breakdown data (e.g., `Power_Import_Breakdown.ipynb`, `Power_Export_Breakdown.ipynb`).
 
-The Streamlit application utilizes data from:
-
-- Real-time power grid data
-- Historical energy production
-- Cross-border energy exchange
-- Carbon intensity measurements
-- Renewable energy generation
+These notebooks provide valuable insights into the data science workflow and the foundational steps that led to the development of the operational models used in the FastAPI service.
 
 ## 🛠️ Development
 
-(Assuming these commands are run from the project root or relevant subdirectories)
+Development practices apply across the project, whether working on the Streamlit frontend, the FastAPI backend, or the MVP notebooks.
+
+(Commands are typically run from the project root, or specific subdirectories like `frontend/streamlit` or `backend/api/CI_RP` as appropriate)
 
 ### Running Tests
-
 ```bash
+# Example: Running pytest from the project root (if tests are structured there)
 python -m pytest tests/ 
-# (Adjust path to tests if they exist elsewhere, e.g., frontend/streamlit/tests/)
+
+# Or, if tests are specific to a component, navigate to its directory:
+# cd frontend/streamlit
+# python -m pytest tests/ 
+# (Adjust paths and commands based on your actual test setup)
 ```
 
 ### Code Formatting and Linting
