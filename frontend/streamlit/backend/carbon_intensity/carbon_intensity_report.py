@@ -86,7 +86,7 @@ def generate_carbon_intensity_pdf_report(
             try:
                 HERE = os.path.dirname(os.path.abspath(__file__))
                 # Attempt to load logo if available
-                self.image(os.path.join(HERE, "assets/images/logo.png"), 10, 8, 33)
+                self.image(os.path.join(HERE, "../../assets/images/logo.png"), 10, 8, 33)
             except Exception as e:
                 print(f"Error loading logo: {e}")
             # Title
