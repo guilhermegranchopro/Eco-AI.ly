@@ -189,8 +189,10 @@ def rend_model_stats_RP():
     6. **The Best!** (> 80%): Excellent renewable energy, almost entirely clean electricity
     """)
 
+    HERE = os.path.dirname(os.path.abspath(__file__))
+
     # Set base paths for each model's statistics
-    renewable_base_path = os.path.join("backend", "renewable_percentage", "model_stats")
+    renewable_base_path = os.path.join(HERE, "model_stats")
 
     # Display model stats with clean visuals
     display_model_stats("Renewable Percentage", renewable_base_path)
