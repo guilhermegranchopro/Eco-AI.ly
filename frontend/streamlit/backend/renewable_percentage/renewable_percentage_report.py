@@ -123,8 +123,9 @@ def generate_renewable_percentage_pdf_report(
 
     # Add authentication stamp at the beginning
     try:
+        HERE = os.path.dirname(os.path.abspath(__file__))
         # Load and add logo
-        logo_path = "assets/images/logo.png"
+        logo_path = os.path.join(HERE, "../../assets/images/logo.png")
         if os.path.exists(logo_path):
             # Calculate logo dimensions to fit nicely on the page
             logo_width = 150

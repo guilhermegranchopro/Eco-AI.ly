@@ -126,11 +126,13 @@ def generate_carbon_intensity_pdf_report(
 
     # Add logo for authentication
     try:
+        HERE = os.path.dirname(os.path.abspath(__file__))
+        # Attempt to load logo if available
         # Center the logo
         logo_width = 150
         logo_height = 50
         pdf.image(
-            "assets/images/logo.png",
+            os.path.join(HERE, "../../assets/images/logo.png"),
             pdf.w / 2 - logo_width / 2,
             pdf.get_y(),
             logo_width,
