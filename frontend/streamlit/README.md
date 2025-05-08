@@ -143,7 +143,7 @@ cp .env.example .env
 # Edit .env with your configuration
 
 # Run the application
-streamlit run Home.py
+streamlit run frontend/streamlit/Home.py
 ```
 
 ## 🔧 Environment Variables
@@ -172,52 +172,55 @@ LOG_LEVEL=INFO
 ```
 eco-ai-ly/
 ├── .devcontainer/           # Development container configuration
-├── assets/                  # Static assets and resources
-│   ├── images/             # Image assets and logos
-│   └── styles/             # CSS and styling files
-├── backend/                 # Core backend functionality
-│   ├── api.py              # API integration and endpoints
-│   ├── other_countries.py  # International data handling
-│   ├── carbon_intensity/   # Carbon intensity analysis
-│   │   ├── models/        # ML model definitions
-│   │   ├── data/         # Data processing scripts
-│   │   └── utils/        # Helper functions
-│   ├── renewable_percentage/  # Renewable energy analysis
-│   │   ├── models/        # ML model definitions
-│   │   ├── data/         # Data processing scripts
-│   │   └── utils/        # Helper functions
-│   ├── production_consumption/  # Production vs consumption analysis
-│   │   ├── models/        # ML model definitions
-│   │   ├── data/         # Data processing scripts
-│   │   └── utils/        # Helper functions
-│   └── import_export/     # Import/export analysis
-│       ├── models/        # ML model definitions
-│       ├── data/         # Data processing scripts
-│       └── utils/        # Helper functions
-├── pages/                  # Streamlit application pages
-│   ├── 1_Carbon_Intensity.py           # Carbon intensity dashboard
-│   ├── 2_Renewable_Percentage.py       # Renewable percentage dashboard
-│   ├── 3_Production_VS_Consumption.py  # Production vs consumption dashboard
-│   └── 4_Import_VS_Export.py          # Import vs export dashboard
-├── .venv/                  # Python virtual environment
-├── .env                    # Environment variables
-├── .gitignore             # Git ignore rules
-├── Home.py                # Main application entry point
-├── LICENSE                # Project license
-├── README.md              # Project documentation
-├── requirements.txt       # Python dependencies
-├── pyproject.toml         # Project configuration
-└── uv.lock               # Dependency lock file
+├── backend/                 # Main backend services and models
+│   ├── api/                 # Main API definitions
+│   │   └── CI_RP/           # Example API for Carbon Intensity & Renewable Percentage
+│   └── mvp/                 # Core MVP features (data processing, original models)
+│       ├── carbon_intensity/
+│       ├── power_breakdown/
+│       └── renewable_percentage/
+├── branding/                # Branding assets (logos, color palettes)
+├── frontend/
+│   ├── streamlit/           # Streamlit application
+│   │   ├── assets/          # Static assets (logo, styles) for Streamlit app
+│   │   │   ├── images/
+│   │   │   └── styles/
+│   │   ├── backend/         # Streamlit-specific backend logic and data handlers
+│   │   │   ├── carbon_intensity/
+│   │   │   │   ├── model_stats/  # Folder for CI model performance files (plots, metrics)
+│   │   │   │   └── carbon_intensity_model_stats.py # Module to display CI stats
+│   │   │   ├── renewable_percentage/
+│   │   │   │   ├── model_stats/  # Folder for RP model performance files (plots, metrics)
+│   │   │   │   └── renewable_percentage_model_stats.py # Module to display RP stats
+│   │   │   └── other_countries.py # Example utility for Streamlit backend
+│   │   ├── pages/             # Individual Streamlit pages/dashboards
+│   │   │   ├── 1_Carbon_Intensity.py
+│   │   │   ├── 2_Renewable_Percentage.py
+│   │   │   ├── 3_Production_VS_Consumption.py
+│   │   │   └── 4_Import_VS_Export.py
+│   │   ├── Home.py            # Main Streamlit application entry point
+│   │   └── README.md          # Streamlit application documentation (this file)
+│   └── next/                  # Next.js application (if used)
+│       └── ...
+├── .venv/                   # Python virtual environment
+├── .env                     # Environment variables (created from .env.example)
+├── .env.example             # Example environment variables file
+├── .gitignore               # Git ignore rules
+├── LICENSE                  # Project license
+├── README.md                # Main project documentation
+├── requirements.txt         # Python dependencies for the project
+├── pyproject.toml           # Project configuration (e.g., for Ruff, Black)
+└── uv.lock                  # Dependency lock file (if using uv)
 ```
 
 ## 🎯 Usage
 
-1. Start the application:
-```bash
-streamlit run Home.py
-```
+1. Start the application (from the project root directory `eco-ai-ly/`):
+   ```bash
+   streamlit run frontend/streamlit/Home.py
+   ```
 
-2. Navigate to `http://localhost:8501` in your web browser
+2. Navigate to `http://localhost:8501` in your web browser.
 3. Use the sidebar to access different features:
    - Carbon Intensity Analysis
    - Renewable Percentage Tracking
@@ -268,14 +271,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📧 Contact
 
 For questions and support, please contact:
-- Email: guilhermegranchopro@gmail.com
-- Website: https://ecoaily.streamlit.app/
-- GitHub: https://github.com/guilhermegranchopro
+- Email: [guilhermegranchopro@gmail.com](mailto:guilhermegranchopro@gmail.com)
+- Website: [https://ecoaily.streamlit.app/](https://ecoaily.streamlit.app/)
+- GitHub: [https://github.com/guilhermegranchopro](https://github.com/guilhermegranchopro)
 
 ---
 
 <div align="center">
   <sub>Built with ❤️ by the Eco AI.ly Team</sub>
   <br>
-  <sub>© 2024 Eco AI.ly. All rights reserved.</sub>
+  <sub>© 2025 Eco AI.ly. All rights reserved.</sub>
 </div>
