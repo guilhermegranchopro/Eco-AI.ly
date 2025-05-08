@@ -17,11 +17,11 @@ def load_model_and_scalers():
     """Cache the model and scalers to avoid reloading them on every prediction"""
     try:
         # compute the folder that Home.py lives in
-        HERE = os.path.dirname(__file__)  
+        HERE = os.path.dirname(__file__)
 
         # point at assets/images/logo.png inside the same folder
         model_path = os.path.join(HERE, "models", "model_carbon_intensity.keras")
-        
+
         # Load model with custom_objects to handle any custom components
         model = tf.keras.models.load_model(
             model_path,
