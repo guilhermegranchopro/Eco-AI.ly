@@ -84,10 +84,11 @@ def generate_carbon_intensity_pdf_report(
 
             # Logo
             try:
+                HERE = os.path.dirname(os.path.abspath(__file__))
                 # Attempt to load logo if available
-                self.image("assets/images/logo.png", 10, 8, 33)
-            except:
-                pass
+                self.image(os.path.join(HERE, "assets/images/logo.png"), 10, 8, 33)
+            except Exception as e:
+                print(f"Error loading logo: {e}")
             # Title
             self.set_font("Arial", "B", 15)
             self.cell(0, 10, title, 0, 1, "C")
