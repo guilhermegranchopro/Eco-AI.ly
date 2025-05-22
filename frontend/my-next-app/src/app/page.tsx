@@ -1,127 +1,129 @@
 import Image from "next/image";
 
-// Define interfaces for the data
-interface CarbonIntensityDataPoint {
-  time: string; // Or Date
-  value: number; // Or string, depending on the API
-  unit: string;
-}
-
-interface CarbonIntensityDisplayProps {
-  title: string;
-  data: CarbonIntensityDataPoint[];
-}
-
-// Placeholder data - In a real application, this would come from an API
-const last24HoursData: CarbonIntensityDataPoint[] = [
-  { time: "2025-05-22 10:00", value: 150, unit: "gCO2/kWh" },
-  { time: "2025-05-22 11:00", value: 145, unit: "gCO2/kWh" },
-  // ... more data points
-  { time: "2025-05-23 09:00", value: 160, unit: "gCO2/kWh" },
-];
-
-const next24HoursPrediction: CarbonIntensityDataPoint[] = [
-  { time: "2025-05-23 10:00", value: 155, unit: "gCO2/kWh (predicted)" },
-  { time: "2025-05-23 11:00", value: 150, unit: "gCO2/kWh (predicted)" },
-  // ... more data points
-  { time: "2025-05-24 09:00", value: 165, unit: "gCO2/kWh (predicted)" },
-];
-
-// Component to display carbon intensity data
-const CarbonIntensityDisplay: React.FC<CarbonIntensityDisplayProps> = ({ title, data }) => {
-  return (
-    <div className="w-full p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-800">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-200">{title}</h2>
-      <ul className="space-y-2">
-        {data.map((point, index) => (
-          <li key={index} className="text-sm text-gray-600 dark:text-gray-300 flex justify-between">
-            <span>{point.time}:</span>
-            <span className="font-medium">{point.value} {point.unit}</span>
-          </li>
-        ))}
-        {data.length === 0 && <p className="text-gray-500 dark:text-gray-400">No data available.</p>}
-      </ul>
-    </div>
-  );
-};
-
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-8 font-[family-name:var(--font-geist-sans)] text-gray-900 dark:text-white">
-      <header className="text-center mb-10 sm:mb-16">
-        <h1 className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400">
-          Eco AI.ly
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">
-          Portugal Carbon Intensity Dashboard
-        </p>
+    <div className="flex flex-col items-center min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-[family-name:var(--font-geist-sans)]">
+      {/* Header/Logo Section */}
+      <header className="w-full flex justify-center py-6 sm:py-8 bg-white dark:bg-gray-800 shadow-md">
+        {/* 
+          Please ensure your logo image is placed in:
+          frontend/my-next-app/public/assets/images/logo.png
+          The width and height below are placeholders; adjust them to your logo's aspect ratio.
+        */}
+        <Image 
+          src="/assets/images/logo.png" 
+          alt="Eco AI.ly Logo" 
+          width={500} // Placeholder width
+          height={100} // Placeholder height
+          priority 
+        />
       </header>
 
-      <main className="flex flex-col gap-8 md:gap-12 row-start-2 w-full max-w-5xl px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          <CarbonIntensityDisplay title="Last 24 Hours" data={last24HoursData} />
-          <CarbonIntensityDisplay title="Next 24 Hours Prediction" data={next24HoursPrediction} />
-        </div>
+      <main className="w-full max-w-6xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-8 sm:mt-12">
+        {/* Welcome Section */}
+        <section className="text-center my-8 p-6 sm:p-8 rounded-xl shadow-lg bg-white dark:bg-gray-800 w-full">
+          <h1 className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-400 mb-4">
+            🌱 Welcome to Eco AI.ly
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300">
+            Your innovative platform at the intersection of <strong>Artificial Intelligence</strong> 🤖 and <strong>Sustainability</strong> 🌍. 
+            We empower decision-makers with accurate, real-time predictions on environmental metrics, enabling a greener future for all.
+          </p>
+        </section>
 
-        <div className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 font-[family-name:var(--font-geist-mono)]">
-          <p>This is a placeholder for more detailed charts and information.</p>
-          <p>Data displayed is for demonstration purposes only and will be replaced with live API data.</p>
-        </div>
+        {/* Key Features Section */}
+        <section className="my-8 sm:my-12 w-full">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-green-800 dark:text-green-300 mb-8 text-center">
+            ✨ Our Key Features
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+              <h3 className="text-2xl font-semibold text-green-700 dark:text-green-500 mb-3">📊 Predictive Analytics</h3>
+              <ul className="list-none space-y-2 text-gray-600 dark:text-gray-300">
+                <li>• 📈 Real-time energy consumption forecasts</li>
+                <li>• 🌡️ Environmental impact predictions</li>
+                <li>• 📉 Trend analysis and pattern recognition</li>
+              </ul>
+            </div>
+            <div className="p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+              <h3 className="text-2xl font-semibold text-green-700 dark:text-green-500 mb-3">📱 Data Visualization</h3>
+              <ul className="list-none space-y-2 text-gray-600 dark:text-gray-300">
+                <li>• 📊 Interactive dashboards</li>
+                <li>• 📈 Dynamic charts and graphs</li>
+                <li>• 🎯 Customizable data views</li>
+              </ul>
+            </div>
+            <div className="p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+              <h3 className="text-2xl font-semibold text-green-700 dark:text-green-500 mb-3">🤖 AI-Powered Insights</h3>
+              <ul className="list-none space-y-2 text-gray-600 dark:text-gray-300">
+                <li>• 🧠 Machine learning models</li>
+                <li>• 🔍 Pattern recognition</li>
+                <li>• 📋 Automated reporting</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Explore Our Platform Section */}
+        <section className="my-8 sm:my-12 p-6 sm:p-8 rounded-xl shadow-lg bg-white dark:bg-gray-800 w-full text-center">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-green-800 dark:text-green-300 mb-6">
+            🌍 Explore Our Platform
+          </h2>
+          <div>
+            <h3 className="text-2xl font-semibold text-green-700 dark:text-green-500 mb-3">🇵🇹 Portugal Data Dashboard</h3>
+            <ul className="list-none inline-block text-left space-y-2 text-gray-600 dark:text-gray-300">
+              <li>• 📊 Comprehensive energy consumption metrics</li>
+              <li>• ⚡ Real-time data updates</li>
+              <li>• 📈 Historical trend analysis</li>
+              <li>• 🔄 Export and import statistics</li>
+            </ul>
+            {/* 
+              Placeholder for navigation to the dashboard. 
+              We can create this page (e.g., /dashboard/portugal) next.
+            */}
+            {/* <a href="/dashboard/portugal" className="mt-6 inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg">View Dashboard</a> */}
+          </div>
+        </section>
+
+        {/* Our Technology Stack Section */}
+        <section className="my-8 sm:my-12 w-full">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-green-800 dark:text-green-300 mb-8 text-center">
+            ⚙️ Our Technology Stack
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+            <div className="p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
+              <h3 className="text-2xl font-semibold text-green-700 dark:text-green-500 mb-3">🔧 Backend Technologies</h3>
+              <ul className="list-none space-y-2 text-gray-600 dark:text-gray-300">
+                <li>• 🐍 Python & TensorFlow for AI models</li>
+                <li>• 🔄 Advanced data processing pipelines</li>
+                <li>• ⚡ Real-time data integration</li>
+              </ul>
+            </div>
+            <div className="p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
+              <h3 className="text-2xl font-semibold text-green-700 dark:text-green-500 mb-3">🎨 Frontend Technologies</h3>
+              <ul className="list-none space-y-2 text-gray-600 dark:text-gray-300">
+                <li>• 💻 Next.js & React for a dynamic and performant frontend</li>
+                <li>• 🎨 Tailwind CSS for modern and responsive styling</li>
+                <li>• 📊 Interactive charts using libraries like Recharts or Chart.js</li>
+                <li>• 📱 Fully responsive design for all devices</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Call to Action Section */}
+        <section className="my-8 sm:my-12 text-center p-8 sm:p-10 rounded-xl shadow-xl bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white w-full">
+          <h2 className="text-3xl sm:text-4xl font-semibold mb-4">🌟 Ready to Make a Difference?</h2>
+          <p className="text-lg sm:text-xl">
+            Join us in our mission to create a sustainable future through AI-powered insights. 🌱
+          </p>
+        </section>
       </main>
 
-      <footer className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 w-full max-w-5xl text-center">
-        <div className="flex flex-wrap items-center justify-center gap-6 mb-4">
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-gray-600 dark:text-gray-300"
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/file.svg" // Assuming these icons are in the public folder
-              alt="File icon"
-              width={16}
-              height={16}
-              className="dark:invert"
-            />
-            Learn Next.js
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-gray-600 dark:text-gray-300"
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/window.svg" // Assuming these icons are in the public folder
-              alt="Window icon"
-              width={16}
-              height={16}
-              className="dark:invert"
-            />
-            Examples
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-gray-600 dark:text-gray-300"
-            href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/globe.svg" // Assuming these icons are in the public folder
-              alt="Globe icon"
-              width={16}
-              height={16}
-              className="dark:invert"
-            />
-            Go to nextjs.org
-          </a>
-        </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          © {new Date().getFullYear()} Eco AI.ly. Powered by Next.js and Vercel.
+      {/* Footer */}
+      <footer className="w-full text-center py-8 sm:py-10 mt-12 border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          © {new Date().getFullYear()} Eco AI.ly - Empowering Sustainable Decisions with AI 🌿
         </p>
       </footer>
     </div>
