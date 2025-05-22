@@ -77,11 +77,8 @@ export default function Home() {
               <li>• 📈 Historical trend analysis</li>
               <li>• 🔄 Export and import statistics</li>
             </ul>
-            {/* 
-              Placeholder for navigation to the dashboard. 
-              We can create this page (e.g., /dashboard/portugal) next.
-            */}
-            {/* <a href="/dashboard/portugal" className="mt-6 inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg">View Dashboard</a> */}
+            {/* Link to the new dashboard page */}
+            <a href="/dashboard/portugal" className="mt-6 inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg">View Dashboard</a>
           </div>
         </section>
 
