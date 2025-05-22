@@ -1,7 +1,7 @@
 \
-"use client"; // Required for components with event handlers or state, good practice for pages with components
+"use client";
 
-import Image from "next/image"; // Though not used directly in this version, good to keep if icons are added later
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Define interfaces for the data
 interface CarbonIntensityDataPoint {
@@ -17,39 +17,90 @@ interface CarbonIntensityDisplayProps {
 
 // Placeholder data - In a real application, this would come from an API
 const last24HoursData: CarbonIntensityDataPoint[] = [
-  { time: "2025-05-22 10:00", value: 150, unit: "gCO2/kWh" },
-  { time: "2025-05-22 11:00", value: 145, unit: "gCO2/kWh" },
-  { time: "2025-05-22 12:00", value: 140, unit: "gCO2/kWh" },
-  { time: "2025-05-22 13:00", value: 135, unit: "gCO2/kWh" },
-  { time: "2025-05-22 14:00", value: 130, unit: "gCO2/kWh" },
-  { time: "2025-05-23 09:00", value: 160, unit: "gCO2/kWh" },
+  { time: "10:00", value: 150, unit: "gCO2/kWh" },
+  { time: "11:00", value: 145, unit: "gCO2/kWh" },
+  { time: "12:00", value: 140, unit: "gCO2/kWh" },
+  { time: "13:00", value: 135, unit: "gCO2/kWh" },
+  { time: "14:00", value: 130, unit: "gCO2/kWh" },
+  { time: "15:00", value: 160, unit: "gCO2/kWh" },
 ];
 
 const next24HoursPrediction: CarbonIntensityDataPoint[] = [
-  { time: "2025-05-23 10:00", value: 155, unit: "gCO2/kWh (predicted)" },
-  { time: "2025-05-23 11:00", value: 150, unit: "gCO2/kWh (predicted)" },
-  { time: "2025-05-23 12:00", value: 148, unit: "gCO2/kWh (predicted)" },
-  { time: "2025-05-23 13:00", value: 145, unit: "gCO2/kWh (predicted)" },
-  { time: "2025-05-23 14:00", value: 142, unit: "gCO2/kWh (predicted)" },
-  { time: "2025-05-24 09:00", value: 165, unit: "gCO2/kWh (predicted)" },
+  { time: "10:00", value: 155, unit: "gCO2/kWh (predicted)" },
+  { time: "11:00", value: 150, unit: "gCO2/kWh (predicted)" },
+  { time: "12:00", value: 148, unit: "gCO2/kWh (predicted)" },
+  { time: "13:00", value: 145, unit: "gCO2/kWh (predicted)" },
+  { time: "14:00", value: 142, unit: "gCO2/kWh (predicted)" },
+  { time: "15:00", value: 165, unit: "gCO2/kWh (predicted)" },
 ];
 
-// Component to display carbon intensity data
+// Component to display carbon intensity data with a chart
 const CarbonIntensityDisplay: React.FC<CarbonIntensityDisplayProps> = ({ title, data }) => {
   return (
     <div className="w-full p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-800">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-200">{title}</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-700 dark:text-gray-200">{title}</h2>
       {data.length > 0 ? (
-        <ul className="space-y-2">
-          {data.map((point, index) => (
-            <li key={index} className="text-sm text-gray-600 dark:text-gray-300 flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
-              <span>{point.time}:</span>
-              <span className="font-medium text-lg">{point.value} <span className="text-xs">{point.unit}</span></span>
-            </li>
-          ))}
-        </ul>
+        <ResponsiveContainer width="100%" height={350}>
+          <LineChart 
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 20, // Increased bottom margin for XAxis labels
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#4A5568" />
+            <XAxis 
+              dataKey="time" 
+              stroke="#718096" 
+              tick={{ fontSize: 12 }}
+              angle={-30} // Angle labels to prevent overlap
+              textAnchor="end" // Anchor angled labels correctly
+              height={50} // Allocate space for angled labels
+            />
+            <YAxis 
+              stroke="#718096" 
+              tick={{ fontSize: 12 }} 
+              label={{ 
+                value: data[0]?.unit.replace(" (predicted)", ""), // Use base unit for label
+                angle: -90, 
+                position: 'insideLeft', 
+                fill: '#A0AEC0', 
+                fontSize: 14, 
+                dy: 70, // Adjust dy for better positioning with angled X-axis labels
+                dx: -10 // Adjust dx for better positioning
+              }} 
+            />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: 'rgba(45, 55, 72, 0.95)', 
+                border: '1px solid #4A5568', 
+                borderRadius: '0.5rem', 
+                color: '#E2E8F0' 
+              }} 
+              itemStyle={{ color: '#E2E8F0' }}
+              labelStyle={{ color: '#CBD5E0', fontWeight: 'bold' }} 
+              cursor={{fill: 'rgba(113, 128, 150, 0.3)'}}
+              formatter={(value: number, name: string, props: any) => [`${value} ${props.payload.unit}`, 'Intensity']} // Custom formatter for tooltip
+            />
+            <Legend 
+              wrapperStyle={{ color: '#A0AEC0', paddingTop: '15px' }} 
+              formatter={(value, entry) => <span style={{ color: '#A0AEC0' }}>{title}</span>} // Use chart title for legend
+            />
+            <Line 
+              type="monotone" 
+              dataKey="value" 
+              stroke="#38A169" 
+              strokeWidth={2.5} 
+              activeDot={{ r: 8, strokeWidth: 2, stroke: '#2F855A'}} 
+              dot={{ r: 4, fill: '#38A169' }}
+              name={title} // Use chart title for line name (can be used by legend/tooltip)
+            />
+          </LineChart>
+        </ResponsiveContainer>
       ) : (
-        <p className="text-gray-500 dark:text-gray-400">No data available for {title}.</p>
+        <p className="text-gray-500 dark:text-gray-400 text-center py-10">No data available for {title}.</p>
       )}
     </div>
   );
@@ -67,15 +118,15 @@ export default function PortugalDashboardPage() {
         </p>
       </header>
 
-      <main className="flex flex-col gap-8 md:gap-12 w-full max-w-5xl px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+      <main className="flex flex-col gap-8 md:gap-12 w-full max-w-6xl px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           <CarbonIntensityDisplay title="Last 24 Hours" data={last24HoursData} />
           <CarbonIntensityDisplay title="Next 24 Hours Prediction" data={next24HoursPrediction} />
         </div>
 
         <div className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 font-[family-name:var(--font-geist-mono)]">
           <p>Data displayed is for demonstration purposes and will be replaced with live API data.</p>
-          <p>
+          <p className="mt-2">
             <a href="/" className="text-green-600 dark:text-green-400 hover:underline">
               &larr; Back to Homepage
             </a>
@@ -83,7 +134,7 @@ export default function PortugalDashboardPage() {
         </div>
       </main>
 
-      <footer className="mt-16 py-8 border-t border-gray-200 dark:border-gray-700 w-full max-w-5xl text-center">
+      <footer className="mt-16 py-8 border-t border-gray-200 dark:border-gray-700 w-full max-w-6xl text-center">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           © {new Date().getFullYear()} Eco AI.ly
         </p>
