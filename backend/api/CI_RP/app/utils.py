@@ -4,11 +4,14 @@ import pandas as pd
 import numpy as np
 import joblib
 import tensorflow as tf
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 # Load secrets from env
 API_KEY = os.getenv("ELECTRICITYMAP_API_KEY")
-BASE_URL = os.getenv("ELECTRICITYMAP_BASE_URL", "https://api.electricitymap.org/v3")
-REGION = os.getenv("ELECTRICITYMAP_REGION", "PT")
+BASE_URL = os.getenv("ELECTRICITYMAP_BASE_URL")
+REGION = os.getenv("ELECTRICITYMAP_REGION")
 
 # Paths to your saved models & scalers (mount these into container)
 SCALER_RP_PATH = os.getenv(
@@ -32,6 +35,9 @@ _model_ci = tf.keras.models.load_model(MODEL_CI_PATH)
 
 
 def _fetch_history(endpoint: str, field: str) -> pd.DataFrame:
+    print(BASE_URL)
+    print(REGION)
+    print(API_KEY)
     url = f"{BASE_URL}/{endpoint}?zone={REGION}"
     headers = {"auth-token": API_KEY}
     resp = requests.get(url, headers=headers)

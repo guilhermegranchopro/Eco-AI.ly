@@ -1,12 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from app.utils import get_renewable_percentage, get_carbon_intensity
 import uvicorn
-from dotenv import load_dotenv
-
-load_dotenv()  # Load environment variables from .env file
 
 app = FastAPI(title="Energy Forecast API")
-
 
 @app.get(
     "/api/renewable-percentage",
