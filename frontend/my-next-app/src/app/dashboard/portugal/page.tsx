@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from 'react'; // Added useEffect and useState
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts'; // Added TooltipProps
+import Link from 'next/link'; // Import Link
 
 // Define interfaces for the data
 interface CarbonIntensityDataPoint {
@@ -34,20 +35,40 @@ const next24HoursPredictionPlaceholder: CarbonIntensityDataPoint[] = [
 ];
 
 // Component to display carbon intensity data with a chart
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const dataPoint = payload[0].payload as CarbonIntensityDataPoint;
+    return (
+      <div className="p-2 bg-gray-700 bg-opacity-90 border border-gray-600 rounded-md shadow-lg text-white">
+        <p className="label text-sm text-gray-300">{`Time : ${label}`}</p>
+        <p className="intro text-sm font-semibold">{`Intensity : ${payload[0].value} ${dataPoint.unit}`}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const CarbonIntensityDisplay: React.FC<CarbonIntensityDisplayProps> = ({ title, data, isLoading, error }) => {
   if (isLoading) {
     return (
-      <div className="w-full p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-800 flex items-center justify-center min-h-[438px]">
-        <p className="text-gray-500 dark:text-gray-400">Loading data for {title}...</p>
+      <div className="w-full p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-800 flex flex-col items-center justify-center min-h-[438px]">
+        <svg className="animate-spin h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p className="text-gray-500 dark:text-gray-400">Loading {title}...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-800 flex flex-col items-center justify-center min-h-[438px]">
-        <p className="text-red-500 dark:text-red-400">Error loading data for {title}:</p>
-        <p className="text-red-400 dark:text-red-300 text-sm">{error}</p>
+      <div className="w-full p-6 border border-red-300 dark:border-red-700 rounded-xl shadow-lg bg-red-50 dark:bg-red-900 flex flex-col items-center justify-center min-h-[438px]">
+        <svg className="h-12 w-12 text-red-500 dark:text-red-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+        <p className="text-xl font-semibold text-red-700 dark:text-red-300 mb-2">Error loading {title}</p>
+        <p className="text-red-600 dark:text-red-400 text-sm text-center px-4">{error}</p>
       </div>
     );
   }
@@ -89,20 +110,12 @@ const CarbonIntensityDisplay: React.FC<CarbonIntensityDisplayProps> = ({ title, 
               }} 
             />
             <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'rgba(45, 55, 72, 0.95)', 
-                border: '1px solid #4A5568', 
-                borderRadius: '0.5rem', 
-                color: '#E2E8F0' 
-              }} 
-              itemStyle={{ color: '#E2E8F0' }}
-              labelStyle={{ color: '#CBD5E0', fontWeight: 'bold' }} 
+              content={<CustomTooltip />} // Use custom tooltip
               cursor={{fill: 'rgba(113, 128, 150, 0.3)'}}
-              formatter={(value: number, name: string, props: any) => [`${value} ${props.payload.unit}`, 'Intensity']} 
             />
             <Legend 
               wrapperStyle={{ color: '#A0AEC0', paddingTop: '15px' }} 
-              formatter={(value, entry) => <span style={{ color: '#A0AEC0' }}>{title}</span>} 
+              formatter={() => <span style={{ color: '#A0AEC0' }}>{title.split(" (")[0]}</span>} // Simplified legend
             />
             <Line 
               type="monotone" 
@@ -111,7 +124,7 @@ const CarbonIntensityDisplay: React.FC<CarbonIntensityDisplayProps> = ({ title, 
               strokeWidth={2.5} 
               activeDot={{ r: 8, strokeWidth: 2, stroke: '#2F855A'}} 
               dot={{ r: 4, fill: '#38A169' }}
-              name={title} 
+              name={title.split(" (")[0]} // Simplified name for legend matching
             />
           </LineChart>
         </ResponsiveContainer>
@@ -124,42 +137,45 @@ const CarbonIntensityDisplay: React.FC<CarbonIntensityDisplayProps> = ({ title, 
 
 export default function PortugalDashboardPage() {
   const [last24HoursApiData, setLast24HoursApiData] = useState<CarbonIntensityDataPoint[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [predictionData, setPredictionData] = useState<CarbonIntensityDataPoint[]>(next24HoursPredictionPlaceholder);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastFetchTime, setLastFetchTime] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('http://localhost:8080/api/carbon-intensity');
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}: ${await response.text()}`);
+      }
+      const apiData = await response.json();
+
+      const transformedHistory = apiData.history.map((point: ApiHistoryPoint) => ({
+        time: new Date(point.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        value: point.value,
+        unit: "gCO2/kWh",
+      }));
+      setLast24HoursApiData(transformedHistory);
+      setLastFetchTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+      console.log("API Prediction Class:", apiData.prediction_class);
+
+    } catch (err: unknown) { // Changed 'e: any' to 'err: unknown'
+      console.error("Failed to fetch carbon intensity data:", err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+      setLast24HoursApiData([]);
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        // Assuming your FastAPI backend is running on http://localhost:8080
-        const response = await fetch('http://localhost:8080/api/carbon-intensity');
-        if (!response.ok) {
-          throw new Error(`API request failed with status ${response.status}: ${await response.text()}`);
-        }
-        const data = await response.json();
-
-        // Transform API history data for the chart
-        const transformedHistory = data.history.map((point: ApiHistoryPoint) => ({
-          time: new Date(point.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          value: point.value,
-          unit: "gCO2/kWh", // Assuming this unit from your previous setup
-        }));
-        setLast24HoursApiData(transformedHistory);
-
-        // TODO: Handle prediction_class from data.prediction_class if needed
-        // For now, prediction chart uses placeholder data.
-        console.log("API Prediction Class:", data.prediction_class);
-
-      } catch (e: any) {
-        console.error("Failed to fetch carbon intensity data:", e);
-        setError(e.message || "An unknown error occurred");
-        setLast24HoursApiData([]); // Clear data on error
-      }
-      setIsLoading(false);
-    };
-
     fetchData();
   }, []);
 
@@ -175,6 +191,23 @@ export default function PortugalDashboardPage() {
       </header>
 
       <main className="flex flex-col gap-8 md:gap-12 w-full max-w-6xl px-4">
+        <div className="flex justify-between items-center mb-2">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {lastFetchTime && !isLoading && !error && (
+              <span>Last updated: {lastFetchTime}</span>
+            )}
+          </div>
+          <button
+            onClick={fetchData}
+            disabled={isLoading}
+            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-5 h-5 mr-2 ${isLoading ? 'animate-spin' : ''}`}>
+              <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.204 4.306A5.532 5.532 0 0 1 4.5 12.5c0-1.404.524-2.69 1.386-3.697L4.303 7.21C3.36 8.435 2.75 10.068 2.75 11.852c0 3.444 2.724 6.25 6.083 6.25 2.434 0 4.568-1.423 5.526-3.512l.001-.002-1.048-2.164ZM4.688 8.576l1.048 2.164A5.5 5.5 0 0 1 14.94 6.434a5.532 5.532 0 0 1 1.56 3.216c0 1.404-.524 2.69-1.386 3.697l1.583 1.593c.944-1.226 1.553-2.86 1.553-4.642 0-3.444-2.724-6.25-6.083-6.25-2.434 0-4.568 1.423-5.526 3.512l-.001.002Z" clipRule="evenodd" />
+            </svg>
+            {isLoading ? 'Refreshing...' : 'Refresh Data'}
+          </button>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           <CarbonIntensityDisplay 
             title="Last 24 Hours" 
@@ -183,9 +216,8 @@ export default function PortugalDashboardPage() {
             error={error} 
           />
           <CarbonIntensityDisplay 
-            title="Next 24 Hours Prediction (Placeholder)" // Updated title
+            title="Next 24 Hours Prediction (Placeholder)"
             data={predictionData} 
-            // This chart is not currently driven by API, so no isLoading/error from this fetch
           />
         </div>
 
@@ -198,11 +230,11 @@ export default function PortugalDashboardPage() {
         )}
 
         <div className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 font-[family-name:var(--font-geist-mono)]">
-          <p>Data for "Last 24 Hours" is fetched from your local API. "Next 24 Hours Prediction" currently uses placeholder data.</p>
+          <p>Data for &quot;Last 24 Hours&quot; is fetched from your local API. &quot;Next 24 Hours Prediction&quot; currently uses placeholder data.</p>
           <p className="mt-2">
-            <a href="/" className="text-green-600 dark:text-green-400 hover:underline">
+            <Link href="/" className="text-green-600 dark:text-green-400 hover:underline">
               &larr; Back to Homepage
-            </a>
+            </Link>
           </p>
         </div>
       </main>
