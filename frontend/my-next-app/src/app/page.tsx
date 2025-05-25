@@ -1,42 +1,71 @@
-"use client"; // Add this at the top if not already present
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { ReactNode, useEffect, useState } from "react";
-import { motion, AnimatePresence, useAnimation, AnimationControls } from "framer-motion";
+import { ReactNode, useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence, useAnimation, AnimationControls, useMotionValue, useTransform } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-// SVG Icon Components (can be moved to a separate file later)
+// SVG Icon Components (Enhanced with motion)
 const PredictiveAnalyticsIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500">
+  <motion.svg
+    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500"
+    whileHover={{ scale: 1.15, rotate: 5 }}
+    animate={{ opacity: [0.8, 1, 0.8] }}
+    transition={{ opacity: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } }}
+  >
     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l3.045-3.045m0 0A18.75 18.75 0 0121.5 12M6.795 10.455A18.75 18.75 0 002.5 12m4.295-1.545l2.016 2.016m-2.016-2.016L6.75 8.25m2.016 4.268L6.75 10.455m1.06 6.273l2.016-2.016m-2.016 2.016L6.75 16.75m2.016-4.268L6.75 14.732m9-3.232h.008v.008H15.75V11.5m0 2.25h.008v.008H15.75V13.75m0 2.25h.008v.008H15.75V16m0 2.25h.008v.008H15.75V18.25M12 11.5h.008v.008H12V11.5m0 2.25h.008v.008H12V13.75m0 2.25h.008v.008H12V16m0 2.25h.008v.008H12V18.25m-3.75-6.75h.008v.008H8.25V11.5m0 2.25h.008v.008H8.25V13.75m0 2.25h.008v.008H8.25V16m0 2.25h.008v.008H8.25V18.25M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-  </svg>
+  </motion.svg>
 );
 
 const DataVisualizationIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500">
+  <motion.svg 
+    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500"
+    whileHover={{ scale: 1.15, y: -5 }}
+    animate={{ scale: [1, 1.03, 1] }}
+    transition={{ scale: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
+  >
     <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-  </svg>
+  </motion.svg>
 );
 
 const AIPoweredInsightsIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500">
+  <motion.svg 
+    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500"
+    whileHover={{ scale: 1.15, filter: "brightness(1.2)" }}
+    animate={{ rotate: [0, 3, -3, 0] }}
+    transition={{ rotate: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
+  >
     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M12 3v1.5M12 21v-1.5M12 8.25v7.5M15.75 3v1.5M15.75 21v-1.5M19.5 8.25H12M19.5 15.75H12" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 12m-3 0a3 3 0 106 0 3 3 0 10-6 0Z" />
-  </svg>
+    <motion.path 
+      strokeLinecap="round" strokeLinejoin="round" d="M12 12m-3 0a3 3 0 106 0 3 3 0 10-6 0Z" 
+      animate={{ scale: [1, 1.1, 1], opacity: [0.7, 1, 0.7] }}
+      transition={{ default: { duration: 2, repeat: Infinity, ease: "easeInOut" }}}
+    />
+  </motion.svg>
 );
 
 const BackendTechIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500">
+  <motion.svg 
+    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500"
+    whileHover={{ scale: 1.15, x: -3 }}
+    animate={{ opacity: [0.85, 1, 0.85] }}
+    transition={{ opacity: { duration: 2.8, repeat: Infinity, ease: "easeInOut" } }}
+  >
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
-  </svg>
+  </motion.svg>
 );
 
 const FrontendTechIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500">
+  <motion.svg 
+    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 mb-4 text-green-500"
+    whileHover={{ scale: 1.15, y: -3 }}
+    animate={{ filter: ["brightness(1)", "brightness(1.1)", "brightness(1)"] }}
+    transition={{ filter: { duration: 3.2, repeat: Infinity, ease: "easeInOut" } }}
+  >
     <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5.16 12.75M9.75 3.104A2.25 2.25 0 0112 4.5h5.25a2.25 2.25 0 012.25 2.25v4.072a2.25 2.25 0 01-.659 1.591L14.84 12.75M9.75 3.104A2.25 2.25 0 007.5 4.5H2.25a2.25 2.25 0 00-2.25 2.25v4.072a2.25 2.25 0 00.659 1.591L5.16 12.75m0 0L2.25 15M5.16 12.75l2.595-2.595m0 0A2.25 2.25 0 019.75 8.25v0M14.84 12.75l2.595 2.595m0 0A2.25 2.25 0 0014.25 18v0M14.84 12.75L12 15.165m2.84-2.415L12 10.155M12 10.155L9.16 12.75" />
     <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 15.75H14.25" />
-  </svg>
+  </motion.svg>
 );
 
 const ArrowRightIcon = () => (
@@ -68,10 +97,73 @@ const staggerContainer = {
   animate: { transition: { staggerChildren: 0.1 } },
 };
 
-const cardHover = {
-  scale: 1.05,
-  boxShadow: "0px 15px 30px rgba(0, 200, 0, 0.2)",
-  transition: { type: "spring", stiffness: 300 }
+// NEW InteractiveCard Component
+const InteractiveCard = ({ children, className, variants }: { children: ReactNode, className?: string, variants?: any }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const mouseX = useMotionValue(0.5); // Normalized 0-1 for center
+  const mouseY = useMotionValue(0.5); // Normalized 0-1 for center
+
+  // Spring animations for smoother tilt reset
+  const springConfig = { stiffness: 150, damping: 20 };
+  const rotateX = useTransform(mouseY, [0, 1], [-8, 8]); // Tilt range reduced slightly
+  const springRotateX = useAnimation();
+  const rotateY = useTransform(mouseX, [0, 1], [8, -8]); // Tilt range reduced slightly
+  const springRotateY = useAnimation();
+
+  const glareX = useTransform(mouseX, [0, 1], [100, 0]); // For a glare effect %
+  const glareY = useTransform(mouseY, [0, 1], [100, 0]); // For a glare effect %
+
+  useEffect(() => {
+    springRotateX.start(rotateX.get(), springConfig);
+    springRotateY.start(rotateY.get(), springConfig);
+  }, [rotateX, rotateY, springRotateX, springRotateY]); // This might be too frequent, let's simplify
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      mouseX.set((event.clientX - rect.left) / rect.width);
+      mouseY.set((event.clientY - rect.top) / rect.height);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0.5); // Reset to center
+    mouseY.set(0.5); // Reset to center
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className={`${className} relative`} // Added relative for glare positioning
+      variants={variants}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transformStyle: "preserve-3d",
+        perspective: "1000px",
+        rotateX: rotateX, // Direct use, spring can be added via animate prop if needed
+        rotateY: rotateY,
+      }}
+      whileHover={{
+        scale: 1.03,
+        boxShadow: "0px 20px 40px rgba(0, 180, 0, 0.25)", // Enhanced shadow
+      }}
+      transition={{ type: "spring", stiffness: 200, damping: 15 }} // For scale/boxShadow hover
+    >
+      <motion.div
+        className="absolute inset-0 rounded-2xl opacity-0 pointer-events-none mix-blend-overlay dark:mix-blend-soft-light"
+        style={{
+          background: `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.5), transparent 60%)`,
+        }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      />
+      <div style={{ transform: "translateZ(30px)" }} className="relative z-10"> {/* Lift content slightly & ensure it's above glare */}
+        {children}
+      </div>
+    </motion.div>
+  );
 };
 
 // Animated Number Component - REVISED and TYPED
@@ -108,82 +200,60 @@ const AnimatedNumber = ({ value }: { value: number }) => {
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  // Generic component for sections to reduce repetition
   const AnimatedSection = ({ children, className, id }: { children: ReactNode, className?: string, id?: string }) => {
-    const controls: AnimationControls = useAnimation(); // Explicitly type controls
+    const controls: AnimationControls = useAnimation();
     const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
     useEffect(() => {
-      if (inView) {
-        controls.start("animate");
-      }
+      if (inView) { controls.start("animate"); }
     }, [controls, inView]);
 
     return (
-      <motion.section
-        id={id}
-        ref={ref}
-        className={className}
-        variants={staggerContainer}
-        initial="initial"
-        animate={controls}
-      >
+      <motion.section id={id} ref={ref} className={className} variants={staggerContainer} initial="initial" animate={controls}>
         {children}
       </motion.section>
     );
   };
 
-
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-gray-100 via-green-50 to-emerald-100 dark:from-gray-900 dark:via-black dark:to-green-900 text-gray-800 dark:text-gray-100 font-[family-name:var(--font-geist-sans)] transition-colors duration-300 overflow-x-hidden">
-      {/* Sticky Header */}
       <motion.header 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         className="sticky top-0 z-50 w-full flex justify-center py-4 sm:py-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-2xl transition-all duration-300"
       >
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <Link href="/" className="hover:opacity-80 transition-opacity">
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <Image 
-                src="/assets/images/logo.png" 
-                alt="Eco AI.ly Logo" 
-                width={200} 
-                height={40} 
-                priority 
-                className="h-10 sm:h-12 w-auto"
-              />
+            <motion.div whileHover={{ scale: 1.05, rotate: -2 }} transition={{ type: "spring", stiffness:300 }}>
+              <Image src="/assets/images/logo.png" alt="Eco AI.ly Logo" width={200} height={40} priority className="h-10 sm:h-12 w-auto"/>
             </motion.div>
           </Link>
-          <nav className="hidden md:flex items-center space-x-6">
-            {[
-              { href: "#features", label: "Features" },
-              { href: "#platform", label: "Platform" },
-              { href: "#tech", label: "Technology" },
-              { href: "#impact", label: "Our Impact" },
+          <nav className="hidden md:flex items-center space-x-1">
+            {[ { href: "#features", label: "Features" }, { href: "#platform", label: "Platform" }, { href: "#tech", label: "Technology" }, { href: "#impact", label: "Our Impact" },
             ].map(link => (
-              <motion.div key={link.href} whileHover={{ scale: 1.1 }}>
-                <Link href={link.href} className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 font-medium">
+              <motion.div key={link.href} className="relative px-3 py-2 group">
+                <Link href={link.href} className="text-gray-600 dark:text-gray-300 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200 font-medium">
                   {link.label}
                 </Link>
+                <motion.div 
+                  className="absolute bottom-1 left-0 right-0 h-0.5 bg-green-500 dark:bg-green-400 origin-center"
+                  initial={{ scaleX: 0 }}
+                  variants={{ hover: { scaleX: 1 }, initial: { scaleX: 0 } }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
               </motion.div>
             ))}
-            <motion.div whileHover={{ scale: 1.05 }}>
+            <motion.div className="ml-4" whileHover={{ scale: 1.05 }}>
               <Link href="/dashboard/portugal" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-xl">
                 View Dashboard
               </Link>
             </motion.div>
           </nav>
           <div className="md:hidden">
-            <motion.button 
-              onClick={toggleMobileMenu} 
-              className="text-gray-600 dark:text-gray-300 focus:outline-none z-50"
-              whileTap={{ scale: 0.9 }}
-            >
+            <motion.button onClick={toggleMobileMenu} className="text-gray-600 dark:text-gray-300 focus:outline-none z-50" whileTap={{ scale: 0.9 }}>
               {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </motion.button>
           </div>
@@ -230,20 +300,25 @@ export default function Home() {
         <AnimatedSection className="text-center my-12 sm:my-16 p-8 sm:p-12 rounded-3xl shadow-2xl bg-white dark:bg-gray-800 w-full transform transition-all duration-500 hover:scale-[1.01] overflow-hidden relative">
           {/* Subtle animated background elements */}
           <motion.div 
-            className="absolute top-0 left-0 w-32 h-32 bg-green-300/30 dark:bg-green-700/30 rounded-full filter blur-2xl opacity-50"
-            animate={{ x: [0, 100, 0], y: [0, 50, 0], scale: [1, 1.2, 1]}}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute top-0 left-0 w-32 h-32 bg-green-300/20 dark:bg-green-700/20 rounded-full filter blur-3xl opacity-40"
+            animate={{ x: [0, 100, -50, 80, 0], y: [0, -60, 70, -40, 0], scale: [1, 1.3, 0.8, 1.2, 1], rotate: [0, 90, -60, 120, 0]}}
+            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div 
-            className="absolute bottom-0 right-0 w-40 h-40 bg-emerald-300/30 dark:bg-emerald-700/30 rounded-full filter blur-2xl opacity-50"
-            animate={{ x: [0, -100, 0], y: [0, -50, 0], scale: [1, 1.3, 1] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: 5 }}
+            className="absolute bottom-0 right-0 w-40 h-40 bg-emerald-300/20 dark:bg-emerald-700/20 rounded-full filter blur-3xl opacity-40"
+            animate={{ x: [0, -120, 60, -90, 0], y: [0, 50, -70, 40, 0], scale: [1, 1.2, 0.9, 1.4, 1], rotate: [0, -80, 70, -100, 0] }}
+            transition={{ duration: 35, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           />
           
           <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 relative z-10">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500">
+            <motion.span
+              className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500"
+              style={{ backgroundSize: "300% auto" }}
+              animate={{ backgroundPosition: ["0% center", "150% center", "0% center"] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            >
               Eco AI.ly
-            </span>
+            </motion.span>
           </motion.h1>
           <motion.p variants={fadeInUp} className="text-xl sm:text-2xl text-gray-700 dark:text-gray-300 mb-4 relative z-10">
             Harnessing <strong className="text-green-600 dark:text-green-400">Artificial Intelligence</strong> for a <strong className="text-emerald-600 dark:text-emerald-400">Sustainable Planet</strong> 🌍.
@@ -265,25 +340,23 @@ export default function Home() {
             ✨ Our Core Capabilities
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: <PredictiveAnalyticsIcon />, title: "Predictive Analytics", items: ["Real-time energy forecasts", "Environmental impact predictions", "Trend analysis & pattern recognition"] },
+            {[ { icon: <PredictiveAnalyticsIcon />, title: "Predictive Analytics", items: ["Real-time energy forecasts", "Environmental impact predictions", "Trend analysis & pattern recognition"] },
               { icon: <DataVisualizationIcon />, title: "Data Visualization", items: ["Interactive dashboards", "Dynamic charts & graphs", "Customizable data views"] },
               { icon: <AIPoweredInsightsIcon />, title: "AI-Powered Insights", items: ["Advanced machine learning models", "Actionable pattern recognition", "Automated sustainability reporting"] }
             ].map((feature) => (
-              <motion.div 
+              <InteractiveCard 
                 key={feature.title} 
                 variants={fadeInUp}
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-green-500/50"
-                whileHover={cardHover}
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-green-500/30"
               >
-                <motion.div whileHover={{ rotate: [0, 10, -10, 0], transition: { duration: 0.5, repeat: Infinity } }}>
+                <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {feature.icon}
                 </motion.div>
                 <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-4">{feature.title}</h3>
                 <ul className="list-none space-y-2 text-gray-600 dark:text-gray-400 text-sm">
                   {feature.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
-              </motion.div>
+              </InteractiveCard>
             ))}
           </div>
         </AnimatedSection>
@@ -323,24 +396,22 @@ export default function Home() {
             ⚙️ Built With Cutting-Edge Technology
           </motion.h2>
           <div className="grid md:grid-cols-2 gap-8">
-            {[
-              { icon: <BackendTechIcon />, title: "Robust Backend", items: ["Python & TensorFlow for AI", "FastAPI for efficient APIs", "Advanced data processing pipelines", "Real-time data integration"] },
+            {[ { icon: <BackendTechIcon />, title: "Robust Backend", items: ["Python & TensorFlow for AI", "FastAPI for efficient APIs", "Advanced data processing pipelines", "Real-time data integration"] },
               { icon: <FrontendTechIcon />, title: "Dynamic Frontend", items: ["Next.js, React & TypeScript", "Tailwind CSS for modern styling", "Framer Motion for animations", "Recharts for interactive charts"] }
             ].map((tech) => (
-              <motion.div 
+              <InteractiveCard 
                 key={tech.title} 
                 variants={fadeInUp}
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-emerald-500/50"
-                whileHover={cardHover}
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-emerald-500/30"
               >
-                 <motion.div whileHover={{ scale: [1, 1.2, 1], transition: { duration: 1, repeat: Infinity } }}>
+                 <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {tech.icon}
                 </motion.div>
                 <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-4">{tech.title}</h3>
                 <ul className="list-none space-y-2 text-gray-600 dark:text-gray-400 text-sm">
                   {tech.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
-              </motion.div>
+              </InteractiveCard>
             ))}
           </div>
         </AnimatedSection>
@@ -351,21 +422,20 @@ export default function Home() {
             📈 Our Impact in Numbers
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { label: "Tons of CO2 Offset Annually", value: 15000, displaySuffix: "+" },
+            {[ { label: "Tons of CO2 Offset Annually", value: 15000, displaySuffix: "+" },
               { label: "Renewable Energy Projects Optimized", value: 300, displaySuffix: "+" },
               { label: "Data Points Processed Daily", value: 10, displaySuffix: "M+" }
             ].map(stat => (
-              <motion.div 
+              <InteractiveCard 
                 key={stat.label}
                 variants={fadeInUp}
-                className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center transform transition-all duration-300 hover:scale-105 border border-transparent hover:border-green-400/50"
+                className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center border border-transparent hover:border-green-400/30"
               >
                 <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
                   <AnimatedNumber value={stat.value} />{stat.displaySuffix}
                 </div>
                 <p className="text-md sm:text-lg text-gray-700 dark:text-gray-300">{stat.label}</p>
-              </motion.div>
+              </InteractiveCard>
             ))}
           </div>
         </AnimatedSection>
@@ -373,14 +443,14 @@ export default function Home() {
         {/* Call to Action Section - Enhanced */}
         <AnimatedSection className="my-16 sm:my-20 text-center p-10 sm:p-16 rounded-3xl shadow-2xl bg-gray-800 dark:bg-black text-white w-full relative overflow-hidden">
             <motion.div 
-              className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/20 rounded-full filter blur-3xl"
-              animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/15 rounded-full filter blur-3xl"
+              animate={{ scale: [1, 1.4, 0.9, 1.5, 1], opacity: [0.4, 0.7, 0.3, 0.8, 0.4], rotate: [0, -70, 80, -50, 0] }}
+              transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div 
-              className="absolute -bottom-20 -right-20 w-72 h-72 bg-emerald-500/20 rounded-full filter blur-3xl"
-              animate={{ scale: [1, 1.4, 1], opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+              className="absolute -bottom-20 -right-20 w-72 h-72 bg-emerald-500/15 rounded-full filter blur-3xl"
+              animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
+              transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
             />
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10">
             Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-500">Greener Future</span>?
