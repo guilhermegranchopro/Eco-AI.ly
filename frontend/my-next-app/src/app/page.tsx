@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, animate, SpringOptions } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useTheme } from "./theme-provider"; // Added useTheme import
 
 // SVG Icon Components (Enhanced with motion)
 const PredictiveAnalyticsIcon = () => (
@@ -224,6 +225,30 @@ const AnimatedNumber = ({ value }: { value: number }) => {
   );
 };
 
+// Theme Toggle Button Component
+const ThemeToggleButton = () => {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <motion.button
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      aria-label="Toggle theme"
+    >
+      {theme === 'light' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+        </svg>
+      )}
+    </motion.button>
+  );
+};
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -290,7 +315,7 @@ export default function Home() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-        className="sticky top-0 z-50 w-full flex justify-center py-4 sm:py-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-2xl transition-all duration-300 rounded-b-2xl" // Added rounded-b-2xl
+        className="sticky top-0 z-50 w-full flex justify-center py-4 sm:py-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-2xl transition-all duration-300 rounded-b-2xl" // Updated dark bg for header
       >
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <Link href="/" className="hover:opacity-80 transition-opacity">
@@ -331,8 +356,12 @@ export default function Home() {
                 View Dashboard
               </Link>
             </motion.div>
+            <div className="ml-4">
+              <ThemeToggleButton />
+            </div>
           </nav>
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-4"> {/* Added flex and space for mobile menu button and theme toggle */}
+            <ThemeToggleButton />
             <motion.button onClick={toggleMobileMenu} className="text-gray-600 dark:text-gray-300 focus:outline-none z-50" whileTap={{ scale: 0.9 }}>
               {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </motion.button>
@@ -348,7 +377,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg shadow-xl z-40 min-h-screen rounded-b-2xl" // Added rounded-b-2xl to mobile menu
+            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl z-40 min-h-screen rounded-b-2xl" // Updated dark bg for mobile menu
             onClick={toggleMobileMenu} 
           >
             <nav className="flex flex-col space-y-6 items-center text-xl">
@@ -450,7 +479,7 @@ export default function Home() {
             ].map((feature) => (
               <InteractiveCard 
                 key={feature.title} 
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-green-500/30" // Ensure rounded-2xl
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-green-500/30" // Ensure rounded-2xl and updated dark bg
               >
                 <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {feature.icon}
@@ -467,20 +496,20 @@ export default function Home() {
         <AnimatedDivider />
 
         {/* Explore Our Platform Section - Enhanced */}
-        <AnimatedSection id="platform" className="py-16 md:py-24 bg-gray-900/30">
+        <AnimatedSection id="platform" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-900/50">
           {/* Decorative elements */}
-          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
-          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
+          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-gray-700/20 dark:border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
+          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-gray-600/10 dark:border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
 
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-gray-800 dark:text-white">
             Dive Into Our Platform
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10">
+          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-600 dark:text-gray-300">
             Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
           </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-3">🇵🇹 Portugal Data Dashboard</h3>
-            <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-100 dark:text-green-200">
+            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-gray-800 dark:text-white">🇵🇹 Portugal Data Dashboard</h3>
+            <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-700 dark:text-green-200">
               <li>Comprehensive energy consumption metrics</li>
               <li>Real-time carbon intensity updates</li>
               <li>Historical trend analysis & AI predictions</li>
@@ -508,7 +537,7 @@ export default function Home() {
             ].map((tech) => (
               <InteractiveCard 
                 key={tech.title} 
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-emerald-500/30" // Ensure rounded-2xl
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-emerald-500/30" // Ensure rounded-2xl and updated dark bg
               >
                  <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {tech.icon}
@@ -537,7 +566,7 @@ export default function Home() {
               <InteractiveCard 
                 key={stat.label}
                 variants={fadeInUp}
-                className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center border border-transparent hover:border-green-400/30" // Ensure rounded-2xl
+                className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center border border-transparent hover:border-green-400/30" // Ensure rounded-2xl and updated dark bg
               >
                 <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
                   <AnimatedNumber value={stat.value} />{stat.displaySuffix}
@@ -551,14 +580,14 @@ export default function Home() {
         <AnimatedDivider />
 
         {/* Call to Action Section - Enhanced */}
-        <AnimatedSection id="cta" className="py-16 md:py-24 bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20">
+        <AnimatedSection id="cta" className="py-16 md:py-24 bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20 dark:from-purple-700/30 dark:via-transparent dark:to-cyan-700/30">
           <motion.div 
-            className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/15 rounded-full filter blur-3xl"
+            className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/15 dark:bg-green-400/10 rounded-full filter blur-3xl"
             animate={{ scale: [1, 1.4, 0.9, 1.5, 1], opacity: [0.4, 0.7, 0.3, 0.8, 0.4], rotate: [0, -70, 80, -50, 0] }}
             transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div 
-            className="absolute -bottom-20 -right-20 w-72 h-72 bg-emerald-500/15 rounded-full filter blur-3xl"
+            className="absolute -bottom-20 -right-20 w-72 h-72 bg-emerald-500/15 dark:bg-emerald-400/10 rounded-full filter blur-3xl"
             animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           />
@@ -582,7 +611,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="w-full py-8 text-center text-gray-400 border-t border-gray-700/50 mt-16 md:mt-24 rounded-t-2xl" // Added rounded-t-2xl
+        className="w-full py-8 text-center text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-2xl" // Updated dark border for footer
       >
         <p>&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
         <p className="text-xs">Innovating for a Greener Future.</p>
