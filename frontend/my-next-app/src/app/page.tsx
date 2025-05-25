@@ -1,10 +1,9 @@
 "use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { ReactNode, useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence, useAnimation, AnimationControls, useMotionValue, useTransform } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import React, { useState, useEffect, useRef, useCallback, useMemo, ReactNode } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, animate, MotionValue, AnimationControls, SpringOptions } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 // SVG Icon Components (Enhanced with motion)
 const PredictiveAnalyticsIcon = () => (
@@ -97,31 +96,99 @@ const staggerContainer = {
   animate: { transition: { staggerChildren: 0.1 } },
 };
 
-// NEW InteractiveCard Component
-const InteractiveCard = ({ children, className, variants }: { children: ReactNode, className?: string, variants?: any }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const mouseX = useMotionValue(0.5); // Normalized 0-1 for center
-  const mouseY = useMotionValue(0.5); // Normalized 0-1 for center
-
-  // Spring animations for smoother tilt reset
-  const springConfig = { stiffness: 150, damping: 20 };
-  const rotateX = useTransform(mouseY, [0, 1], [-8, 8]); // Tilt range reduced slightly
-  const springRotateX = useAnimation();
-  const rotateY = useTransform(mouseX, [0, 1], [8, -8]); // Tilt range reduced slightly
-  const springRotateY = useAnimation();
-
-  const glareX = useTransform(mouseX, [0, 1], [100, 0]); // For a glare effect %
-  const glareY = useTransform(mouseY, [0, 1], [100, 0]); // For a glare effect %
+// POTENTIAL NEW HOOK (if not already defined elsewhere)
+const useMousePosition = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    springRotateX.start(rotateX.get(), springConfig);
-    springRotateY.start(rotateY.get(), springConfig);
-  }, [rotateX, rotateY, springRotateX, springRotateY]); // This might be too frequent, let's simplify
+    const updateMousePosition = (ev: MouseEvent) => {
+      setMousePosition({ x: ev.clientX, y: ev.clientY });
+    };
+    window.addEventListener('mousemove', updateMousePosition);
+    return () => {
+      window.removeEventListener('mousemove', updateMousePosition);
+    };
+  }, []);
+  return mousePosition;
+};
 
+// NEW COMPONENT: CursorFollower
+const CursorFollower = () => {
+  const { x, y } = useMousePosition();
+  const springConfig: SpringOptions = { damping: 30, stiffness: 200, mass: 0.8 };
+  const xSpring = useSpring(typeof window !== 'undefined' ? window.innerWidth / 2 : 0, springConfig);
+  const ySpring = useSpring(typeof window !== 'undefined' ? window.innerHeight / 2 : 0, springConfig);
+
+  useEffect(() => {
+    xSpring.set(x - 10);
+    ySpring.set(y - 10);
+  }, [x, y, xSpring, ySpring]);
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 w-5 h-5 bg-gradient-to-br from-cyan-300 to-purple-400 rounded-full pointer-events-none z-[99999] opacity-60 shadow-lg"
+      style={{ x: xSpring, y: ySpring }}
+      animate={{
+        scale: [1, 1.3, 1],
+        opacity: [0.4, 0.7, 0.4],
+      }}
+      transition={{
+        duration: 2.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  );
+};
+
+// NEW COMPONENT: AnimatedDivider
+const AnimatedDivider = () => {
+  return (
+    <div className="w-full max-w-3xl mx-auto my-16 md:my-24 px-4">
+      <motion.div className="h-px relative overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+          initial={{ x: "-101%" }}
+          animate={{ x: "101%" }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear",
+            delay: 0.2,
+          }}
+        />
+        <motion.div
+          className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-purple-600 to-transparent"
+          initial={{ x: "-101%" }}
+          animate={{ x: "101%" }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear",
+            delay: 1.7, // Offset start time for second gradient line
+          }}
+        />
+      </motion.div>
+    </div>
+  );
+};
+
+
+// NEW InteractiveCard Component
+const InteractiveCard = ({ children, className, variants }: { children: ReactNode, className?: string, variants?: any }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const glareX = useTransform(mouseX, [0, 1], ['100%', '-100%']);
+  const glareY = useTransform(mouseY, [0, 1], ['100%', '-100%']);
+
+  const springCardOptions: SpringOptions = { stiffness: 300, damping: 20 };
+  const rotateX = useSpring(useTransform(mouseY, [0, 1], [10, -10]), springCardOptions);
+  const rotateY = useSpring(useTransform(mouseX, [0, 1], [-10, 10]), springCardOptions);
+  
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (cardRef.current) {
-      const rect = cardRef.current.getBoundingClientRect();
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
       mouseX.set((event.clientX - rect.left) / rect.width);
       mouseY.set((event.clientY - rect.top) / rect.height);
     }
@@ -134,34 +201,48 @@ const InteractiveCard = ({ children, className, variants }: { children: ReactNod
 
   return (
     <motion.div
-      ref={cardRef}
-      className={`${className} relative`} // Added relative for glare positioning
-      variants={variants}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      ref={ref}
+      className={`relative p-6 md:p-8 rounded-xl shadow-xl overflow-hidden bg-gray-800/30 backdrop-blur-md border border-gray-700/50 ${className}`}
       style={{
-        transformStyle: "preserve-3d",
-        perspective: "1000px",
-        rotateX: rotateX, // Direct use, spring can be added via animate prop if needed
-        rotateY: rotateY,
+        transformStyle: 'preserve-3d',
+        rotateX,
+        rotateY,
       }}
       whileHover={{
         scale: 1.03,
-        boxShadow: "0px 20px 40px rgba(0, 180, 0, 0.25)", // Enhanced shadow
+        boxShadow: "0px 15px 35px rgba(0, 255, 255, 0.2), 0px 5px 15px rgba(168, 85, 247, 0.2)", // Enhanced hover shadow
+        borderColor: "rgba(56, 189, 248, 0.7)", // Cyan border on hover
       }}
-      transition={{ type: "spring", stiffness: 200, damping: 15 }} // For scale/boxShadow hover
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
     >
-      <motion.div
-        className="absolute inset-0 rounded-2xl opacity-0 pointer-events-none mix-blend-overlay dark:mix-blend-soft-light"
-        style={{
-          background: `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.5), transparent 60%)`,
-        }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      />
-      <div style={{ transform: "translateZ(30px)" }} className="relative z-10"> {/* Lift content slightly & ensure it's above glare */}
+      <div style={{ transform: 'translateZ(40px)' }} className="relative z-10"> {/* Content lifted */}
         {children}
       </div>
+      {/* Glare effect - ensure this is styled correctly */}
+      <motion.div
+        className="absolute top-0 left-0 w-full h-full pointer-events-none z-20"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+          translateX: glareX,
+          translateY: glareY,
+          opacity: useTransform(mouseX, [0, 0.5, 1], [0, 0.6, 0]), // More subtle glare
+        }}
+      />
+      {/* New Animated Border Element (Optional - can be complex to layer with existing effects) */}
+      <motion.div 
+        className="absolute inset-0 rounded-xl border-2 border-transparent pointer-events-none z-0"
+        variants={{
+          initial: { borderColor: "rgba(100, 116, 139, 0.2)" }, // Faint initial border
+          hover: { 
+            borderColor: ["rgba(0, 220, 255, 0.5)", "rgba(192, 132, 252, 0.5)", "rgba(0, 220, 255, 0.5)"],
+          }
+        }}
+        transition={{
+          borderColor: { duration: 2, repeat: Infinity, ease: "linear" }
+        }}
+      />
     </motion.div>
   );
 };
@@ -170,30 +251,24 @@ const InteractiveCard = ({ children, className, variants }: { children: ReactNod
 const AnimatedNumber = ({ value }: { value: number }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
   const [displayValue, setDisplayValue] = useState(0);
-  const controls = useAnimation();
 
   useEffect(() => {
     if (inView) {
-      controls.start({
-        animatedValue: value, // Animate a custom prop
-        transition: { duration: 2, ease: "easeOut" }
+      const animationControls = animate(0, value, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (latest) => {
+          setDisplayValue(Math.round(latest));
+        }
       });
+      return () => animationControls.stop(); // Cleanup animation
     }
-  }, [inView, value, controls]);
+  }, [inView, value]); // Effect dependencies
 
   return (
-    <motion.span
-      ref={ref}
-      initial={{ animatedValue: 0 }} // Initial state of the custom prop
-      animate={controls}
-      onUpdate={(latest: { animatedValue?: number }) => { // Explicitly type latest
-        if (typeof latest.animatedValue === 'number') {
-          setDisplayValue(Math.round(latest.animatedValue));
-        }
-      }}
-    >
+    <span ref={ref}> {/* Ref for useInView */}
       {displayValue.toLocaleString()}
-    </motion.span>
+    </span>
   );
 };
 
@@ -202,8 +277,9 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
+  // Type for AnimationControls if used directly (it was in AnimatedSection)
   const AnimatedSection = ({ children, className, id }: { children: ReactNode, className?: string, id?: string }) => {
-    const controls: AnimationControls = useAnimation();
+    const controls = useAnimation(); // Keep AnimationControls type consistent if useAnimation is used
     const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
     useEffect(() => {
@@ -216,10 +292,60 @@ export default function Home() {
       </motion.section>
     );
   };
+  // Example of adding new decorative shapes to Hero section
+  const heroShapes = useMemo(() => [
+    // ... your existing shapes ...
+    { id: 'shape-new-1', className: "absolute top-1/4 left-1/5 w-20 h-20 bg-teal-500/20 rounded-full filter blur-lg", animation: { x: [0, 15, -10, 0], y: [0, -25, 20, 0], scale: [1, 1.2, 0.8, 1], rotate: [0, 70, -60, 0] }, transition: { duration: 22, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" as const } },
+    { id: 'shape-new-2', className: "absolute bottom-1/3 right-1/4 w-28 h-12 border-2 border-fuchsia-500/30 rounded-3xl transform -skew-x-12", animation: { skewX: [-12, 12, -12], x: [0, -20, 20, 0], opacity: [0.5, 0.8, 0.5] }, transition: { duration: 18, repeat: Infinity, ease: "linear", repeatType: "mirror" as const } },
+    { id: 'shape-new-3', className: "absolute bottom-1/2 right-1/2 w-16 h-16 opacity-30", animation: { pathLength: [0, 1, 0], rotate: [0, 360] }, transition: { duration: 15, repeat: Infinity, ease: "linear" }, isPath: true, d: "M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM8 12.8C5.34903 12.8 3.2 10.651 3.2 8C3.2 5.34903 5.34903 3.2 8 3.2C10.651 3.2 12.8 5.34903 12.8 8C12.8 10.651 10.651 12.8 8 12.8Z", fill:"url(#gradPulse)" }
+  ], []);
+  // Define gradient for the path shape
+  // <svg width="0" height="0" style={{ position: 'absolute' }}>
+  //   <defs>
+  //     <linearGradient id="gradPulse" x1="0%" y1="0%" x2="100%" y2="100%">
+  //       <stop offset="0%" style={{stopColor: 'rgba(56,189,248,0.7)', stopOpacity: 1}} />
+  //       <stop offset="100%" style={{stopColor: 'rgba(168,85,247,0.7)', stopOpacity: 1}} />
+  //     </linearGradient>
+  //   </defs>
+  // </svg>
+
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-gray-100 via-green-50 to-emerald-100 dark:from-gray-900 dark:via-black dark:to-green-900 text-gray-800 dark:text-gray-100 font-[family-name:var(--font-geist-sans)] transition-colors duration-300 overflow-x-hidden">
-      <motion.header 
+    <motion.main
+      className="flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased bg-[#0A0F1A]" // Base dark color
+      initial="initial"
+      animate="animate"
+      variants={{
+        initial: { background: "linear-gradient(135deg, #0A0F1A 0%, #101626 50%, #0A0F1A 100%)" },
+        animate: {
+          background: [
+            "linear-gradient(135deg, #0A0F1A 0%, #101626 25%, #1A2035 50%, #101626 75%, #0A0F1A 100%)",
+            "linear-gradient(135deg, #0A0F1A 0%, #1A2035 25%, #101626 50%, #1A2035 75%, #0A0F1A 100%)",
+            "linear-gradient(135deg, #0A0F1A 0%, #101626 25%, #1A2035 50%, #101626 75%, #0A0F1A 100%)",
+          ],
+        }
+      }}
+      transition={{
+        background: { // Target the background property specifically for transition
+          duration: 25,
+          repeat: Infinity,
+          ease: "linear",
+        }
+      }}
+    >
+      <CursorFollower />
+      
+      {/* Add the SVG defs for path animation gradient if used */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <linearGradient id="gradPulse" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{stopColor: 'rgba(56,189,248,0.7)', stopOpacity: 1}} />
+            <stop offset="100%" style={{stopColor: 'rgba(168,85,247,0.7)', stopOpacity: 1}} />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <motion.header // <<< FIXED: Was <header>, changed to <motion.header>
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
@@ -234,18 +360,27 @@ export default function Home() {
           <nav className="hidden md:flex items-center space-x-1">
             {[ { href: "#features", label: "Features" }, { href: "#platform", label: "Platform" }, { href: "#tech", label: "Technology" }, { href: "#impact", label: "Our Impact" },
             ].map(link => (
-              <motion.div key={link.href} className="relative px-3 py-2 group">
+              // FIXED: Added whileHover and initial to this parent motion.div to drive underline animation
+              <motion.div 
+                key={link.href} 
+                className="relative px-3 py-2 group" 
+                whileHover="hover" 
+                initial="initial"
+              >
                 <Link href={link.href} className="text-gray-600 dark:text-gray-300 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200 font-medium">
                   {link.label}
                 </Link>
                 <motion.div 
                   className="absolute bottom-1 left-0 right-0 h-0.5 bg-green-500 dark:bg-green-400 origin-center"
-                  initial={{ scaleX: 0 }}
-                  variants={{ hover: { scaleX: 1 }, initial: { scaleX: 0 } }}
+                  // initial={{ scaleX: 0 }} // This is now handled by the parent's 'initial' variant state
+                  variants={{ 
+                    initial: { scaleX: 0 }, // Variant for initial state
+                    hover: { scaleX: 1 }    // Variant for hover state
+                  }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               </motion.div>
-            ))}
+            ))} {/* MODIFIED: Corrected closing parentheses from ))) to )) */}
             <motion.div className="ml-4" whileHover={{ scale: 1.05 }}>
               <Link href="/dashboard/portugal" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-xl">
                 View Dashboard
@@ -334,8 +469,10 @@ export default function Home() {
           </motion.div>
         </AnimatedSection>
 
+        <AnimatedDivider />
+
         {/* Key Features Section - Enhanced */}
-        <AnimatedSection id="features" className="my-16 sm:my-20 w-full scroll-mt-24">
+        <AnimatedSection id="features" className="py-16 md:py-24">
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-12 sm:mb-16 text-center">
             ✨ Our Core Capabilities
           </motion.h2>
@@ -361,8 +498,10 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
+        <AnimatedDivider />
+
         {/* Explore Our Platform Section - Enhanced */}
-        <AnimatedSection id="platform" className="my-16 sm:my-20 p-8 sm:p-12 rounded-3xl shadow-xl bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 dark:from-green-700 dark:via-emerald-700 dark:to-teal-800 w-full text-center text-white scroll-mt-24 relative overflow-hidden">
+        <AnimatedSection id="platform" className="py-16 md:py-24 bg-gray-900/30">
           {/* Decorative elements */}
           <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
           <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
@@ -390,8 +529,10 @@ export default function Home() {
           </motion.div>
         </AnimatedSection>
 
-        {/* Our Technology Stack Section - Enhanced */}
-        <AnimatedSection id="tech" className="my-16 sm:my-20 w-full scroll-mt-24">
+        <AnimatedDivider />
+
+        {/* Technology Stack Section - Enhanced */}
+        <AnimatedSection id="tech-stack" className="py-16 md:py-24">
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-12 sm:mb-16 text-center">
             ⚙️ Built With Cutting-Edge Technology
           </motion.h2>
@@ -416,8 +557,10 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
+        <AnimatedDivider />
+
         {/* Our Impact in Numbers Section - NEW */}
-        <AnimatedSection id="impact" className="my-16 sm:my-20 w-full scroll-mt-24">
+        <AnimatedSection id="impact" className="py-16 md:py-24">
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-12 sm:mb-16 text-center">
             📈 Our Impact in Numbers
           </motion.h2>
@@ -440,18 +583,20 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
+        <AnimatedDivider />
+
         {/* Call to Action Section - Enhanced */}
-        <AnimatedSection className="my-16 sm:my-20 text-center p-10 sm:p-16 rounded-3xl shadow-2xl bg-gray-800 dark:bg-black text-white w-full relative overflow-hidden">
-            <motion.div 
-              className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/15 rounded-full filter blur-3xl"
-              animate={{ scale: [1, 1.4, 0.9, 1.5, 1], opacity: [0.4, 0.7, 0.3, 0.8, 0.4], rotate: [0, -70, 80, -50, 0] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div 
-              className="absolute -bottom-20 -right-20 w-72 h-72 bg-emerald-500/15 rounded-full filter blur-3xl"
-              animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
-              transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-            />
+        <AnimatedSection id="cta" className="py-16 md:py-24 bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20">
+          <motion.div 
+            className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/15 rounded-full filter blur-3xl"
+            animate={{ scale: [1, 1.4, 0.9, 1.5, 1], opacity: [0.4, 0.7, 0.3, 0.8, 0.4], rotate: [0, -70, 80, -50, 0] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div 
+            className="absolute -bottom-20 -right-20 w-72 h-72 bg-emerald-500/15 rounded-full filter blur-3xl"
+            animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
+            transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          />
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10">
             Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-500">Greener Future</span>?
           </motion.h2>
@@ -472,38 +617,15 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="w-full text-center py-10 sm:py-12 mt-12 border-t border-gray-200/50 dark:border-gray-700/50 bg-gray-100/70 dark:bg-gray-800/70 backdrop-blur-sm transition-colors duration-300"
+        className="w-full py-8 text-center text-gray-400 border-t border-gray-700/50 mt-16 md:mt-24"
       >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center space-y-6 sm:space-y-0">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
-            <Image 
-              src="/assets/images/logo.png" 
-              alt="Eco AI.ly Logo" 
-              width={160} 
-              height={32} 
-              className="h-8 w-auto"
-            />
-          </Link>
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {[
-              { href: "#features", label: "Features" },
-              { href: "#platform", label: "Platform" },
-              { href: "#tech", label: "Technology" },
-              { href: "#impact", label: "Impact" },
-              { href: "/dashboard/portugal", label: "Dashboard" },
-              // { href: "/privacy", label: "Privacy Policy" }, // Example link
-              // { href: "/terms", label: "Terms of Service" }, // Example link
-            ].map(link => (
-              <Link key={link.href} href={link.href} className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 text-sm">
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} Eco AI.ly. All rights reserved.
-          </p>
-        </div>
+        <p>&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
+        <p className="text-xs">Innovating for a Greener Future.</p>
+        {/* Add social links or other footer content here, potentially with looping hover animations */}
       </motion.footer>
-    </div>
+    </motion.main>
   );
-}
+};
+
+// Ensure all other components (AnimatedSection, specific SVG icons, etc.) are correctly defined or imported.
+// Review z-index values across components to ensure correct layering, especially with the CursorFollower.
