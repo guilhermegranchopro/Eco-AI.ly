@@ -274,7 +274,17 @@ export default function Home() {
     // ... your existing shapes ...
     { id: 'shape-new-1', className: "absolute top-1/4 left-1/5 w-20 h-20 bg-teal-500/20 rounded-full filter blur-lg", animation: { x: [0, 15, -10, 0], y: [0, -25, 20, 0], scale: [1, 1.2, 0.8, 1], rotate: [0, 70, -60, 0] }, transition: { duration: 22, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" as const } },
     { id: 'shape-new-2', className: "absolute bottom-1/3 right-1/4 w-28 h-12 border-2 border-fuchsia-500/30 rounded-3xl transform -skew-x-12", animation: { skewX: [-12, 12, -12], x: [0, -20, 20, 0], opacity: [0.5, 0.8, 0.5] }, transition: { duration: 18, repeat: Infinity, ease: "linear", repeatType: "mirror" as const } },
-    { id: 'shape-new-3', className: "absolute bottom-1/2 right-1/2 w-16 h-16 opacity-30", animation: { pathLength: [0, 1, 0], rotate: [0, 360] }, transition: { duration: 15, repeat: Infinity, ease: "linear" }, isPath: true, d: "M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM8 12.8C5.34903 12.8 3.2 10.651 3.2 8C3.2 5.34903 5.34903 3.2 8 3.2C10.651 3.2 12.8 5.34903 12.8 8C12.8 10.651 10.651 12.8 8 12.8Z", fill:"url(#gradPulse)" }
+    { 
+      id: 'shape-new-3', 
+      className: "absolute bottom-1/2 right-1/2 w-16 h-16 opacity-30", 
+      animation: { pathLength: [0, 1, 0], rotate: [0, 360] }, 
+      transition: { duration: 15, repeat: Infinity, ease: "linear" }, 
+      isPath: true, 
+      d: "M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM8 12.8C5.34903 12.8 3.2 10.651 3.2 8C3.2 5.34903 5.34903 3.2 8 3.2C10.651 3.2 12.8 5.34903 12.8 8C12.8 10.651 10.651 12.8 8 12.8Z", 
+      fill:"url(#gradPulse)",
+      stroke: "none", // Added stroke property
+      strokeWidth: 0   // Added strokeWidth property
+    }
   ], []);
 
 
@@ -408,34 +418,39 @@ export default function Home() {
         {/* Welcome Section - Enhanced */}
         <AnimatedSection className="text-center my-12 sm:my-16 p-8 sm:p-12 rounded-3xl shadow-2xl bg-white dark:bg-gray-800 w-full transform transition-all duration-500 hover:scale-[1.01] overflow-hidden relative">
           {/* Subtle animated background elements */}
-          {heroShapesData.map(shape => ( // Use heroShapesData here
-            shape.isPath ? (
-              <motion.svg 
-                key={shape.id} 
-                className={shape.className} 
+          {/*
+          {heroShapesData.map(shape => { // Use heroShapesData here
+            const animProps = shape.animation || {}; // Default to empty object if animation is undefined
+            const transProps = shape.transition || {}; // Default to empty object if transition is undefined
+
+            return shape.isPath ? (
+              <motion.svg
+                key={shape.id}
+                className={shape.className}
                 viewBox="0 0 16 16" // Assuming a 16x16 viewbox for the example path
                 initial={{ opacity: 0 }}
-                animate={{ ...shape.animation, opacity: shape.animation.opacity ? shape.animation.opacity : [0.3, 0.7, 0.3] }} // Ensure opacity is part of animation
-                transition={{ ...shape.transition, opacity: { duration: shape.transition.duration / 2, repeat: Infinity, ease: "easeInOut" } }}
+                animate={{ ...animProps, opacity: animProps.opacity ?? [0.3, 0.7, 0.3] }} // Ensure opacity is part of animation
+                transition={{ ...transProps, opacity: { duration: (transProps.duration || 0.6) / 2, repeat: Infinity, ease: "easeInOut" } }} // Default duration for calculation
               >
-                <motion.path 
-                  d={shape.d} 
+                <motion.path
+                  d={shape.d || ""} // Default to empty string if d is undefined
                   fill={shape.fill || "none"} // Use fill from data or none
                   stroke={shape.stroke || "none"} // Use stroke from data or none
                   strokeWidth={shape.strokeWidth || 0} // Use strokeWidth from data or 0
-                  animate={{ pathLength: shape.animation.pathLength }}
-                  transition={{ duration: shape.transition.duration, repeat: Infinity, ease: "linear" }}
+                  animate={{ pathLength: animProps.pathLength }} // Framer Motion handles undefined pathLength by not animating it
+                  transition={{ duration: transProps.duration || 2, repeat: Infinity, ease: "linear" }} // Default duration
                 />
               </motion.svg>
             ) : (
               <motion.div
                 key={shape.id}
                 className={shape.className} // Ensure rounded-full, rounded-3xl etc. are here
-                animate={shape.animation}
-                transition={shape.transition}
+                animate={animProps}
+                transition={transProps}
               />
-            )
-          ))}
+            );
+          })}
+          */}
           <motion.div 
             variants={fadeInUp} 
             className="relative z-10"
@@ -566,16 +581,19 @@ export default function Home() {
               { label: "Renewable Energy Projects Optimized", value: 300, displaySuffix: "+" },
               { label: "Data Points Processed Daily", value: 10, displaySuffix: "M+" }
             ].map(stat => (
-              <InteractiveCard 
+              <motion.div // Wrap InteractiveCard with motion.div to apply variants
                 key={stat.label}
-                variants={fadeInUp}
-                className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center border border-transparent hover:border-green-400/30" // Ensure rounded-2xl and updated dark bg
+                variants={fadeInUp} // Apply variants to the motion.div wrapper
               >
-                <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
-                  <AnimatedNumber value={stat.value} />{stat.displaySuffix}
-                </div>
-                <p className="text-md sm:text-lg text-gray-700 dark:text-gray-300">{stat.label}</p>
-              </InteractiveCard>
+                <InteractiveCard
+                  className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center border border-transparent hover:border-green-400/30" // Ensure rounded-2xl and updated dark bg
+                >
+                  <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
+                    <AnimatedNumber value={stat.value} />{stat.displaySuffix}
+                  </div>
+                  <p className="text-md sm:text-lg text-gray-700 dark:text-gray-300">{stat.label}</p>
+                </InteractiveCard>
+              </motion.div>
             ))}
           </div>
         </AnimatedSection>
