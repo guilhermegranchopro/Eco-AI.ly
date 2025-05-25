@@ -496,7 +496,10 @@ export default function Home() {
         <AnimatedDivider />
 
         {/* Explore Our Platform Section - Enhanced */}
-        <AnimatedSection id="platform" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-900/50">
+        <AnimatedSection 
+          id="platform" 
+          className="py-16 md:py-24 bg-gray-100 dark:bg-gray-900/50 rounded-3xl relative overflow-hidden" // Added rounded-3xl and relative overflow-hidden
+        >
           {/* Decorative elements */}
           <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-gray-700/20 dark:border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
           <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-gray-600/10 dark:border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
@@ -580,7 +583,10 @@ export default function Home() {
         <AnimatedDivider />
 
         {/* Call to Action Section - Enhanced */}
-        <AnimatedSection id="cta" className="py-16 md:py-24 bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20 dark:from-purple-700/30 dark:via-transparent dark:to-cyan-700/30">
+        <AnimatedSection 
+          id="cta" 
+          className="py-16 md:py-24 bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20 dark:from-purple-700/30 dark:via-transparent dark:to-cyan-700/30 rounded-3xl relative overflow-hidden" // Added rounded-3xl and relative overflow-hidden
+        >
           <motion.div 
             className="absolute -top-20 -left-20 w-60 h-60 bg-green-500/15 dark:bg-green-400/10 rounded-full filter blur-3xl"
             animate={{ scale: [1, 1.4, 0.9, 1.5, 1], opacity: [0.4, 0.7, 0.3, 0.8, 0.4], rotate: [0, -70, 80, -50, 0] }}
