@@ -86,6 +86,12 @@ const CloseIcon = () => (
   </svg>
 );
 
+const GitHubIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+  </svg>
+);
+
 // Animation Variants
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -388,7 +394,7 @@ export default function Home() {
             </motion.div>
           </Link>
           <nav className="hidden md:flex items-center space-x-1">
-            {[ { href: "#features", label: "Features" }, { href: "#platform", label: "Platform" }, { href: "#tech-stack", label: "Technology" }, { href: "#impact", label: "Our Impact" },
+            {[ { href: "#features", label: "Features" }, { href: "#platform", label: "Technology" }, { href: "#impact", label: "Our Impact" },
             ].map(link => (
               // FIXED: Added whileHover and initial to this parent motion.div to drive underline animation
               <motion.div 
@@ -420,11 +426,33 @@ export default function Home() {
                 View Dashboard
               </Link>
             </motion.div>
-            <div className="ml-4">
+            <div className="ml-4 flex items-center space-x-3">
+              <motion.a
+                href="https://github.com/guilhermegranchopro/Eco-AI.ly"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md flex items-center justify-center"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="View GitHub repository"
+              >
+                <GitHubIcon />
+              </motion.a>
               <ThemeToggleButton />
             </div>
           </nav>
           <div className="md:hidden flex items-center space-x-4"> {/* Added flex and space for mobile menu button and theme toggle */}
+            <motion.a
+              href="https://github.com/guilhermegranchopro/Eco-AI.ly"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md flex items-center justify-center"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="View GitHub repository"
+            >
+              <GitHubIcon />
+            </motion.a>
             <ThemeToggleButton />
             <motion.button onClick={toggleMobileMenu} className="text-gray-600 dark:text-gray-300 focus:outline-none z-50" whileTap={{ scale: 0.9 }}>
               {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
@@ -447,10 +475,10 @@ export default function Home() {
             <nav className="flex flex-col space-y-6 items-center text-xl">
               {[
                 { href: "#features", label: "Features" },
-                { href: "#platform", label: "Platform" },
-                { href: "#tech-stack", label: "Technology" },
+                { href: "#platform", label: "Technology" },
                 { href: "#impact", label: "Our Impact" },
                 { href: "/dashboard/portugal", label: "View Dashboard", isButton: true },
+                { href: "https://github.com/guilhermegranchopro/Eco-AI.ly", label: "GitHub", isExternal: true },
               ].map(link => (
                 <Link 
                   key={link.href} 
@@ -459,13 +487,16 @@ export default function Home() {
                     ? "w-full text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg" // Ensure this is rounded-xl or similar
                     : "text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 font-medium rounded-lg"} // Added rounded-lg to mobile nav links
                   onClick={(e) => {
-                    handleSmoothScroll(e, link.href);
+                    if (!link.isExternal) {
+                      handleSmoothScroll(e, link.href);
+                    }
                     // For mobile menu, we also want to close it after clicking a link
                     // No need to check for href.startsWith("#") here for toggleMobileMenu, 
                     // as handleSmoothScroll already prevents default for hash links.
                     // We always want to close the mobile menu after a link is clicked.
                     toggleMobileMenu(); 
                   }}
+                  {...(link.isExternal && { target: "_blank", rel: "noopener noreferrer" })}
                 >
                   {link.label}
                 </Link>
