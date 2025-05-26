@@ -170,7 +170,7 @@ const InteractiveCard = ({ children, className }: { children: ReactNode, classNa
   return (
     <motion.div
       ref={ref}
-      className={`relative p-6 md:p-8 rounded-xl shadow-xl overflow-hidden bg-gray-800/30 backdrop-blur-md border border-gray-700/50 ${className}`}
+      className={`relative p-6 md:p-8 rounded-xl shadow-xl overflow-hidden bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         rotateX,
@@ -288,7 +288,11 @@ const ThemeToggleButton = () => {
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // const { theme, setTheme } = useTheme(); // This line is removed as ThemeToggleButton handles its own theme logic
+  const { theme } = useTheme(); // Get current theme
+  const [mounted, setMounted] = useState(false);
+
+  // Handle hydration
+  useEffect(() => setMounted(true), []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -302,6 +306,29 @@ export default function Home() {
       }
     }
     // For external links or non-hash links, the default Link behavior will proceed.
+  };
+
+  // Theme-aware background variants
+  const backgroundVariants = mounted && theme === 'dark' ? {
+    initial: { background: "linear-gradient(135deg, #0A0F1A 0%, #101626 50%, #0A0F1A 100%)" },
+    animate: {
+      background: [
+        "linear-gradient(135deg, #0A0F1A 0%, #101626 25%, #1A2035 50%, #101626 75%, #0A0F1A 100%)",
+        "linear-gradient(135deg, #0A0F1A 0%, #1A2035 25%, #101626 50%, #1A2035 75%, #0A0F1A 100%)",
+        "linear-gradient(135deg, #0A0F1A 0%, #101626 25%, #1A2035 50%, #101626 75%, #0A0F1A 100%)",
+      ],
+    }
+  } : {
+    initial: { 
+      background: "linear-gradient(135deg, rgb(249 250 251) 0%, rgb(255 255 255) 50%, rgb(243 244 246) 100%)" 
+    },
+    animate: {
+      background: [
+        "linear-gradient(135deg, rgb(249 250 251) 0%, rgb(255 255 255) 25%, rgb(248 250 252) 50%, rgb(255 255 255) 75%, rgb(243 244 246) 100%)",
+        "linear-gradient(135deg, rgb(243 244 246) 0%, rgb(248 250 252) 25%, rgb(255 255 255) 50%, rgb(248 250 252) 75%, rgb(249 250 251) 100%)",
+        "linear-gradient(135deg, rgb(249 250 251) 0%, rgb(255 255 255) 25%, rgb(248 250 252) 50%, rgb(255 255 255) 75%, rgb(243 244 246) 100%)",
+      ],
+    }
   };
 
   // Type for AnimationControls if used directly (it was in AnimatedSection)
@@ -322,19 +349,10 @@ export default function Home() {
   
   return (
     <motion.main
-      className="flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased bg-[#0A0F1A]" // Base dark color
+      className="flex flex-col items-center justify-center min-h-screen text-gray-900 dark:text-white overflow-x-hidden antialiased bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#0A0F1A]" // Light theme gradient, dark theme base
       initial="initial"
       animate="animate"
-      variants={{
-        initial: { background: "linear-gradient(135deg, #0A0F1A 0%, #101626 50%, #0A0F1A 100%)" },
-        animate: {
-          background: [
-            "linear-gradient(135deg, #0A0F1A 0%, #101626 25%, #1A2035 50%, #101626 75%, #0A0F1A 100%)",
-            "linear-gradient(135deg, #0A0F1A 0%, #1A2035 25%, #101626 50%, #1A2035 75%, #0A0F1A 100%)",
-            "linear-gradient(135deg, #0A0F1A 0%, #101626 25%, #1A2035 50%, #101626 75%, #0A0F1A 100%)",
-          ],
-        }
-      }}
+      variants={backgroundVariants}
       transition={{
         background: { // Target the background property specifically for transition
           duration: 25,
@@ -658,10 +676,10 @@ export default function Home() {
             animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           />
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10">
-            Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-500">Greener Future</span>?
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10 text-gray-800 dark:text-white">
+            Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500">Greener Future</span>?
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-gray-300 dark:text-gray-400 max-w-2xl mx-auto mb-10 relative z-10">
+          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10 relative z-10">
             Join us in leveraging AI for sustainability. Explore our solutions or get in touch to discuss how Eco AI.ly can help your organization achieve its environmental goals.
           </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
@@ -678,7 +696,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="w-full py-8 text-center text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-2xl" // Updated dark border for footer
+        className="w-full py-8 text-center text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm" // Added light theme background
       >
         <p>&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
         <p className="text-xs">Innovating for a Greener Future.</p>
