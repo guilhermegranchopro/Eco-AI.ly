@@ -692,6 +692,32 @@ export default function Home() {
 
         <AnimatedDivider />
 
+        {/* Dashboard Section - NEW */}
+        <AnimatedSection id="dashboard" className="py-16 md:py-24">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-8 text-center">
+            🇵🇹 Live Portugal Energy Dashboard
+          </motion.h2>
+          <motion.p variants={fadeInUp} className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12 text-center">
+            Explore real-time carbon intensity and renewable energy data for Portugal. See AI predictions and insights powered by our advanced analytics.
+          </motion.p>
+          <motion.div variants={fadeInUp} className="text-center">
+            <Link 
+              href="/dashboard/portugal" 
+              className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-5 rounded-xl font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800"
+            >
+              <div className="flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+                </svg>
+                <span>View Portugal Dashboard</span>
+                <ArrowRightIcon />
+              </div>
+            </Link>
+          </motion.div>
+        </AnimatedSection>
+
+        <AnimatedDivider />
+
         {/* Call to Action Section - Enhanced */}
         <AnimatedSection 
           id="cta" 

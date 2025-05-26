@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from app.utils import get_renewable_percentage, get_carbon_intensity
 import uvicorn
 
 app = FastAPI(title="Energy Forecast API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3002", "http://127.0.0.1:3002"],  # Next.js default ports
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get(
     "/api/renewable-percentage",
