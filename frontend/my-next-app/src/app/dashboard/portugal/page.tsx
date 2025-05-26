@@ -33,7 +33,7 @@ interface ChartDataPoint extends HistoryData {
 }
 
 // Constants
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+// Using internal API routes to avoid CORS issues
 
 // Prediction class descriptions
 const PREDICTION_CLASSES = {
@@ -307,22 +307,45 @@ export default function PortugalDashboard() {
       setLoading(true);
       setError(null);
 
+      console.log('🔄 Fetching data from internal API routes');
+
       const [carbonResponse, renewableResponse] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/carbon-intensity`),
-        fetch(`${API_BASE_URL}/api/renewable-percentage`)
+        fetch('/api/carbon-intensity', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+        fetch('/api/renewable-percentage', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
       ]);
 
+      console.log('📡 Response status:', {
+        carbon: carbonResponse.status,
+        renewable: renewableResponse.status
+      });
+
       if (!carbonResponse.ok || !renewableResponse.ok) {
-        throw new Error('Failed to fetch data from API');
+        throw new Error(`Failed to fetch data from API. Carbon: ${carbonResponse.status}, Renewable: ${renewableResponse.status}`);
       }
 
       const carbonData = await carbonResponse.json();
       const renewableData = await renewableResponse.json();
 
+      console.log('✅ Data received:', {
+        carbonData: carbonData ? 'Success' : 'Failed',
+        renewableData: renewableData ? 'Success' : 'Failed'
+      });
+
       setCarbonData(carbonData);
       setRenewableData(renewableData);
       setLastUpdate(new Date());
     } catch (err) {
+      console.error('❌ Fetch error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
