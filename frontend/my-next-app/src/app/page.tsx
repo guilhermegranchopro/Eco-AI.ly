@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect, useRef, useMemo, ReactNode } from 'react';
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, animate, SpringOptions } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useTheme } from "./theme-provider"; // Added useTheme import
+import { useTheme } from './theme-provider';
 
 // SVG Icon Components (Enhanced with motion)
 const PredictiveAnalyticsIcon = () => (
@@ -129,6 +129,18 @@ const AnimatedDivider = () => {
   );
 };
 
+// Placeholder Icon Components (add these or import your actual icons)
+const SunIcon = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8.66-15.66l-.707.707M4.34 19.66l-.707.707m15.66 0l-.707-.707M4.34 4.34l-.707-.707m0 15.66l.707-.707M19.66 4.34l.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
+  </svg>
+);
+
+const MoonIcon = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+  </svg>
+);
 
 // NEW InteractiveCard Component
 const InteractiveCard = ({ children, className }: { children: ReactNode, className?: string }) => { // Removed variants prop
@@ -225,34 +237,72 @@ const AnimatedNumber = ({ value }: { value: number }) => {
   );
 };
 
-// Theme Toggle Button Component
+// Theme Toggle Button Component - CORRECTED
 const ThemeToggleButton = () => {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  // Avoid hydration mismatch by not rendering on the server or until mounted.
+  if (!mounted) {
+    // Render a placeholder or null during server-side rendering and initial client-side mount
+    return <div className="p-2 rounded-lg w-[40px] h-[40px]" aria-label="Loading theme toggle" />; // Adjust size to match button
+  }
 
   return (
     <motion.button
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md"
+      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md flex items-center justify-center"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       aria-label="Toggle theme"
+      type="button"
     >
-      {theme === 'light' ? (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-        </svg>
-      )}
+      <AnimatePresence mode="wait" initial={false}>
+        {theme === 'dark' ? (
+          <motion.div
+            key="moon"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <MoonIcon className="w-5 h-5 text-yellow-400" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="sun"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <SunIcon className="w-5 h-5 text-orange-500" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.button>
   );
 };
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // const { theme, setTheme } = useTheme(); // This line is removed as ThemeToggleButton handles its own theme logic
+
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    // For external links or non-hash links, the default Link behavior will proceed.
+  };
 
   // Type for AnimationControls if used directly (it was in AnimatedSection)
   const AnimatedSection = ({ children, className, id }: { children: ReactNode, className?: string, id?: string }) => {
@@ -270,24 +320,6 @@ export default function Home() {
     );
   };
   
-  const heroShapesData = useMemo(() => [ // Renamed to heroShapesData to avoid conflict if heroShapes is used in JSX later
-    // ... your existing shapes ...
-    { id: 'shape-new-1', className: "absolute top-1/4 left-1/5 w-20 h-20 bg-teal-500/20 rounded-full filter blur-lg", animation: { x: [0, 15, -10, 0], y: [0, -25, 20, 0], scale: [1, 1.2, 0.8, 1], rotate: [0, 70, -60, 0] }, transition: { duration: 22, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" as const } },
-    { id: 'shape-new-2', className: "absolute bottom-1/3 right-1/4 w-28 h-12 border-2 border-fuchsia-500/30 rounded-3xl transform -skew-x-12", animation: { skewX: [-12, 12, -12], x: [0, -20, 20, 0], opacity: [0.5, 0.8, 0.5] }, transition: { duration: 18, repeat: Infinity, ease: "linear", repeatType: "mirror" as const } },
-    { 
-      id: 'shape-new-3', 
-      className: "absolute bottom-1/2 right-1/2 w-16 h-16 opacity-30", 
-      animation: { pathLength: [0, 1, 0], rotate: [0, 360] }, 
-      transition: { duration: 15, repeat: Infinity, ease: "linear" }, 
-      isPath: true, 
-      d: "M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM8 12.8C5.34903 12.8 3.2 10.651 3.2 8C3.2 5.34903 5.34903 3.2 8 3.2C10.651 3.2 12.8 5.34903 12.8 8C12.8 10.651 10.651 12.8 8 12.8Z", 
-      fill:"url(#gradPulse)",
-      stroke: "none", // Added stroke property
-      strokeWidth: 0   // Added strokeWidth property
-    }
-  ], []);
-
-
   return (
     <motion.main
       className="flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased bg-[#0A0F1A]" // Base dark color
@@ -338,7 +370,7 @@ export default function Home() {
             </motion.div>
           </Link>
           <nav className="hidden md:flex items-center space-x-1">
-            {[ { href: "#features", label: "Features" }, { href: "#platform", label: "Platform" }, { href: "#tech", label: "Technology" }, { href: "#impact", label: "Our Impact" },
+            {[ { href: "#features", label: "Features" }, { href: "#platform", label: "Platform" }, { href: "#tech-stack", label: "Technology" }, { href: "#impact", label: "Our Impact" },
             ].map(link => (
               // FIXED: Added whileHover and initial to this parent motion.div to drive underline animation
               <motion.div 
@@ -347,7 +379,11 @@ export default function Home() {
                 whileHover="hover" 
                 initial="initial"
               >
-                <Link href={link.href} className="text-gray-600 dark:text-gray-300 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200 font-medium rounded-md"> {/* Added rounded-md to link text container if needed */}
+                <Link 
+                  href={link.href} 
+                  className="text-gray-600 dark:text-gray-300 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200 font-medium rounded-md"
+                  onClick={(e) => handleSmoothScroll(e, link.href)}
+                > {/* Added rounded-md to link text container if needed */}
                   {link.label}
                 </Link>
                 <motion.div 
@@ -394,7 +430,7 @@ export default function Home() {
               {[
                 { href: "#features", label: "Features" },
                 { href: "#platform", label: "Platform" },
-                { href: "#tech", label: "Technology" },
+                { href: "#tech-stack", label: "Technology" },
                 { href: "#impact", label: "Our Impact" },
                 { href: "/dashboard/portugal", label: "View Dashboard", isButton: true },
               ].map(link => (
@@ -404,7 +440,14 @@ export default function Home() {
                   className={link.isButton 
                     ? "w-full text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg" // Ensure this is rounded-xl or similar
                     : "text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 font-medium rounded-lg"} // Added rounded-lg to mobile nav links
-                  onClick={(e) => { e.stopPropagation(); toggleMobileMenu(); }} // Prevent closing when clicking link, then close
+                  onClick={(e) => {
+                    handleSmoothScroll(e, link.href);
+                    // For mobile menu, we also want to close it after clicking a link
+                    // No need to check for href.startsWith("#") here for toggleMobileMenu, 
+                    // as handleSmoothScroll already prevents default for hash links.
+                    // We always want to close the mobile menu after a link is clicked.
+                    toggleMobileMenu(); 
+                  }}
                 >
                   {link.label}
                 </Link>
