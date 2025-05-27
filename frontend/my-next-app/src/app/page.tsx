@@ -1610,28 +1610,42 @@ export default function Home() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative w-full py-12 text-center text-gray-600 dark:text-gray-300 border-t border-gray-200/60 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-3xl overflow-hidden"
+        className="relative w-full py-12 text-center text-gray-300 dark:text-gray-200 border-t border-gray-200/60 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-3xl overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.8) 100%)",
+          background: "linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.9) 30%, rgba(15,23,42,0.95) 70%, rgba(0,0,0,0.98) 100%)",
           backdropFilter: "blur(20px)",
+          borderTop: "1px solid rgba(34,197,94,0.3)",
         }}
       >
         {/* Animated background elements */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-green-400/5 via-cyan-400/5 to-purple-400/5"
+          className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-cyan-400/10 to-purple-400/10"
           animate={{
             background: [
-              "linear-gradient(135deg, rgba(34,197,94,0.05) 0%, rgba(6,182,212,0.05) 50%, rgba(168,85,247,0.05) 100%)",
-              "linear-gradient(135deg, rgba(6,182,212,0.05) 0%, rgba(168,85,247,0.05) 50%, rgba(34,197,94,0.05) 100%)",
-              "linear-gradient(135deg, rgba(168,85,247,0.05) 0%, rgba(34,197,94,0.05) 50%, rgba(6,182,212,0.05) 100%)",
+              "linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(6,182,212,0.1) 50%, rgba(168,85,247,0.1) 100%)",
+              "linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(168,85,247,0.1) 50%, rgba(34,197,94,0.1) 100%)",
+              "linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(34,197,94,0.1) 50%, rgba(6,182,212,0.1) 100%)",
             ],
           }}
           transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
         />
         
+        {/* Revolutionary energy grid overlay */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(34,197,94,0.3) 0%, transparent 50%),
+                             radial-gradient(circle at 75% 75%, rgba(6,182,212,0.3) 0%, transparent 50%)`,
+          }}
+          animate={{
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
         {/* Floating orbs in footer */}
         <motion.div
-          className="absolute top-4 left-10 w-16 h-16 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-full filter blur-2xl"
+          className="absolute top-4 left-10 w-16 h-16 bg-gradient-to-r from-green-400/30 to-emerald-400/30 rounded-full filter blur-2xl"
           animate={{
             y: [-8, 8, -8],
             scale: [1, 1.2, 1],
@@ -1640,13 +1654,22 @@ export default function Home() {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-8 right-16 w-12 h-12 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 rounded-full filter blur-2xl"
+          className="absolute top-8 right-16 w-12 h-12 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full filter blur-2xl"
           animate={{
             y: [-6, 6, -6],
             scale: [1, 1.3, 1],
             opacity: [0.2, 0.5, 0.2],
           }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div
+          className="absolute bottom-6 left-1/3 w-8 h-8 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full filter blur-xl"
+          animate={{
+            y: [-4, 4, -4],
+            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
         
         <div className="relative z-10">
@@ -1656,10 +1679,10 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="mb-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600 mb-2">
+            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-2 drop-shadow-lg">
               Eco AI.ly
             </h3>
-            <p className="text-lg font-medium">Innovating for a Greener Future 🌱</p>
+            <p className="text-lg font-medium text-gray-200">Innovating for a Greener Future 🌱</p>
           </motion.div>
           
           <motion.div
@@ -1676,7 +1699,7 @@ export default function Home() {
               <motion.a
                 key={social.href}
                 href={social.href}
-                className="group relative p-3 rounded-2xl bg-gradient-to-r from-gray-100/80 to-gray-200/80 dark:from-gray-700/80 dark:to-gray-800/80 backdrop-blur-sm border border-white/30 hover:border-green-400/50 transition-all duration-300"
+                className="group relative p-3 rounded-2xl bg-gradient-to-r from-gray-800/80 to-gray-700/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-sm border border-gray-600/30 hover:border-green-400/50 transition-all duration-300 text-gray-200"
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -1697,9 +1720,9 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.3 }}
-            className="border-t border-gray-300/30 dark:border-gray-600/30 pt-6"
+            className="border-t border-gray-600/40 dark:border-gray-500/40 pt-6"
           >
-            <p className="text-sm">&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
+            <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
             <motion.p 
               className="text-xs mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
               animate={{
