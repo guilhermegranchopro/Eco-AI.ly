@@ -11,11 +11,18 @@ import { useInView } from 'react-intersection-observer';
 // ===============================
 const ReactiveParticleSystem = React.memo(() => {
   const [isInteracting, setIsInteracting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Reduce particle count and optimize animations
-  const particles = useMemo(() => 
-    Array.from({ length: 25 }, (_, i) => ({ // Reduced from 80 to 25
+  // Handle hydration to prevent SSR/client mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Generate particles only after mounting to avoid hydration issues
+  const particles = useMemo(() => {
+    if (!mounted) return [];
+    return Array.from({ length: 25 }, (_, i) => ({ // Reduced from 80 to 25
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -24,14 +31,19 @@ const ReactiveParticleSystem = React.memo(() => {
       duration: Math.random() * 20 + 15, // Slower animations
       delay: Math.random() * 10,
       hue: Math.random() * 360,
-    }))
-  , []);
+    }));
+  }, [mounted]);
+
+  // Pre-calculate deterministic movement values for particles to avoid hydration issues
+  const particleMovements = useMemo(() => [0, 20, -15, 10, -8, 25, -12, 18, -6, 30, -20, 15, -10, 22, -18, 8, -25, 12, -5, 28, -16, 14, -9, 26, -13], []);
 
   // Throttled event handlers
   const handleInteractionStart = useCallback(() => setIsInteracting(true), []);
   const handleInteractionEnd = useCallback(() => setIsInteracting(false), []);
 
   useEffect(() => {
+    if (!mounted) return;
+    
     // Use passive listeners for better performance
     window.addEventListener('mousedown', handleInteractionStart, { passive: true });
     window.addEventListener('mouseup', handleInteractionEnd, { passive: true });
@@ -40,7 +52,12 @@ const ReactiveParticleSystem = React.memo(() => {
       window.removeEventListener('mousedown', handleInteractionStart);
       window.removeEventListener('mouseup', handleInteractionEnd);
     };
-  }, [handleInteractionStart, handleInteractionEnd]);
+  }, [handleInteractionStart, handleInteractionEnd, mounted]);
+
+  // Don't render particles until mounted to prevent hydration issues
+  if (!mounted) {
+    return <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden" />;
+  }
 
   return (
     <div ref={containerRef} className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
@@ -59,7 +76,7 @@ const ReactiveParticleSystem = React.memo(() => {
           }}
           animate={{
             y: [0, -100, 0], // Reduced movement range
-            x: [0, Math.sin(particle.id) * 50, 0], // Reduced movement range
+            x: [0, particleMovements[particle.id] || 0, 0], // Use fixed values instead of Math.sin
             scale: isInteracting ? [1, 1.5, 1] : [1, 1.2, 1], // Reduced scale changes
             opacity: [particle.opacity, particle.opacity * 0.5, particle.opacity],
           }}
@@ -82,6 +99,10 @@ ReactiveParticleSystem.displayName = 'ReactiveParticleSystem';
 // OPTIMIZED LIQUID ENERGY FLOWS
 // ===============================
 const LiquidEnergyFlows = React.memo(() => {
+  // Pre-calculate deterministic movement values to avoid hydration issues
+  const movementPatterns = [0, 15, -10, 8, -5, 12]; // Fixed values instead of Math.sin
+  const energyOrbMovements = [0, 30, -20, 40]; // Fixed values for energy orbs
+  
   return (
     <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
       {/* Reduced liquid energy streams */}
@@ -104,7 +125,7 @@ const LiquidEnergyFlows = React.memo(() => {
           animate={{
             scaleY: [1, 1.3, 0.9, 1.1, 1],
             opacity: [0.4, 0.7, 0.3, 0.6, 0.4],
-            x: [0, Math.sin(i) * 15, 0], // Reduced movement
+            x: [0, movementPatterns[i] || 0, 0], // Use fixed values
           }}
           transition={{
             duration: 12 + i * 3, // Slower animations
@@ -133,7 +154,7 @@ const LiquidEnergyFlows = React.memo(() => {
           }}
           animate={{
             y: ['100vh', '-20vh'],
-            x: [0, Math.sin(i * 2) * 50, 0], // Reduced movement
+            x: [0, energyOrbMovements[i] || 0, 0], // Use fixed values
             scale: [0.8, 1.2, 0.8],
             opacity: [0, 0.8, 0],
           }}
