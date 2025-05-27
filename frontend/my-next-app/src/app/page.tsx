@@ -10,24 +10,17 @@ import { useTheme } from './theme-provider';
 // REVOLUTIONARY REACTIVE PARTICLE SYSTEM
 // ===============================
 const ReactiveParticleSystem = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isInteracting, setIsInteracting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
     const handleMouseDown = () => setIsInteracting(true);
     const handleMouseUp = () => setIsInteracting(false);
 
-    window.addEventListener('mousemove', updateMousePosition);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
     };
@@ -80,26 +73,6 @@ const ReactiveParticleSystem = () => {
           }}
         />
       ))}
-      
-      {/* Mouse interaction particles */}
-      <motion.div
-        className="absolute w-20 h-20 rounded-full pointer-events-none"
-        style={{
-          left: mousePosition.x - 40,
-          top: mousePosition.y - 40,
-          background: 'radial-gradient(circle, rgba(6,182,212,0.3) 0%, transparent 70%)',
-          filter: 'blur(10px)',
-        }}
-        animate={{
-          scale: isInteracting ? [1, 2, 1] : [1, 1.2, 1],
-          opacity: [0.5, 0.8, 0.5],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
     </div>
   );
 };
