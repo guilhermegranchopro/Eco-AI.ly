@@ -7,287 +7,264 @@ import { useInView } from 'react-intersection-observer';
 
 
 // ===============================
-// REVOLUTIONARY REACTIVE PARTICLE SYSTEM
+// OPTIMIZED REACTIVE PARTICLE SYSTEM
 // ===============================
-const ReactiveParticleSystem = () => {
+const ReactiveParticleSystem = React.memo(() => {
   const [isInteracting, setIsInteracting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleMouseDown = () => setIsInteracting(true);
-    const handleMouseUp = () => setIsInteracting(false);
-
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, []);
-
+  // Reduce particle count and optimize animations
   const particles = useMemo(() => 
-    Array.from({ length: 80 }, (_, i) => ({
+    Array.from({ length: 25 }, (_, i) => ({ // Reduced from 80 to 25
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 4 + 1,
-      opacity: Math.random() * 0.6 + 0.2,
-      duration: Math.random() * 15 + 8,
-      delay: Math.random() * 8,
+      size: Math.random() * 3 + 2, // Slightly larger particles
+      opacity: Math.random() * 0.4 + 0.3, // More visible
+      duration: Math.random() * 20 + 15, // Slower animations
+      delay: Math.random() * 10,
       hue: Math.random() * 360,
     }))
   , []);
+
+  // Throttled event handlers
+  const handleInteractionStart = useCallback(() => setIsInteracting(true), []);
+  const handleInteractionEnd = useCallback(() => setIsInteracting(false), []);
+
+  useEffect(() => {
+    // Use passive listeners for better performance
+    window.addEventListener('mousedown', handleInteractionStart, { passive: true });
+    window.addEventListener('mouseup', handleInteractionEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousedown', handleInteractionStart);
+      window.removeEventListener('mouseup', handleInteractionEnd);
+    };
+  }, [handleInteractionStart, handleInteractionEnd]);
 
   return (
     <div ref={containerRef} className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
-          className="absolute rounded-full filter blur-sm"
+          className="absolute rounded-full"
           style={{
             width: particle.size,
             height: particle.size,
             left: `${particle.x}%`,
             top: `${particle.y}%`,
             background: `hsl(${particle.hue}, 70%, 60%)`,
-            boxShadow: `0 0 ${particle.size * 2}px hsla(${particle.hue}, 70%, 60%, 0.5)`,
+            filter: 'blur(1px)', // Reduced blur for better performance
+            boxShadow: `0 0 ${particle.size * 1.5}px hsla(${particle.hue}, 70%, 60%, 0.4)`,
           }}
           animate={{
-            y: [0, -150, 0],
-            x: [0, Math.sin(particle.id) * 80, 0],
-            scale: isInteracting ? [1, 2, 1] : [1, 1.5, 1],
-            opacity: [particle.opacity, particle.opacity * 0.2, particle.opacity],
-            rotate: [0, 360, 0],
-            filter: [
-              `hue-rotate(0deg) brightness(1)`,
-              `hue-rotate(180deg) brightness(1.5)`,
-              `hue-rotate(360deg) brightness(1)`
-            ],
+            y: [0, -100, 0], // Reduced movement range
+            x: [0, Math.sin(particle.id) * 50, 0], // Reduced movement range
+            scale: isInteracting ? [1, 1.5, 1] : [1, 1.2, 1], // Reduced scale changes
+            opacity: [particle.opacity, particle.opacity * 0.5, particle.opacity],
           }}
           transition={{
-            duration: isInteracting ? particle.duration * 0.5 : particle.duration,
+            duration: particle.duration,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: "linear", // Changed to linear for better performance
             delay: particle.delay,
+            repeatType: "loop",
           }}
         />
       ))}
     </div>
   );
-};
+});
+
+ReactiveParticleSystem.displayName = 'ReactiveParticleSystem';
 
 // ===============================
-// ADVANCED LIQUID ENERGY FLOWS
+// OPTIMIZED LIQUID ENERGY FLOWS
 // ===============================
-const LiquidEnergyFlows = () => {
-  useEffect(() => {
-    const handleScroll = () => {
-      // Scroll handling can be added here if needed for future enhancements
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+const LiquidEnergyFlows = React.memo(() => {
   return (
     <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
-      {/* Liquid energy streams */}
-      {Array.from({ length: 12 }, (_, i) => (
+      {/* Reduced liquid energy streams */}
+      {Array.from({ length: 6 }, (_, i) => ( // Reduced from 12 to 6
         <motion.div
           key={`liquid-${i}`}
           className="absolute"
           style={{
-            left: `${5 + i * 8}%`,
+            left: `${10 + i * 15}%`,
             top: '-10%',
             width: '2px',
             height: '120%',
             background: `linear-gradient(180deg, 
               transparent 0%, 
-              hsla(${120 + i * 30}, 70%, 60%, 0.8) 20%, 
-              hsla(${180 + i * 30}, 80%, 70%, 0.6) 50%, 
-              hsla(${240 + i * 30}, 70%, 60%, 0.8) 80%, 
+              hsla(${120 + i * 60}, 70%, 60%, 0.6) 30%, 
+              hsla(${180 + i * 60}, 80%, 70%, 0.4) 50%, 
+              hsla(${240 + i * 60}, 70%, 60%, 0.6) 70%, 
               transparent 100%)`,
-            filter: 'blur(1px)',
           }}
           animate={{
-            scaleY: [1, 1.5, 0.8, 1.2, 1],
-            opacity: [0.3, 0.8, 0.4, 0.9, 0.3],
-            x: [0, Math.sin(i) * 20, 0],
-            filter: [
-              'blur(1px) hue-rotate(0deg)',
-              'blur(2px) hue-rotate(90deg)',
-              'blur(1px) hue-rotate(180deg)',
-              'blur(2px) hue-rotate(270deg)',
-              'blur(1px) hue-rotate(360deg)',
-            ],
+            scaleY: [1, 1.3, 0.9, 1.1, 1],
+            opacity: [0.4, 0.7, 0.3, 0.6, 0.4],
+            x: [0, Math.sin(i) * 15, 0], // Reduced movement
           }}
           transition={{
-            duration: 8 + i * 2,
+            duration: 12 + i * 3, // Slower animations
             repeat: Infinity,
-            ease: "easeInOut",
-            delay: i * 0.5,
+            ease: "linear",
+            delay: i * 1,
           }}
         />
       ))}
       
-      {/* Flowing energy orbs */}
-      {Array.from({ length: 8 }, (_, i) => (
+      {/* Reduced energy orbs */}
+      {Array.from({ length: 4 }, (_, i) => ( // Reduced from 8 to 4
         <motion.div
           key={`energy-orb-${i}`}
-          className="absolute rounded-full filter blur-md"
+          className="absolute rounded-full"
           style={{
-            width: `${8 + i * 2}px`,
-            height: `${8 + i * 2}px`,
-            left: `${10 + i * 12}%`,
+            width: `${12 + i * 3}px`,
+            height: `${12 + i * 3}px`,
+            left: `${15 + i * 20}%`,
             background: `radial-gradient(circle, 
-              hsla(${i * 45}, 80%, 70%, 0.9) 0%, 
-              hsla(${i * 45 + 60}, 70%, 60%, 0.6) 50%, 
+              hsla(${i * 90}, 80%, 70%, 0.8) 0%, 
+              hsla(${i * 90 + 60}, 70%, 60%, 0.4) 50%, 
               transparent 100%)`,
-            boxShadow: `0 0 ${20 + i * 5}px hsla(${i * 45}, 80%, 70%, 0.8)`,
+            filter: 'blur(2px)',
+            boxShadow: `0 0 ${15 + i * 3}px hsla(${i * 90}, 80%, 70%, 0.6)`,
           }}
           animate={{
             y: ['100vh', '-20vh'],
-            x: [0, Math.sin(i * 2) * 100, 0],
-            scale: [0.5, 1.5, 0.8, 1.2, 0.5],
-            opacity: [0, 1, 0.8, 1, 0],
-            rotate: [0, 360 + i * 45, 720],
+            x: [0, Math.sin(i * 2) * 50, 0], // Reduced movement
+            scale: [0.8, 1.2, 0.8],
+            opacity: [0, 0.8, 0],
           }}
           transition={{
-            duration: 12 + i * 3,
+            duration: 20 + i * 5, // Much slower
             repeat: Infinity,
             ease: "linear",
-            delay: i * 1.5,
+            delay: i * 3,
           }}
         />
       ))}
-      
-      {/* Energy connection lines */}
-      <svg className="absolute inset-0 w-full h-full">
-        {Array.from({ length: 6 }, (_, i) => (
-          <motion.path
-            key={`energy-line-${i}`}
-            d={`M${10 + i * 15},${20 + i * 10} Q${50 + i * 20},${100 + i * 30} ${90 - i * 10},${80 + i * 15}`}
-            fill="none"
-            stroke={`hsl(${i * 60}, 70%, 60%)`}
-            strokeWidth="2"
-            style={{ filter: 'drop-shadow(0 0 5px currentColor)' }}
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ 
-              pathLength: [0, 1, 0], 
-              opacity: [0, 0.8, 0],
-              stroke: [
-                `hsl(${i * 60}, 70%, 60%)`,
-                `hsl(${i * 60 + 120}, 80%, 70%)`,
-                `hsl(${i * 60 + 240}, 70%, 60%)`,
-              ]
-            }}
-            transition={{
-              duration: 6 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.8,
-            }}
-          />
-        ))}
-      </svg>
     </div>
   );
-};
+});
+
+LiquidEnergyFlows.displayName = 'LiquidEnergyFlows';
 
 // ===============================
-// INTERACTIVE ENERGY WAVES
+// OPTIMIZED INTERACTIVE ENERGY WAVES
 // ===============================
-const InteractiveEnergyWaves = () => {
+const InteractiveEnergyWaves = React.memo(() => {
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [isHovering, setIsHovering] = useState(false);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
+  // Throttle mouse move events for better performance
+  const throttledMouseMove = useCallback((e: MouseEvent) => {
+    setMousePosition({
+      x: (e.clientX / window.innerWidth) * 100,
+      y: (e.clientY / window.innerHeight) * 100,
+    });
+  }, []);
 
+  useEffect(() => {
     const handleMouseEnter = () => setIsHovering(true);
     const handleMouseLeave = () => setIsHovering(false);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseenter', handleMouseEnter);
-    document.addEventListener('mouseleave', handleMouseLeave);
+    // Throttle the mouse move event manually
+    let lastCallTime = 0;
+    const throttledHandler = (e: MouseEvent) => {
+      const now = Date.now();
+      if (now - lastCallTime >= 50) { // 50ms throttle
+        throttledMouseMove(e);
+        lastCallTime = now;
+      }
+    };
+
+    window.addEventListener('mousemove', throttledHandler, { passive: true });
+    document.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    document.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', throttledHandler);
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, []);
+  }, [throttledMouseMove]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Reactive wave rings */}
-      {Array.from({ length: 5 }, (_, i) => (
+      {/* Reduced reactive wave rings */}
+      {Array.from({ length: 3 }, (_, i) => ( // Reduced from 5 to 3
         <motion.div
           key={`wave-${i}`}
           className="absolute border rounded-full"
           style={{
             left: `${mousePosition.x}%`,
             top: `${mousePosition.y}%`,
-            width: `${(i + 1) * 100}px`,
-            height: `${(i + 1) * 100}px`,
-            marginLeft: `${-(i + 1) * 50}px`,
-            marginTop: `${-(i + 1) * 50}px`,
-            borderColor: `hsla(${180 + i * 30}, 70%, 60%, ${0.6 - i * 0.1})`,
-            borderWidth: '2px',
-            filter: `blur(${i}px)`,
+            width: `${(i + 1) * 80}px`, // Smaller waves
+            height: `${(i + 1) * 80}px`,
+            marginLeft: `${-(i + 1) * 40}px`,
+            marginTop: `${-(i + 1) * 40}px`,
+            borderColor: `hsla(${180 + i * 60}, 70%, 60%, ${0.5 - i * 0.15})`,
+            borderWidth: '1px',
+            filter: `blur(${i + 1}px)`,
           }}
           animate={{
-            scale: isHovering ? [1, 2, 1] : [1, 1.5, 1],
-            opacity: isHovering ? [0.8, 0.3, 0.8] : [0.4, 0.1, 0.4],
-            rotate: [0, 360, 0],
+            scale: isHovering ? [1, 1.5, 1] : [1, 1.2, 1], // Reduced scale changes
+            opacity: isHovering ? [0.6, 0.2, 0.6] : [0.3, 0.1, 0.3],
           }}
           transition={{
-            duration: 4 + i,
+            duration: 6 + i * 2, // Slower animations
             repeat: Infinity,
-            ease: "easeInOut",
-            delay: i * 0.3,
+            ease: "linear",
+            delay: i * 0.5,
           }}
         />
       ))}
       
-      {/* Energy pulse center */}
+      {/* Simplified energy pulse center */}
       <motion.div
         className="absolute rounded-full"
         style={{
           left: `${mousePosition.x}%`,
           top: `${mousePosition.y}%`,
-          width: '20px',
-          height: '20px',
-          marginLeft: '-10px',
-          marginTop: '-10px',
-          background: 'radial-gradient(circle, rgba(6,182,212,0.8) 0%, transparent 70%)',
-          filter: 'blur(5px)',
+          width: '16px',
+          height: '16px',
+          marginLeft: '-8px',
+          marginTop: '-8px',
+          background: 'radial-gradient(circle, rgba(6,182,212,0.6) 0%, transparent 70%)',
+          filter: 'blur(2px)',
         }}
         animate={{
-          scale: isHovering ? [1, 3, 1] : [1, 2, 1],
-          opacity: [0.8, 0.4, 0.8],
+          scale: isHovering ? [1, 2, 1] : [1, 1.5, 1],
+          opacity: [0.6, 0.3, 0.6],
         }}
         transition={{
-          duration: 2,
+          duration: 3,
           repeat: Infinity,
-          ease: "easeInOut",
+          ease: "linear",
         }}
       />
     </div>
   );
-};
+});
+
+InteractiveEnergyWaves.displayName = 'InteractiveEnergyWaves';
 
 // ===============================
-// FLOATING ORB COMPONENT
+// OPTIMIZED FLOATING ORB COMPONENT
 // ===============================
-const FloatingOrb = ({ size = 200, color = "cyan", delay = 0, x = "50%", y = "50%" }) => (
+interface FloatingOrbProps {
+  size?: number;
+  color?: "cyan" | "purple" | "green" | "pink";
+  delay?: number;
+  x?: string;
+  y?: string;
+}
+
+const FloatingOrb = React.memo<FloatingOrbProps>(({ size = 150, color = "cyan", delay = 0, x = "50%", y = "50%" }) => (
   <motion.div
-    className={`absolute rounded-full filter blur-3xl opacity-20 pointer-events-none mix-blend-screen
+    className={`absolute rounded-full opacity-15 pointer-events-none mix-blend-screen
       ${color === 'cyan' ? 'from-cyan-400' : 
         color === 'purple' ? 'from-purple-400' : 
         color === 'green' ? 'from-green-400' : 
@@ -299,21 +276,23 @@ const FloatingOrb = ({ size = 200, color = "cyan", delay = 0, x = "50%", y = "50
       left: x,
       top: y,
       background: `radial-gradient(circle, var(--tw-gradient-from), transparent)`,
+      filter: 'blur(20px)', // Reduced blur complexity
     }}
     animate={{
-      scale: [1, 1.5, 0.8, 1.2, 1],
-      x: [0, 100, -50, 80, 0],
-      y: [0, -80, 120, -40, 0],
-      rotate: [0, 180, -90, 270, 0],
+      scale: [1, 1.3, 0.9, 1.1, 1], // Simplified animation
+      x: [0, 60, -30, 50, 0], // Reduced movement
+      y: [0, -50, 80, -25, 0],
     }}
     transition={{
-      duration: 25,
+      duration: 30, // Slower animation
       repeat: Infinity,
-      ease: "easeInOut",
+      ease: "linear",
       delay,
     }}
   />
-);
+));
+
+FloatingOrb.displayName = 'FloatingOrb';
 
 // ===============================
 // ENHANCED SVG ICONS WITH LIQUID ANIMATIONS
@@ -718,19 +697,6 @@ const AnimatedDivider = () => {
   );
 };
 
-// Placeholder Icon Components (add these or import your actual icons)
-const SunIcon = ({ className }: { className?: string }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8.66-15.66l-.707.707M4.34 19.66l-.707.707m15.66 0l-.707-.707M4.34 4.34l-.707-.707m0 15.66l.707-.707M19.66 4.34l.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
-  </svg>
-);
-
-const MoonIcon = ({ className }: { className?: string }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-  </svg>
-);
-
 // ===============================
 // REVOLUTIONARY INTERACTIVE CARD
 // ===============================
@@ -877,11 +843,7 @@ const AnimatedNumber = ({ value }: { value: number }) => {
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
-
-  // Handle hydration
-  useEffect(() => setMounted(true), []);
 
   // Parallax effects based on scroll  
   const backgroundY = useTransform(scrollY, [0, 1000], [0, -100]);
@@ -913,7 +875,7 @@ export default function Home() {
         "radial-gradient(ellipse at bottom, #020617 0%, #0f172a 25%, #1e293b 50%, #000000 100%)",
       ],
     }
-  }), [mounted]);
+  }), []);
 
   const AnimatedSection = ({ children, className, id }: { children: ReactNode, className?: string, id?: string }) => {
     const controls = useAnimation();
@@ -1134,27 +1096,26 @@ export default function Home() {
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             />
             
-            {/* Floating particles in mobile menu */}
-            {Array.from({ length: 4 }, (_, i) => (
+            {/* Optimized floating particles in mobile menu - reduced count */}
+            {Array.from({ length: 2 }, (_, i) => ( // Reduced from 4 to 2
               <motion.div
                 key={i}
                 className={`absolute w-2 h-2 ${
                   i % 2 === 0 ? 'bg-cyan-400/30' : 'bg-purple-400/30'
                 } rounded-full filter blur-sm`}
                 style={{
-                  left: `${20 + i * 20}%`,
-                  top: `${30 + i * 15}%`,
+                  left: `${30 + i * 40}%`,
+                  top: `${35 + i * 20}%`,
                 }}
                 animate={{
-                  y: [-15, 15, -15],
-                  x: [-8, 8, -8],
-                  opacity: [0.3, 0.7, 0.3],
+                  y: [-10, 10, -10], // Reduced movement
+                  opacity: [0.4, 0.7, 0.4],
                 }}
                 transition={{
-                  duration: 4 + i,
+                  duration: 6 + i * 2, // Slower animations
                   repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.5,
+                  ease: "linear", // Changed to linear for better performance
+                  delay: i * 1,
                 }}
               />
             ))}
@@ -1236,28 +1197,27 @@ export default function Home() {
               transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
             />
             
-            {/* Floating geometric shapes */}
-            {Array.from({ length: 6 }, (_, i) => (
+            {/* Optimized floating geometric shapes - reduced count and complexity */}
+            {Array.from({ length: 3 }, (_, i) => ( // Reduced from 6 to 3
               <motion.div
                 key={i}
-                className={`absolute w-${4 + i} h-${4 + i} ${
+                className={`absolute w-4 h-4 ${
                   i % 3 === 0 ? 'bg-cyan-400/20' : i % 3 === 1 ? 'bg-purple-400/20' : 'bg-green-400/20'
                 } ${i % 2 === 0 ? 'rounded-full' : 'rounded-lg'} filter blur-sm`}
                 style={{
-                  left: `${10 + i * 15}%`,
-                  top: `${20 + i * 10}%`,
+                  left: `${15 + i * 25}%`,
+                  top: `${25 + i * 15}%`,
                 }}
                 animate={{
-                  y: [-20, 20, -20],
-                  x: [-10, 10, -10],
-                  rotate: [0, 180, 360],
-                  opacity: [0.3, 0.7, 0.3],
+                  y: [-15, 15, -15], // Reduced movement
+                  x: [-8, 8, -8], // Reduced movement
+                  opacity: [0.4, 0.7, 0.4], // Simplified opacity changes
                 }}
                 transition={{
-                  duration: 5 + i,
+                  duration: 8 + i * 2, // Slower animations
                   repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.5,
+                  ease: "linear", // Changed to linear for better performance
+                  delay: i * 1,
                 }}
               />
             ))}
@@ -1582,33 +1542,22 @@ export default function Home() {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         
-        {/* Floating orbs in footer */}
+        {/* Optimized floating orbs in footer - reduced count and simplified */}
         <motion.div
-          className="absolute top-4 left-10 w-16 h-16 bg-gradient-to-r from-green-400/30 to-emerald-400/30 rounded-full filter blur-2xl"
+          className="absolute top-4 left-10 w-12 h-12 bg-gradient-to-r from-green-400/30 to-emerald-400/30 rounded-full filter blur-2xl"
           animate={{
-            y: [-8, 8, -8],
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
+            y: [-6, 6, -6], // Reduced movement
+            opacity: [0.4, 0.6, 0.4],
           }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }} // Simplified easing
         />
         <motion.div
-          className="absolute top-8 right-16 w-12 h-12 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full filter blur-2xl"
+          className="absolute bottom-6 right-16 w-10 h-10 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full filter blur-2xl"
           animate={{
-            y: [-6, 6, -6],
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.5, 0.2],
+            y: [-5, 5, -5], // Reduced movement
+            opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <motion.div
-          className="absolute bottom-6 left-1/3 w-8 h-8 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full filter blur-xl"
-          animate={{
-            y: [-4, 4, -4],
-            scale: [1, 1.1, 1],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 2 }} // Simplified easing
         />
         
         <div className="relative z-10">
