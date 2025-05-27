@@ -10,7 +10,10 @@ import {
   Tooltip, 
   ResponsiveContainer, 
   AreaChart, 
-  Area
+  Area,
+  PieChart,
+  Pie,
+  Cell
 } from 'recharts';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
@@ -32,8 +35,68 @@ interface ChartDataPoint extends HistoryData {
   fullTime: string;
 }
 
+// Power Breakdown Types
+interface PowerBreakdownItem {
+  [key: string]: number;
+}
+
+interface PowerBreakdownHistoryEntry {
+  datetime: string;
+  powerConsumptionBreakdown: PowerBreakdownItem;
+  powerProductionBreakdown: PowerBreakdownItem;
+  powerImportBreakdown: PowerBreakdownItem;
+  powerExportBreakdown: PowerBreakdownItem;
+  fossilFreePercentage: number;
+  renewablePercentage: number;
+  powerConsumptionTotal: number;
+  powerProductionTotal: number;
+  powerImportTotal: number;
+  powerExportTotal: number;
+  isEstimated: boolean;
+}
+
+interface PowerBreakdownResponse {
+  zone: string;
+  history: PowerBreakdownHistoryEntry[];
+  latest: PowerBreakdownHistoryEntry;
+}
+
+interface PieDataPoint {
+  name: string;
+  value: number;
+  color: string;
+}
+
 // Constants
 // Using internal API routes to avoid CORS issues
+
+// Power source colors for consistent visualization
+const POWER_SOURCE_COLORS: { [key: string]: string } = {
+  // Renewables (greens)
+  'solar': '#FFA500',
+  'wind': '#32CD32',
+  'hydro': '#4169E1',
+  'hydro discharge': '#6495ED',
+  'hydro pumped storage': '#87CEEB',
+  'biomass': '#228B22',
+  'geothermal': '#B22222',
+  'nuclear': '#9370DB',
+  
+  // Fossil fuels (warmer colors)
+  'gas': '#FF6347',
+  'coal': '#2F4F4F',
+  'oil': '#8B4513',
+  
+  // Import/Export
+  'imports': '#4682B4',
+  'exports': '#FF69B4',
+  
+  // Other/Unknown
+  'unknown': '#A9A9A9',
+  'other': '#D3D3D3',
+  'battery': '#FFD700',
+  'battery discharge': '#FFA500',
+};
 
 // Prediction class descriptions
 const PREDICTION_CLASSES = {
@@ -77,6 +140,30 @@ const CarbonIcon = () => (
 const RenewableIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636a9 9 0 1012.728 0z" />
+  </svg>
+);
+
+const ConsumptionIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+  </svg>
+);
+
+const ProductionIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+  </svg>
+);
+
+const ImportIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+  </svg>
+);
+
+const ExportIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
   </svg>
 );
 
@@ -199,6 +286,125 @@ const PredictionBadge = ({ predictionClass, type }: {
   );
 };
 
+// Power Breakdown Pie Chart Component
+const PowerBreakdownChart = ({ title, data, icon, total }: {
+  title: string;
+  data: PieDataPoint[];
+  icon: React.ReactNode;
+  total: number;
+}) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    percent: number;
+  }) => {
+    if (percent < 0.05) return null; // Don't show labels for slices smaller than 5%
+    
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="white" 
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontSize={12}
+        fontWeight="bold"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6"
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay: 0.2 }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="text-green-500">
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Total: {total.toFixed(0)} MW
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="h-80">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={renderCustomizedLabel}
+              outerRadius={120}
+              fill="#8884d8"
+              dataKey="value"
+              animationBegin={0}
+              animationDuration={1000}
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white'
+              }}
+              formatter={(value: number) => [`${value.toFixed(0)} MW`, 'Power']}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-4 space-y-2">
+        {data.slice(0, 6).map((entry, index) => (
+          <div key={index} className="flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-2">
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-gray-700 dark:text-gray-300">{entry.name}</span>
+            </div>
+            <span className="text-gray-600 dark:text-gray-400 font-medium">
+              {entry.value.toFixed(0)} MW ({((entry.value / total) * 100).toFixed(1)}%)
+            </span>
+          </div>
+        ))}
+        {data.length > 6 && (
+          <div className="text-xs text-gray-500 dark:text-gray-400 pt-2">
+            ... and {data.length - 6} more
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
 // Chart Component
 const ChartCard = ({ title, data, type, prediction }: {
   title: string;
@@ -298,9 +504,24 @@ const ChartCard = ({ title, data, type, prediction }: {
 export default function PortugalDashboard() {
   const [carbonData, setCarbonData] = useState<ApiResponse | null>(null);
   const [renewableData, setRenewableData] = useState<ApiResponse | null>(null);
+  const [powerBreakdownData, setPowerBreakdownData] = useState<PowerBreakdownResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
+  // Helper function to process power breakdown data for pie charts
+  const processPowerData = (breakdown: PowerBreakdownItem, total: number): PieDataPoint[] => {
+    if (!breakdown || total === 0) return [];
+    
+    return Object.entries(breakdown)
+      .filter(([, value]) => value > 0)
+      .map(([source, value]) => ({
+        name: source.charAt(0).toUpperCase() + source.slice(1),
+        value: value,
+        color: POWER_SOURCE_COLORS[source.toLowerCase()] || POWER_SOURCE_COLORS['other']
+      }))
+      .sort((a, b) => b.value - a.value);
+  };
 
   const fetchData = async () => {
     try {
@@ -309,7 +530,7 @@ export default function PortugalDashboard() {
 
       console.log('🔄 Fetching data from internal API routes');
 
-      const [carbonResponse, renewableResponse] = await Promise.all([
+      const [carbonResponse, renewableResponse, powerBreakdownResponse] = await Promise.all([
         fetch('/api/carbon-intensity', {
           method: 'GET',
           headers: {
@@ -321,28 +542,38 @@ export default function PortugalDashboard() {
           headers: {
             'Content-Type': 'application/json',
           },
+        }),
+        fetch('/api/power-breakdown', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
       ]);
 
       console.log('📡 Response status:', {
         carbon: carbonResponse.status,
-        renewable: renewableResponse.status
+        renewable: renewableResponse.status,
+        powerBreakdown: powerBreakdownResponse.status
       });
 
-      if (!carbonResponse.ok || !renewableResponse.ok) {
-        throw new Error(`Failed to fetch data from API. Carbon: ${carbonResponse.status}, Renewable: ${renewableResponse.status}`);
+      if (!carbonResponse.ok || !renewableResponse.ok || !powerBreakdownResponse.ok) {
+        throw new Error(`Failed to fetch data from API. Carbon: ${carbonResponse.status}, Renewable: ${renewableResponse.status}, Power: ${powerBreakdownResponse.status}`);
       }
 
       const carbonData = await carbonResponse.json();
       const renewableData = await renewableResponse.json();
+      const powerBreakdownData = await powerBreakdownResponse.json();
 
       console.log('✅ Data received:', {
         carbonData: carbonData ? 'Success' : 'Failed',
-        renewableData: renewableData ? 'Success' : 'Failed'
+        renewableData: renewableData ? 'Success' : 'Failed',
+        powerBreakdownData: powerBreakdownData ? 'Success' : 'Failed'
       });
 
       setCarbonData(carbonData);
       setRenewableData(renewableData);
+      setPowerBreakdownData(powerBreakdownData);
       setLastUpdate(new Date());
     } catch (err) {
       console.error('❌ Fetch error:', err);
@@ -360,7 +591,7 @@ export default function PortugalDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading && !carbonData && !renewableData) {
+  if (loading && !carbonData && !renewableData && !powerBreakdownData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
         <div className="max-w-7xl mx-auto">
@@ -372,7 +603,7 @@ export default function PortugalDashboard() {
     );
   }
 
-  if (error && !carbonData && !renewableData) {
+  if (error && !carbonData && !renewableData && !powerBreakdownData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
         <div className="max-w-7xl mx-auto">
@@ -386,6 +617,13 @@ export default function PortugalDashboard() {
 
   const currentCarbon = carbonData?.history[carbonData.history.length - 1]?.value || 0;
   const currentRenewable = renewableData?.history[renewableData.history.length - 1]?.value || 0;
+  
+  // Power breakdown metrics
+  const latestPowerData = powerBreakdownData?.latest;
+  const currentConsumption = latestPowerData?.powerConsumptionTotal || 0;
+  const currentProduction = latestPowerData?.powerProductionTotal || 0;
+  const currentImport = latestPowerData?.powerImportTotal || 0;
+  const currentExport = latestPowerData?.powerExportTotal || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -444,13 +682,13 @@ export default function PortugalDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Metrics Overview */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <MetricCard
-            title="Current Carbon Intensity"
+            title="Carbon Intensity"
             value={currentCarbon}
             unit="gCO₂/kWh"
             icon={<CarbonIcon />}
@@ -458,7 +696,7 @@ export default function PortugalDashboard() {
           />
           
           <MetricCard
-            title="Current Renewable %"
+            title="Renewable %"
             value={currentRenewable}
             unit="%"
             icon={<RenewableIcon />}
@@ -466,26 +704,40 @@ export default function PortugalDashboard() {
           />
           
           <MetricCard
-            title="Carbon Prediction"
-            value={carbonData?.prediction_class !== undefined ? 
-              PREDICTION_CLASSES.carbon_intensity[carbonData.prediction_class as keyof typeof PREDICTION_CLASSES.carbon_intensity].label : 
-              'Loading...'
-            }
-            icon={<CarbonIcon />}
+            title="Consumption"
+            value={currentConsumption}
+            unit="MW"
+            icon={<ConsumptionIcon />}
+            trend="neutral"
           />
           
           <MetricCard
-            title="Renewable Prediction"
-            value={renewableData?.prediction_class !== undefined ? 
-              PREDICTION_CLASSES.renewable_percentage[renewableData.prediction_class as keyof typeof PREDICTION_CLASSES.renewable_percentage].label : 
-              'Loading...'
-            }
-            icon={<RenewableIcon />}
+            title="Production"
+            value={currentProduction}
+            unit="MW"
+            icon={<ProductionIcon />}
+            trend="neutral"
+          />
+          
+          <MetricCard
+            title="Import"
+            value={currentImport}
+            unit="MW"
+            icon={<ImportIcon />}
+            trend={currentImport > 1000 ? 'up' : 'neutral'}
+          />
+          
+          <MetricCard
+            title="Export"
+            value={currentExport}
+            unit="MW"
+            icon={<ExportIcon />}
+            trend={currentExport > 500 ? 'up' : 'neutral'}
           />
         </motion.div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {carbonData && (
             <ChartCard
               title="Carbon Intensity Forecast"
@@ -505,6 +757,67 @@ export default function PortugalDashboard() {
           )}
         </div>
 
+        {/* Power Breakdown Charts */}
+        {powerBreakdownData && latestPowerData && (
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                Power Breakdown Analysis
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Real-time power generation, consumption, and trade breakdown for Portugal
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Consumption Breakdown */}
+              {latestPowerData.powerConsumptionBreakdown && (
+                <PowerBreakdownChart
+                  title="Power Consumption"
+                  data={processPowerData(latestPowerData.powerConsumptionBreakdown, currentConsumption)}
+                  icon={<ConsumptionIcon />}
+                  total={currentConsumption}
+                />
+              )}
+              
+              {/* Production Breakdown */}
+              {latestPowerData.powerProductionBreakdown && (
+                <PowerBreakdownChart
+                  title="Power Production"
+                  data={processPowerData(latestPowerData.powerProductionBreakdown, currentProduction)}
+                  icon={<ProductionIcon />}
+                  total={currentProduction}
+                />
+              )}
+              
+              {/* Import Breakdown */}
+              {latestPowerData.powerImportBreakdown && currentImport > 0 && (
+                <PowerBreakdownChart
+                  title="Power Imports"
+                  data={processPowerData(latestPowerData.powerImportBreakdown, currentImport)}
+                  icon={<ImportIcon />}
+                  total={currentImport}
+                />
+              )}
+              
+              {/* Export Breakdown */}
+              {latestPowerData.powerExportBreakdown && currentExport > 0 && (
+                <PowerBreakdownChart
+                  title="Power Exports"
+                  data={processPowerData(latestPowerData.powerExportBreakdown, currentExport)}
+                  icon={<ExportIcon />}
+                  total={currentExport}
+                />
+              )}
+            </div>
+          </motion.div>
+        )}
+
         {/* Insights Section */}
         <motion.div
           className="mt-8 bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6"
@@ -513,9 +826,9 @@ export default function PortugalDashboard() {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            Energy Insights
+            Energy Insights & Analysis
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-2">
               <h4 className="font-medium text-gray-900 dark:text-gray-100">Carbon Intensity Status</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -528,7 +841,50 @@ export default function PortugalDashboard() {
                 {renewableData && PREDICTION_CLASSES.renewable_percentage[renewableData.prediction_class as keyof typeof PREDICTION_CLASSES.renewable_percentage].description}
               </p>
             </div>
+            <div className="space-y-2">
+              <h4 className="font-medium text-gray-900 dark:text-gray-100">Energy Balance</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {powerBreakdownData ? (
+                  currentProduction > currentConsumption ? 
+                  `Portugal is exporting ${(currentProduction - currentConsumption).toFixed(0)} MW` :
+                  `Portugal is importing ${(currentConsumption - currentProduction).toFixed(0)} MW`
+                ) : 'Loading energy balance data...'}
+              </p>
+            </div>
           </div>
+          
+          {/* Additional Power Insights */}
+          {powerBreakdownData && latestPowerData && (
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Power Breakdown Summary</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">
+                    {((latestPowerData.renewablePercentage || 0) * 100).toFixed(1)}%
+                  </div>
+                  <div className="text-gray-600 dark:text-gray-400">Renewable</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">
+                    {((latestPowerData.fossilFreePercentage || 0) * 100).toFixed(1)}%
+                  </div>
+                  <div className="text-gray-600 dark:text-gray-400">Fossil Free</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">
+                    {((currentExport / (currentProduction || 1)) * 100).toFixed(1)}%
+                  </div>
+                  <div className="text-gray-600 dark:text-gray-400">Export Ratio</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">
+                    {latestPowerData.isEstimated ? 'Est.' : 'Real'}
+                  </div>
+                  <div className="text-gray-600 dark:text-gray-400">Data Type</div>
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
       </main>
     </div>
