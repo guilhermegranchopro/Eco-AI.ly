@@ -356,7 +356,7 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Total: {total.toFixed(0)} MW
+              Total: {total.toFixed(1)} MW
             </p>
           </div>
         </div>
@@ -458,6 +458,139 @@ const TimeFrameSelector = ({ selectedTimeFrame, onTimeFrameChange }: {
               {option.label}
             </motion.button>
           ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Zero Data Animation Component
+const ZeroDataAnimation = ({ title, icon, timeFrame }: {
+  title: string;
+  icon: React.ReactNode;
+  timeFrame: string;
+}) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6"
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay: 0.2 }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="text-green-500">
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Total: 0 MW
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="h-80 flex flex-col items-center justify-center">
+        {/* Animated Zero Data Visualization */}
+        <motion.div
+          className="relative"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+        >
+          {/* Outer Circle */}
+          <motion.div
+            className="w-32 h-32 border-4 border-gray-200 dark:border-gray-600 rounded-full flex items-center justify-center"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          >
+            {/* Inner Animated Dots */}
+            <motion.div
+              className="relative w-20 h-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full"
+                  style={{
+                    top: '50%',
+                    left: '50%',
+                    transformOrigin: '0 0',
+                  }}
+                  initial={{ 
+                    rotate: i * 120,
+                    x: -4,
+                    y: -4,
+                    scale: 0 
+                  }}
+                  animate={{ 
+                    rotate: i * 120,
+                    x: -4,
+                    y: -4,
+                    scale: [0, 1, 0] 
+                  }}
+                  transition={{
+                    scale: {
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: i * 0.3,
+                      ease: "easeInOut"
+                    }
+                  }}
+                />
+              ))}
+              
+              {/* Center Icon */}
+              <motion.div
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+              >
+                <div className="w-6 h-6">
+                  {icon}
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* Zero Data Message */}
+        <motion.div
+          className="text-center mt-6 space-y-2"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1, duration: 0.6 }}
+        >
+          <h4 className="text-lg font-medium text-gray-600 dark:text-gray-400">
+            No Data Available
+          </h4>
+          <p className="text-sm text-gray-500 dark:text-gray-500 max-w-xs">
+            No {title.toLowerCase()} activity recorded during the {timeFrame.toLowerCase()}.
+          </p>
+          
+          {/* Animated Pulse Effect */}
+          <motion.div
+            className="w-12 h-1 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-auto mt-4 rounded-full"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: [0, 1, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      </div>
+
+      {/* Zero Data Legend */}
+      <div className="mt-4 text-center">
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Try selecting a different time frame to view data from other periods.
         </div>
       </div>
     </motion.div>
@@ -848,7 +981,7 @@ export default function PortugalDashboard() {
           
           <MetricCard
             title="Consumption"
-            value={currentConsumption}
+            value={parseFloat(currentConsumption.toFixed(1))}
             unit="MW"
             icon={<ConsumptionIcon />}
             trend="neutral"
@@ -856,7 +989,7 @@ export default function PortugalDashboard() {
           
           <MetricCard
             title="Production"
-            value={currentProduction}
+            value={parseFloat(currentProduction.toFixed(1))}
             unit="MW"
             icon={<ProductionIcon />}
             trend="neutral"
@@ -864,7 +997,7 @@ export default function PortugalDashboard() {
           
           <MetricCard
             title="Import"
-            value={currentImport}
+            value={parseFloat(currentImport.toFixed(1))}
             unit="MW"
             icon={<ImportIcon />}
             trend={currentImport > 1000 ? 'up' : 'neutral'}
@@ -872,7 +1005,7 @@ export default function PortugalDashboard() {
           
           <MetricCard
             title="Export"
-            value={currentExport}
+            value={parseFloat(currentExport.toFixed(1))}
             unit="MW"
             icon={<ExportIcon />}
             trend={currentExport > 500 ? 'up' : 'neutral'}
@@ -925,44 +1058,108 @@ export default function PortugalDashboard() {
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Consumption Breakdown */}
-              {aggregatedPowerData.powerConsumptionBreakdown && (
-                <PowerBreakdownChart
-                  title={`Power Consumption - ${selectedTimeFrame.label}`}
-                  data={processPowerData(aggregatedPowerData.powerConsumptionBreakdown, currentConsumption)}
-                  icon={<ConsumptionIcon />}
-                  total={currentConsumption}
-                />
-              )}
+              <motion.div
+                key={`consumption-container-${selectedTimeFrame.hours}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                {aggregatedPowerData.powerConsumptionBreakdown && currentConsumption > 0 ? (
+                  <PowerBreakdownChart
+                    key={`consumption-${selectedTimeFrame.hours}`}
+                    title={`Power Consumption - ${selectedTimeFrame.label}`}
+                    data={processPowerData(aggregatedPowerData.powerConsumptionBreakdown, currentConsumption)}
+                    icon={<ConsumptionIcon />}
+                    total={currentConsumption}
+                  />
+                ) : (
+                  <ZeroDataAnimation
+                    key={`consumption-zero-${selectedTimeFrame.hours}`}
+                    title={`Power Consumption - ${selectedTimeFrame.label}`}
+                    icon={<ConsumptionIcon />}
+                    timeFrame={selectedTimeFrame.label}
+                  />
+                )}
+              </motion.div>
               
               {/* Production Breakdown */}
-              {aggregatedPowerData.powerProductionBreakdown && (
-                <PowerBreakdownChart
-                  title={`Power Production - ${selectedTimeFrame.label}`}
-                  data={processPowerData(aggregatedPowerData.powerProductionBreakdown, currentProduction)}
-                  icon={<ProductionIcon />}
-                  total={currentProduction}
-                />
-              )}
+              <motion.div
+                key={`production-container-${selectedTimeFrame.hours}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {aggregatedPowerData.powerProductionBreakdown && currentProduction > 0 ? (
+                  <PowerBreakdownChart
+                    key={`production-${selectedTimeFrame.hours}`}
+                    title={`Power Production - ${selectedTimeFrame.label}`}
+                    data={processPowerData(aggregatedPowerData.powerProductionBreakdown, currentProduction)}
+                    icon={<ProductionIcon />}
+                    total={currentProduction}
+                  />
+                ) : (
+                  <ZeroDataAnimation
+                    key={`production-zero-${selectedTimeFrame.hours}`}
+                    title={`Power Production - ${selectedTimeFrame.label}`}
+                    icon={<ProductionIcon />}
+                    timeFrame={selectedTimeFrame.label}
+                  />
+                )}
+              </motion.div>
               
-              {/* Import Breakdown */}
-              {aggregatedPowerData.powerImportBreakdown && currentImport > 0 && (
-                <PowerBreakdownChart
-                  title={`Power Imports - ${selectedTimeFrame.label}`}
-                  data={processPowerData(aggregatedPowerData.powerImportBreakdown, currentImport)}
-                  icon={<ImportIcon />}
-                  total={currentImport}
-                />
-              )}
+              {/* Import Breakdown - Always show either chart or zero animation */}
+              <motion.div
+                key={`import-container-${selectedTimeFrame.hours}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {aggregatedPowerData.powerImportBreakdown && currentImport > 0 ? (
+                  <PowerBreakdownChart
+                    key={`import-${selectedTimeFrame.hours}`}
+                    title={`Power Imports - ${selectedTimeFrame.label}`}
+                    data={processPowerData(aggregatedPowerData.powerImportBreakdown, currentImport)}
+                    icon={<ImportIcon />}
+                    total={currentImport}
+                  />
+                ) : (
+                  <ZeroDataAnimation
+                    key={`import-zero-${selectedTimeFrame.hours}`}
+                    title={`Power Imports - ${selectedTimeFrame.label}`}
+                    icon={<ImportIcon />}
+                    timeFrame={selectedTimeFrame.label}
+                  />
+                )}
+              </motion.div>
               
-              {/* Export Breakdown */}
-              {aggregatedPowerData.powerExportBreakdown && currentExport > 0 && (
-                <PowerBreakdownChart
-                  title={`Power Exports - ${selectedTimeFrame.label}`}
-                  data={processPowerData(aggregatedPowerData.powerExportBreakdown, currentExport)}
-                  icon={<ExportIcon />}
-                  total={currentExport}
-                />
-              )}
+              {/* Export Breakdown - Always show either chart or zero animation */}
+              <motion.div
+                key={`export-container-${selectedTimeFrame.hours}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                {aggregatedPowerData.powerExportBreakdown && currentExport > 0 ? (
+                  <PowerBreakdownChart
+                    key={`export-${selectedTimeFrame.hours}`}
+                    title={`Power Exports - ${selectedTimeFrame.label}`}
+                    data={processPowerData(aggregatedPowerData.powerExportBreakdown, currentExport)}
+                    icon={<ExportIcon />}
+                    total={currentExport}
+                  />
+                ) : (
+                  <ZeroDataAnimation
+                    key={`export-zero-${selectedTimeFrame.hours}`}
+                    title={`Power Exports - ${selectedTimeFrame.label}`}
+                    icon={<ExportIcon />}
+                    timeFrame={selectedTimeFrame.label}
+                  />
+                )}
+              </motion.div>
             </div>
           </motion.div>
         )}
