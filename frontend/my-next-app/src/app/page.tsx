@@ -176,7 +176,7 @@ const InteractiveCard = ({ children, className }: { children: ReactNode, classNa
   return (
     <motion.div
       ref={ref}
-      className={`relative p-6 md:p-8 rounded-xl shadow-xl overflow-hidden bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 ${className}`}
+      className={`relative p-6 md:p-8 rounded-xl shadow-md overflow-hidden bg-white/80 dark:bg-gray-800/30 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/50 ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         rotateX,
@@ -259,7 +259,7 @@ const ThemeToggleButton = () => {
   return (
     <motion.button
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md flex items-center justify-center"
+      className="p-2 rounded-lg bg-slate-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-slate-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md border border-gray-300/50 dark:border-gray-600/50 flex items-center justify-center"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       aria-label="Toggle theme"
@@ -326,13 +326,13 @@ export default function Home() {
     }
   } : {
     initial: { 
-      background: "linear-gradient(135deg, rgb(249 250 251) 0%, rgb(255 255 255) 50%, rgb(243 244 246) 100%)" 
+      background: "linear-gradient(135deg, rgb(248 250 252) 0%, rgb(241 245 249) 50%, rgb(248 250 252) 100%)" 
     },
     animate: {
       background: [
-        "linear-gradient(135deg, rgb(249 250 251) 0%, rgb(255 255 255) 25%, rgb(248 250 252) 50%, rgb(255 255 255) 75%, rgb(243 244 246) 100%)",
-        "linear-gradient(135deg, rgb(243 244 246) 0%, rgb(248 250 252) 25%, rgb(255 255 255) 50%, rgb(248 250 252) 75%, rgb(249 250 251) 100%)",
-        "linear-gradient(135deg, rgb(249 250 251) 0%, rgb(255 255 255) 25%, rgb(248 250 252) 50%, rgb(255 255 255) 75%, rgb(243 244 246) 100%)",
+        "linear-gradient(135deg, rgb(248 250 252) 0%, rgb(241 245 249) 25%, rgb(236 242 249) 50%, rgb(241 245 249) 75%, rgb(248 250 252) 100%)",
+        "linear-gradient(135deg, rgb(236 242 249) 0%, rgb(241 245 249) 25%, rgb(248 250 252) 50%, rgb(241 245 249) 75%, rgb(236 242 249) 100%)",
+        "linear-gradient(135deg, rgb(248 250 252) 0%, rgb(241 245 249) 25%, rgb(236 242 249) 50%, rgb(241 245 249) 75%, rgb(248 250 252) 100%)",
       ],
     }
   };
@@ -355,7 +355,7 @@ export default function Home() {
   
   return (
     <motion.main
-      className="flex flex-col items-center justify-center min-h-screen text-gray-900 dark:text-white overflow-x-hidden antialiased bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#0A0F1A]" // Light theme gradient, dark theme base
+      className="flex flex-col items-center justify-center min-h-screen text-gray-700 dark:text-white overflow-x-hidden antialiased bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100 dark:bg-[#0A0F1A]" // Updated light theme gradient
       initial="initial"
       animate="animate"
       variants={backgroundVariants}
@@ -381,7 +381,7 @@ export default function Home() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-        className="sticky top-0 z-50 w-full flex justify-center py-4 sm:py-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-2xl transition-all duration-300 rounded-b-2xl" // Updated dark bg for header
+        className="sticky top-0 z-50 w-full flex justify-center py-4 sm:py-6 bg-white/90 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 rounded-b-2xl" // Updated light background and added border
       >
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <Link href="/" className="hover:opacity-80 transition-opacity">
@@ -431,7 +431,7 @@ export default function Home() {
                 href="https://github.com/guilhermegranchopro/Eco-AI.ly"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md flex items-center justify-center"
+                className="p-2 rounded-lg bg-slate-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-slate-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md border border-gray-300/50 dark:border-gray-600/50 flex items-center justify-center"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label="View GitHub repository"
@@ -446,7 +446,7 @@ export default function Home() {
               href="https://github.com/guilhermegranchopro/Eco-AI.ly"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md flex items-center justify-center"
+              className="p-2 rounded-lg bg-slate-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-slate-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md border border-gray-300/50 dark:border-gray-600/50 flex items-center justify-center"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label="View GitHub repository"
@@ -469,7 +469,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl z-40 min-h-screen rounded-b-2xl" // Updated dark bg for mobile menu
+            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl border-b border-gray-200/50 dark:border-gray-700/50 z-40 min-h-screen rounded-b-2xl" // Added border
             onClick={toggleMobileMenu} 
           >
             <nav className="flex flex-col space-y-6 items-center text-xl">
@@ -485,7 +485,7 @@ export default function Home() {
                   href={link.href} 
                   className={link.isButton 
                     ? "w-full text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg" // Ensure this is rounded-xl or similar
-                    : "text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 font-medium rounded-lg"} // Added rounded-lg to mobile nav links
+                    : "text-gray-600 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 font-medium rounded-lg"} // Updated mobile nav text colors
                   onClick={(e) => {
                     if (!link.isExternal) {
                       handleSmoothScroll(e, link.href);
@@ -508,7 +508,7 @@ export default function Home() {
 
       <main className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-8 sm:mt-12">
         {/* Welcome Section - Enhanced */}
-        <AnimatedSection className="text-center my-12 sm:my-16 p-8 sm:p-12 rounded-3xl shadow-2xl bg-white dark:bg-gray-800 w-full transform transition-all duration-500 hover:scale-[1.01] overflow-hidden relative">
+        <AnimatedSection className="text-center my-12 sm:my-16 p-8 sm:p-12 rounded-3xl shadow-lg bg-white/80 dark:bg-gray-800 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 w-full transform transition-all duration-500 hover:scale-[1.01] overflow-hidden relative">
           {/* Subtle animated background elements */}
           {/*
           {heroShapesData.map(shape => { // Use heroShapesData here
@@ -557,10 +557,10 @@ export default function Home() {
                 Eco AI.ly
               </motion.span>
             </h1>
-            <motion.p variants={fadeInUp} className="text-xl sm:text-2xl text-gray-700 dark:text-gray-300 mb-4 relative z-10">
+            <motion.p variants={fadeInUp} className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-4 relative z-10">
               Harnessing <strong className="text-green-600 dark:text-green-400">Artificial Intelligence</strong> for a <strong className="text-emerald-600 dark:text-emerald-400">Sustainable Planet</strong> 🌍.
             </motion.p>
-            <motion.p variants={fadeInUp} className="text-md sm:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto relative z-10">
+            <motion.p variants={fadeInUp} className="text-md sm:text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto relative z-10">
               We provide cutting-edge predictive analytics and actionable insights to empower decision-makers in building a greener, more resilient future. Explore real-time environmental metrics and AI-driven forecasts.
             </motion.p>
             <motion.div variants={fadeInUp} className="mt-10 relative z-10">
@@ -576,7 +576,7 @@ export default function Home() {
 
         {/* Key Features Section - Enhanced */}
         <AnimatedSection id="features" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
             ✨ Our Core Capabilities
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -586,7 +586,7 @@ export default function Home() {
             ].map((feature) => (
               <InteractiveCard 
                 key={feature.title} 
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-green-500/30" // Ensure rounded-2xl and updated dark bg
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/50 hover:border-green-400/40 dark:hover:border-green-500/30" // Updated backgrounds and borders
               >
                 <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {feature.icon}
@@ -605,20 +605,20 @@ export default function Home() {
         {/* Explore Our Platform Section - Enhanced */}
         <AnimatedSection 
           id="platform" 
-          className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-100 dark:bg-gray-900/50 rounded-3xl relative overflow-hidden" // Added horizontal padding
+          className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-slate-100/80 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200/40 dark:border-gray-700/30 rounded-3xl relative overflow-hidden" // Updated light background
         >
           {/* Decorative elements */}
           <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-gray-700/20 dark:border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
           <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-gray-600/10 dark:border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
 
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-gray-800 dark:text-white">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-gray-700 dark:text-white">
             Dive Into Our Platform
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-600 dark:text-gray-300">
+          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-500 dark:text-gray-300">
             Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
           </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-gray-800 dark:text-white">🇵🇹 Portugal Data Dashboard</h3>
+            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-gray-700 dark:text-white">🇵🇹 Portugal Data Dashboard</h3>
             <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-700 dark:text-green-200">
               <li>Comprehensive energy consumption metrics</li>
               <li>Real-time carbon intensity updates</li>
@@ -638,7 +638,7 @@ export default function Home() {
 
         {/* Technology Stack Section - Enhanced */}
         <AnimatedSection id="tech-stack" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
             ⚙️ Built With Cutting-Edge Technology
           </motion.h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -647,7 +647,7 @@ export default function Home() {
             ].map((tech) => (
               <InteractiveCard 
                 key={tech.title} 
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-800/70 backdrop-blur-sm border border-transparent hover:border-emerald-500/30" // Ensure rounded-2xl and updated dark bg
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/50 hover:border-emerald-400/40 dark:hover:border-emerald-500/30" // Updated backgrounds and borders
               >
                  <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {tech.icon}
@@ -665,7 +665,7 @@ export default function Home() {
 
         {/* Our Impact in Numbers Section - NEW */}
         <AnimatedSection id="impact" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
             📈 Our Impact in Numbers
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -678,7 +678,7 @@ export default function Home() {
                 variants={fadeInUp} // Apply variants to the motion.div wrapper
               >
                 <InteractiveCard
-                  className="p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800/70 backdrop-blur-sm text-center border border-transparent hover:border-green-400/30" // Ensure rounded-2xl and updated dark bg
+                  className="p-6 sm:p-8 rounded-2xl shadow-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm text-center border border-gray-200/60 dark:border-gray-700/50 hover:border-green-400/40 dark:hover:border-green-400/30" // Updated backgrounds and borders
                 >
                   <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
                     <AnimatedNumber value={stat.value} />{stat.displaySuffix}
@@ -694,7 +694,7 @@ export default function Home() {
 
         {/* Dashboard Section - NEW */}
         <AnimatedSection id="dashboard" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-300 mb-8 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-8 text-center">
             🇵🇹 Live Portugal Energy Dashboard
           </motion.h2>
           <motion.p variants={fadeInUp} className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12 text-center">
@@ -733,10 +733,10 @@ export default function Home() {
             animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           />
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10 text-gray-800 dark:text-white">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10 text-gray-700 dark:text-white">
             Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500">Greener Future</span>?
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10 relative z-10">
+          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-10 relative z-10">
             Join us in leveraging AI for sustainability. Explore our solutions or get in touch to discuss how Eco AI.ly can help your organization achieve its environmental goals.
           </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
@@ -753,7 +753,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="w-full py-8 text-center text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm" // Added light theme background
+        className="w-full py-8 text-center text-gray-500 dark:text-gray-400 border-t border-gray-200/60 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-2xl bg-white/60 dark:bg-gray-900/50 backdrop-blur-sm" // Updated light theme background
       >
         <p>&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
         <p className="text-xs">Innovating for a Greener Future.</p>

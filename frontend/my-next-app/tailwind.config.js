@@ -13,15 +13,19 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      // You can extend your color palette here for more specific dark mode colors
-      // For example:
-      // colors: {
-      //   dark: {
-      //     background: '#1a202c',
-      //     text: '#e2e8f0',
-      //     primary: '#38b2ac',
-      //   }
-      // }
+      colors: {
+        light: {
+          background: '#f8fafc',
+          surface: '#ffffff',
+          'surface-secondary': '#f1f5f9',
+          'surface-tertiary': '#e2e8f0',
+          text: '#374151',
+          'text-secondary': '#6b7280',
+          'text-muted': '#9ca3af',
+          border: '#e5e7eb',
+          'border-light': '#f3f4f6',
+        }
+      }
     },
   },
   plugins: [],
