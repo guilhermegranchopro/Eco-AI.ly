@@ -85,32 +85,32 @@ const TIME_FRAME_OPTIONS: TimeFrameOption[] = [
 // Constants
 // Using internal API routes to avoid CORS issues
 
-// Power source colors for consistent visualization
+// Enhanced power source colors for Eco AI.ly branding
 const POWER_SOURCE_COLORS: { [key: string]: string } = {
-  // Renewables (greens)
-  'solar': '#FFA500',
-  'wind': '#32CD32',
-  'hydro': '#4169E1',
-  'hydro discharge': '#6495ED',
-  'hydro pumped storage': '#87CEEB',
-  'biomass': '#228B22',
-  'geothermal': '#B22222',
-  'nuclear': '#9370DB',
+  // Renewables (eco-friendly greens and natural colors)
+  'solar': '#F59E0B', // Vibrant amber for solar energy
+  'wind': '#059669', // Eco green for wind
+  'hydro': '#0EA5E9', // Clean blue for hydro
+  'hydro discharge': '#06B6D4', // Cyan for hydro discharge
+  'hydro pumped storage': '#3B82F6', // Bright blue for pumped storage
+  'biomass': '#65A30D', // Natural green for biomass
+  'geothermal': '#DC2626', // Earth red for geothermal
+  'nuclear': '#7C3AED', // Purple for nuclear
   
-  // Fossil fuels (warmer colors)
-  'gas': '#FF6347',
-  'coal': '#2F4F4F',
-  'oil': '#8B4513',
+  // Fossil fuels (warmer, less vibrant colors to show environmental impact)
+  'gas': '#EF4444', // Red to indicate emissions
+  'coal': '#374151', // Dark gray for coal
+  'oil': '#92400E', // Brown for oil
   
-  // Import/Export
-  'imports': '#4682B4',
-  'exports': '#FF69B4',
+  // Import/Export (professional blues)
+  'imports': '#1E40AF', // Deep blue for imports
+  'exports': '#059669', // Eco green for exports (positive)
   
-  // Other/Unknown
-  'unknown': '#A9A9A9',
-  'other': '#D3D3D3',
-  'battery': '#FFD700',
-  'battery discharge': '#FFA500',
+  // Other/Unknown (neutral eco-friendly tones)
+  'unknown': '#6B7280', // Neutral gray
+  'other': '#9CA3AF', // Light gray
+  'battery': '#FBBF24', // Golden yellow for battery
+  'battery discharge': '#F59E0B', // Amber for battery discharge
 };
 
 // Prediction class descriptions
@@ -301,7 +301,7 @@ const PredictionBadge = ({ predictionClass, type }: {
   );
 };
 
-// Power Breakdown Pie Chart Component
+// Enhanced Power Breakdown Pie Chart Component with Eco AI.ly Branding
 const PowerBreakdownChart = ({ title, data, icon, total }: {
   title: string;
   data: PieDataPoint[];
@@ -309,19 +309,19 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
   total: number;
 }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent }: {
     cx: number;
     cy: number;
     midAngle: number;
-    innerRadius: number;
     outerRadius: number;
     percent: number;
   }) => {
-    if (percent < 0.05) return null; // Don't show labels for slices smaller than 5%
+    if (percent < 0.08) return null; // Only show labels for segments > 8%
     
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const radius = outerRadius + 25; // Position labels outside the chart
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -329,93 +329,204 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
       <text 
         x={x} 
         y={y} 
-        fill="white" 
+        fill="#374151" 
+        className="dark:fill-white"
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={12}
-        fontWeight="bold"
+        fontSize={11}
+        fontWeight="600"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {`${(percent * 100).toFixed(1)}%`}
       </text>
     );
   };
 
+  // Create gradient definitions for each data entry
+  const gradientDefs = data.map((entry, index) => (
+    <defs key={`gradient-${index}`}>
+      <radialGradient id={`gradient-${index}`} cx="30%" cy="30%">
+        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.4)" />
+        <stop offset="50%" stopColor={entry.color} />
+        <stop offset="100%" stopColor={entry.color} />
+      </radialGradient>
+    </defs>
+  ));
+
   return (
     <motion.div
       ref={ref}
-      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6"
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: 0.2 }}
+      className="relative bg-gradient-to-br from-white via-green-50/30 to-blue-50/20 dark:from-gray-800/40 dark:via-gray-800/30 dark:to-gray-900/20 backdrop-blur-xl border border-green-200/50 dark:border-gray-700/30 rounded-2xl p-6 shadow-xl"
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.8, delay: 0.2, type: "spring", bounce: 0.3 }}
+      style={{
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(247,251,252,0.8) 25%, rgba(89,165,44,0.1) 100%)',
+      }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
-          <div className="text-green-500">
+      {/* Eco AI.ly Branding Badge */}
+      <motion.div
+        className="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ delay: 0.8, type: "spring", bounce: 0.4 }}
+      >
+        Eco AI.ly
+      </motion.div>
+
+      {/* Enhanced Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-4">
+          <motion.div 
+            className="p-3 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", bounce: 0.4 }}
+          >
             {icon}
-          </div>
+          </motion.div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Total: {total.toFixed(1)} MW
-            </p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
+            <div className="flex items-center space-x-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Total: <span className="font-semibold text-green-600 dark:text-green-400">{total.toFixed(1)} MW</span>
+              </p>
+              <motion.div
+                className="w-2 h-2 bg-green-500 rounded-full"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="h-80">
+      {/* Enhanced Donut Chart */}
+      <div className="h-96 relative">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
+            {gradientDefs}
             <Pie
               data={data}
               cx="50%"
               cy="50%"
               labelLine={false}
               label={renderCustomizedLabel}
-              outerRadius={120}
+              outerRadius={140}
+              innerRadius={60} // Creates donut effect
               fill="#8884d8"
               dataKey="value"
               animationBegin={0}
-              animationDuration={1000}
+              animationDuration={1500}
+              animationEasing="ease-out"
+              onMouseEnter={(_, index) => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={hoveredIndex === index ? `url(#gradient-${index})` : entry.color}
+                  stroke={hoveredIndex === index ? "#ffffff" : "transparent"}
+                  strokeWidth={hoveredIndex === index ? 3 : 0}
+                  style={{
+                    filter: hoveredIndex === index ? 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15))' : 'none',
+                    cursor: 'pointer'
+                  }}
+                />
               ))}
             </Pie>
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
                 border: 'none',
-                borderRadius: '8px',
-                color: 'white'
+                borderRadius: '12px',
+                color: 'white',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+                backdropFilter: 'blur(10px)'
               }}
-              formatter={(value: number) => [`${value.toFixed(0)} MW`, 'Power']}
+              formatter={(value: number, name: string) => [
+                `${value.toFixed(0)} MW`, 
+                name
+              ]}
+              labelStyle={{ color: '#10B981', fontWeight: 'bold' }}
             />
           </PieChart>
         </ResponsiveContainer>
+
+        {/* Center Content - Total Value */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 1 }}
+        >
+          <div className="text-center">
+            <motion.div
+              className="text-3xl font-bold text-gray-900 dark:text-gray-100"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              {total.toFixed(0)}
+            </motion.div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">MW Total</div>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Legend */}
-      <div className="mt-4 space-y-2">
-        {data.slice(0, 6).map((entry, index) => (
-          <div key={index} className="flex items-center justify-between text-sm">
-            <div className="flex items-center space-x-2">
-              <div 
-                className="w-3 h-3 rounded-full"
+      {/* Enhanced Legend with Hover Effects */}
+      <div className="mt-6 space-y-3 max-h-48 overflow-y-auto custom-scrollbar">
+        {data.map((entry, index) => (
+          <motion.div
+            key={index}
+            className="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 dark:bg-gray-700/30 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-all duration-200 cursor-pointer"
+            whileHover={{ scale: 1.02, x: 4 }}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            <div className="flex items-center space-x-3">
+              <motion.div 
+                className="w-4 h-4 rounded-full shadow-sm border-2 border-white"
                 style={{ backgroundColor: entry.color }}
+                animate={hoveredIndex === index ? { scale: 1.2 } : { scale: 1 }}
+                transition={{ type: "spring", bounce: 0.4 }}
               />
-              <span className="text-gray-700 dark:text-gray-300">{entry.name}</span>
+              <span className="text-gray-800 dark:text-gray-200 font-medium">{entry.name}</span>
             </div>
-            <span className="text-gray-600 dark:text-gray-400 font-medium">
-              {entry.value.toFixed(0)} MW ({((entry.value / total) * 100).toFixed(1)}%)
-            </span>
-          </div>
+            <div className="text-right">
+              <div className="text-gray-900 dark:text-gray-100 font-semibold">
+                {entry.value.toFixed(0)} MW
+              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                {((entry.value / total) * 100).toFixed(1)}%
+              </div>
+            </div>
+          </motion.div>
         ))}
         {data.length > 6 && (
-          <div className="text-xs text-gray-500 dark:text-gray-400 pt-2">
-            ... and {data.length - 6} more
-          </div>
+          <motion.div 
+            className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-600"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+          >
+            Showing all {data.length} energy sources
+          </motion.div>
         )}
       </div>
+
+      {/* Subtle Animation Overlay */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none rounded-2xl"
+        style={{
+          background: 'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)'
+        }}
+        animate={{
+          background: [
+            'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 80%, rgba(111,202,58,0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)'
+          ]
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+      />
     </motion.div>
   );
 };
