@@ -85,32 +85,32 @@ const TIME_FRAME_OPTIONS: TimeFrameOption[] = [
 // Constants
 // Using internal API routes to avoid CORS issues
 
-// Enhanced power source colors for Eco AI.ly branding
+// Dark theme aligned power source colors for Eco AI.ly branding
 const POWER_SOURCE_COLORS: { [key: string]: string } = {
-  // Renewables (eco-friendly greens and natural colors)
-  'solar': '#F59E0B', // Vibrant amber for solar energy
-  'wind': '#059669', // Eco green for wind
-  'hydro': '#0EA5E9', // Clean blue for hydro
-  'hydro discharge': '#06B6D4', // Cyan for hydro discharge
-  'hydro pumped storage': '#3B82F6', // Bright blue for pumped storage
-  'biomass': '#65A30D', // Natural green for biomass
-  'geothermal': '#DC2626', // Earth red for geothermal
-  'nuclear': '#7C3AED', // Purple for nuclear
+  // Renewables (darker eco-friendly colors for minimalistic UI)
+  'solar': '#FBBF24', // Warm amber for solar energy
+  'wind': '#10B981', // Eco green for wind (Tailwind emerald-500)
+  'hydro': '#3B82F6', // Blue for hydro (Tailwind blue-500)
+  'hydro discharge': '#06B6D4', // Cyan for hydro discharge (Tailwind cyan-500)
+  'hydro pumped storage': '#8B5CF6', // Purple for pumped storage (Tailwind violet-500)
+  'biomass': '#84CC16', // Lime green for biomass (Tailwind lime-500)
+  'geothermal': '#EF4444', // Red for geothermal (Tailwind red-500)
+  'nuclear': '#A855F7', // Purple for nuclear (Tailwind purple-500)
   
-  // Fossil fuels (warmer, less vibrant colors to show environmental impact)
-  'gas': '#EF4444', // Red to indicate emissions
-  'coal': '#374151', // Dark gray for coal
-  'oil': '#92400E', // Brown for oil
+  // Fossil fuels (muted colors to indicate environmental impact)
+  'gas': '#F87171', // Lighter red to indicate emissions (Tailwind red-400)
+  'coal': '#6B7280', // Gray for coal (Tailwind gray-500)
+  'oil': '#A3A3A3', // Neutral gray for oil (Tailwind neutral-400)
   
-  // Import/Export (professional blues)
-  'imports': '#1E40AF', // Deep blue for imports
-  'exports': '#059669', // Eco green for exports (positive)
+  // Import/Export (professional grays and greens)
+  'imports': '#64748B', // Slate gray for imports (Tailwind slate-500)
+  'exports': '#22C55E', // Green for exports (Tailwind green-500)
   
-  // Other/Unknown (neutral eco-friendly tones)
-  'unknown': '#6B7280', // Neutral gray
-  'other': '#9CA3AF', // Light gray
-  'battery': '#FBBF24', // Golden yellow for battery
-  'battery discharge': '#F59E0B', // Amber for battery discharge
+  // Other/Unknown (neutral dark theme colors)
+  'unknown': '#9CA3AF', // Gray for unknown (Tailwind gray-400)
+  'other': '#D1D5DB', // Light gray for other (Tailwind gray-300)
+  'battery': '#F59E0B', // Amber for battery (Tailwind amber-500)
+  'battery discharge': '#FB923C', // Orange for battery discharge (Tailwind orange-400)
 };
 
 // Prediction class descriptions
@@ -330,7 +330,7 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
         x={x} 
         y={y} 
         fill="#374151" 
-        className="dark:fill-white"
+        className="dark:fill-gray-300"
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
         fontSize={11}
@@ -341,13 +341,13 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
     );
   };
 
-  // Create gradient definitions for each data entry
+  // Create subtle gradient definitions for dark theme
   const gradientDefs = data.map((entry, index) => (
     <defs key={`gradient-${index}`}>
       <radialGradient id={`gradient-${index}`} cx="30%" cy="30%">
-        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.4)" />
+        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.1)" />
         <stop offset="50%" stopColor={entry.color} />
-        <stop offset="100%" stopColor={entry.color} />
+        <stop offset="100%" stopColor={entry.color} stopOpacity="0.8" />
       </radialGradient>
     </defs>
   ));
@@ -355,15 +355,12 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
   return (
     <motion.div
       ref={ref}
-      className="relative bg-gradient-to-br from-white via-green-50/30 to-blue-50/20 dark:from-gray-800/40 dark:via-gray-800/30 dark:to-gray-900/20 backdrop-blur-xl border border-green-200/50 dark:border-gray-700/30 rounded-2xl p-6 shadow-xl"
+      className="relative bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6 shadow-lg"
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.8, delay: 0.2, type: "spring", bounce: 0.3 }}
-      style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(247,251,252,0.8) 25%, rgba(89,165,44,0.1) 100%)',
-      }}
     >
-      {/* Eco AI.ly Branding Badge */}
+      {/* Eco AI.ly Branding Badge - Darker theme */}
       <motion.div
         className="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg"
         initial={{ opacity: 0, scale: 0 }}
@@ -373,11 +370,11 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
         Eco AI.ly
       </motion.div>
 
-      {/* Enhanced Header */}
+      {/* Enhanced Header - Dark theme aligned */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center space-x-4">
           <motion.div 
-            className="p-3 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg"
+            className="p-3 bg-gradient-to-br from-green-500/80 to-green-600/80 text-white rounded-xl shadow-md backdrop-blur-sm"
             whileHover={{ scale: 1.1, rotate: 5 }}
             transition={{ type: "spring", bounce: 0.4 }}
           >
@@ -435,11 +432,11 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
             </Pie>
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                backgroundColor: 'rgba(17, 24, 39, 0.95)', // dark:bg-gray-900/95
                 border: 'none',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 color: 'white',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
                 backdropFilter: 'blur(10px)'
               }}
               formatter={(value: number, name: string) => [
@@ -471,19 +468,19 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
         </motion.div>
       </div>
 
-      {/* Enhanced Legend with Hover Effects */}
+      {/* Enhanced Legend with Dark Theme Styling */}
       <div className="mt-6 space-y-3 max-h-48 overflow-y-auto custom-scrollbar">
         {data.map((entry, index) => (
           <motion.div
             key={index}
-            className="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 dark:bg-gray-700/30 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-all duration-200 cursor-pointer"
+            className="flex items-center justify-between p-3 rounded-lg bg-gray-50/80 dark:bg-gray-700/50 hover:bg-gray-100/80 dark:hover:bg-gray-700/70 transition-all duration-200 cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
             whileHover={{ scale: 1.02, x: 4 }}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
             <div className="flex items-center space-x-3">
               <motion.div 
-                className="w-4 h-4 rounded-full shadow-sm border-2 border-white"
+                className="w-4 h-4 rounded-full shadow-sm border-2 border-white dark:border-gray-800"
                 style={{ backgroundColor: entry.color }}
                 animate={hoveredIndex === index ? { scale: 1.2 } : { scale: 1 }}
                 transition={{ type: "spring", bounce: 0.4 }}
@@ -512,20 +509,20 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
         )}
       </div>
 
-      {/* Subtle Animation Overlay */}
+      {/* Subtle Dark Theme Animation Overlay */}
       <motion.div
-        className="absolute inset-0 pointer-events-none rounded-2xl"
+        className="absolute inset-0 pointer-events-none rounded-xl opacity-30"
         style={{
-          background: 'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)'
+          background: 'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%)'
         }}
         animate={{
           background: [
-            'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)',
-            'radial-gradient(circle at 80% 80%, rgba(111,202,58,0.1) 0%, transparent 50%)',
-            'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)'
+            'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%)'
           ]
         }}
-        transition={{ duration: 8, repeat: Infinity }}
+        transition={{ duration: 10, repeat: Infinity }}
       />
     </motion.div>
   );
