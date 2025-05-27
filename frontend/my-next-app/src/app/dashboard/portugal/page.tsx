@@ -67,6 +67,21 @@ interface PieDataPoint {
   color: string;
 }
 
+// Time frame options for pie chart data
+interface TimeFrameOption {
+  label: string;
+  hours: number;
+  description: string;
+}
+
+const TIME_FRAME_OPTIONS: TimeFrameOption[] = [
+  { label: "Last Hour", hours: 1, description: "Current hour data" },
+  { label: "Last 3 Hours", hours: 3, description: "Average of last 3 hours" },
+  { label: "Last 6 Hours", hours: 6, description: "Average of last 6 hours" },
+  { label: "Last 12 Hours", hours: 12, description: "Average of last 12 hours" },
+  { label: "Last 24 Hours", hours: 24, description: "Average of all available data" },
+];
+
 // Constants
 // Using internal API routes to avoid CORS issues
 
@@ -405,6 +420,50 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
   );
 };
 
+// Time Frame Selector Component
+const TimeFrameSelector = ({ selectedTimeFrame, onTimeFrameChange }: {
+  selectedTimeFrame: TimeFrameOption;
+  onTimeFrameChange: (timeFrame: TimeFrameOption) => void;
+}) => {
+  return (
+    <motion.div
+      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-4 mb-6"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Power Breakdown Time Frame
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {selectedTimeFrame.description}
+          </p>
+        </div>
+        
+        <div className="flex flex-wrap gap-2">
+          {TIME_FRAME_OPTIONS.map((option) => (
+            <motion.button
+              key={option.hours}
+              onClick={() => onTimeFrameChange(option)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                selectedTimeFrame.hours === option.hours
+                  ? 'bg-green-600 text-white shadow-lg'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {option.label}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 // Chart Component
 const ChartCard = ({ title, data, type, prediction }: {
   title: string;
@@ -508,8 +567,9 @@ export default function PortugalDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrameOption>(TIME_FRAME_OPTIONS[0]); // Default to "Last Hour"
 
-  // Helper function to process power breakdown data for pie charts
+  // Helper function to process power breakdown data for pie charts based on time frame
   const processPowerData = (breakdown: PowerBreakdownItem, total: number): PieDataPoint[] => {
     if (!breakdown || total === 0) return [];
     
@@ -521,6 +581,87 @@ export default function PortugalDashboard() {
         color: POWER_SOURCE_COLORS[source.toLowerCase()] || POWER_SOURCE_COLORS['other']
       }))
       .sort((a, b) => b.value - a.value);
+  };
+
+  // Helper function to aggregate power breakdown data over a time period
+  const aggregatePowerDataByTimeFrame = (history: PowerBreakdownHistoryEntry[], hours: number) => {
+    if (!history || history.length === 0) return null;
+
+    // Get the most recent entries based on selected hours
+    const recentEntries = history.slice(-hours);
+    
+    if (recentEntries.length === 0) return null;
+
+    // If only one entry (Last Hour), return that entry
+    if (hours === 1) {
+      return recentEntries[recentEntries.length - 1];
+    }
+
+    // For multiple hours, calculate averages
+    const aggregated = {
+      datetime: recentEntries[recentEntries.length - 1].datetime, // Use latest datetime
+      powerConsumptionBreakdown: {} as PowerBreakdownItem,
+      powerProductionBreakdown: {} as PowerBreakdownItem,
+      powerImportBreakdown: {} as PowerBreakdownItem,
+      powerExportBreakdown: {} as PowerBreakdownItem,
+      fossilFreePercentage: 0,
+      renewablePercentage: 0,
+      powerConsumptionTotal: 0,
+      powerProductionTotal: 0,
+      powerImportTotal: 0,
+      powerExportTotal: 0,
+      isEstimated: false,
+    };
+
+    // Aggregate all breakdown categories
+    const breakdownCategories = [
+      'powerConsumptionBreakdown',
+      'powerProductionBreakdown', 
+      'powerImportBreakdown',
+      'powerExportBreakdown'
+    ] as const;
+
+    breakdownCategories.forEach(category => {
+      const sourceData: { [key: string]: number[] } = {};
+      
+      recentEntries.forEach(entry => {
+        const breakdown = entry[category];
+        if (breakdown) {
+          Object.entries(breakdown).forEach(([source, value]) => {
+            if (value !== null && value !== undefined) {
+              if (!sourceData[source]) sourceData[source] = [];
+              sourceData[source].push(value);
+            }
+          });
+        }
+      });
+
+      // Calculate averages for each source
+      Object.entries(sourceData).forEach(([source, values]) => {
+        const validValues = values.filter(v => v >= 0); // Filter out negative values for averages
+        if (validValues.length > 0) {
+          aggregated[category][source] = validValues.reduce((sum, val) => sum + val, 0) / validValues.length;
+        }
+      });
+    });
+
+    // Calculate average totals and percentages
+    const validEntries = recentEntries.filter(entry => 
+      entry.powerConsumptionTotal !== null && 
+      entry.powerProductionTotal !== null
+    );
+
+    if (validEntries.length > 0) {
+      aggregated.powerConsumptionTotal = validEntries.reduce((sum, entry) => sum + entry.powerConsumptionTotal, 0) / validEntries.length;
+      aggregated.powerProductionTotal = validEntries.reduce((sum, entry) => sum + entry.powerProductionTotal, 0) / validEntries.length;
+      aggregated.powerImportTotal = validEntries.reduce((sum, entry) => sum + entry.powerImportTotal, 0) / validEntries.length;
+      aggregated.powerExportTotal = validEntries.reduce((sum, entry) => sum + entry.powerExportTotal, 0) / validEntries.length;
+      aggregated.fossilFreePercentage = validEntries.reduce((sum, entry) => sum + (entry.fossilFreePercentage || 0), 0) / validEntries.length;
+      aggregated.renewablePercentage = validEntries.reduce((sum, entry) => sum + (entry.renewablePercentage || 0), 0) / validEntries.length;
+      aggregated.isEstimated = recentEntries.some(entry => entry.isEstimated);
+    }
+
+    return aggregated;
   };
 
   const fetchData = async () => {
@@ -618,12 +759,14 @@ export default function PortugalDashboard() {
   const currentCarbon = carbonData?.history[carbonData.history.length - 1]?.value || 0;
   const currentRenewable = renewableData?.history[renewableData.history.length - 1]?.value || 0;
   
-  // Power breakdown metrics
-  const latestPowerData = powerBreakdownData?.latest;
-  const currentConsumption = latestPowerData?.powerConsumptionTotal || 0;
-  const currentProduction = latestPowerData?.powerProductionTotal || 0;
-  const currentImport = latestPowerData?.powerImportTotal || 0;
-  const currentExport = latestPowerData?.powerExportTotal || 0;
+  // Power breakdown metrics based on selected time frame
+  const aggregatedPowerData = powerBreakdownData ? 
+    aggregatePowerDataByTimeFrame(powerBreakdownData.history, selectedTimeFrame.hours) : null;
+  
+  const currentConsumption = aggregatedPowerData?.powerConsumptionTotal || 0;
+  const currentProduction = aggregatedPowerData?.powerProductionTotal || 0;
+  const currentImport = aggregatedPowerData?.powerImportTotal || 0;
+  const currentExport = aggregatedPowerData?.powerExportTotal || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -758,7 +901,7 @@ export default function PortugalDashboard() {
         </div>
 
         {/* Power Breakdown Charts */}
-        {powerBreakdownData && latestPowerData && (
+        {powerBreakdownData && aggregatedPowerData && (
           <motion.div
             className="mb-8"
             initial={{ opacity: 0 }}
@@ -770,46 +913,52 @@ export default function PortugalDashboard() {
                 Power Breakdown Analysis
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Real-time power generation, consumption, and trade breakdown for Portugal
+                Power generation, consumption, and trade breakdown for Portugal
               </p>
             </div>
             
+            {/* Time Frame Selector */}
+            <TimeFrameSelector
+              selectedTimeFrame={selectedTimeFrame}
+              onTimeFrameChange={setSelectedTimeFrame}
+            />
+            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Consumption Breakdown */}
-              {latestPowerData.powerConsumptionBreakdown && (
+              {aggregatedPowerData.powerConsumptionBreakdown && (
                 <PowerBreakdownChart
-                  title="Power Consumption"
-                  data={processPowerData(latestPowerData.powerConsumptionBreakdown, currentConsumption)}
+                  title={`Power Consumption - ${selectedTimeFrame.label}`}
+                  data={processPowerData(aggregatedPowerData.powerConsumptionBreakdown, currentConsumption)}
                   icon={<ConsumptionIcon />}
                   total={currentConsumption}
                 />
               )}
               
               {/* Production Breakdown */}
-              {latestPowerData.powerProductionBreakdown && (
+              {aggregatedPowerData.powerProductionBreakdown && (
                 <PowerBreakdownChart
-                  title="Power Production"
-                  data={processPowerData(latestPowerData.powerProductionBreakdown, currentProduction)}
+                  title={`Power Production - ${selectedTimeFrame.label}`}
+                  data={processPowerData(aggregatedPowerData.powerProductionBreakdown, currentProduction)}
                   icon={<ProductionIcon />}
                   total={currentProduction}
                 />
               )}
               
               {/* Import Breakdown */}
-              {latestPowerData.powerImportBreakdown && currentImport > 0 && (
+              {aggregatedPowerData.powerImportBreakdown && currentImport > 0 && (
                 <PowerBreakdownChart
-                  title="Power Imports"
-                  data={processPowerData(latestPowerData.powerImportBreakdown, currentImport)}
+                  title={`Power Imports - ${selectedTimeFrame.label}`}
+                  data={processPowerData(aggregatedPowerData.powerImportBreakdown, currentImport)}
                   icon={<ImportIcon />}
                   total={currentImport}
                 />
               )}
               
               {/* Export Breakdown */}
-              {latestPowerData.powerExportBreakdown && currentExport > 0 && (
+              {aggregatedPowerData.powerExportBreakdown && currentExport > 0 && (
                 <PowerBreakdownChart
-                  title="Power Exports"
-                  data={processPowerData(latestPowerData.powerExportBreakdown, currentExport)}
+                  title={`Power Exports - ${selectedTimeFrame.label}`}
+                  data={processPowerData(aggregatedPowerData.powerExportBreakdown, currentExport)}
                   icon={<ExportIcon />}
                   total={currentExport}
                 />
@@ -854,19 +1003,19 @@ export default function PortugalDashboard() {
           </div>
           
           {/* Additional Power Insights */}
-          {powerBreakdownData && latestPowerData && (
+          {powerBreakdownData && aggregatedPowerData && (
             <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
               <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Power Breakdown Summary</h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                   <div className="font-semibold text-gray-900 dark:text-gray-100">
-                    {((latestPowerData.renewablePercentage || 0) * 100).toFixed(1)}%
+                    {(aggregatedPowerData.renewablePercentage * 100).toFixed(1)}%
                   </div>
                   <div className="text-gray-600 dark:text-gray-400">Renewable</div>
                 </div>
                 <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                   <div className="font-semibold text-gray-900 dark:text-gray-100">
-                    {((latestPowerData.fossilFreePercentage || 0) * 100).toFixed(1)}%
+                    {(aggregatedPowerData.fossilFreePercentage * 100).toFixed(1)}%
                   </div>
                   <div className="text-gray-600 dark:text-gray-400">Fossil Free</div>
                 </div>
@@ -878,7 +1027,7 @@ export default function PortugalDashboard() {
                 </div>
                 <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                   <div className="font-semibold text-gray-900 dark:text-gray-100">
-                    {latestPowerData.isEstimated ? 'Est.' : 'Real'}
+                    {aggregatedPowerData.isEstimated ? 'Est.' : 'Real'}
                   </div>
                   <div className="text-gray-600 dark:text-gray-400">Data Type</div>
                 </div>
