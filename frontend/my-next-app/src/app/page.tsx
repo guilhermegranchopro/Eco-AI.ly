@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, animate, useScroll } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useTheme } from './theme-provider';
+
 
 // ===============================
 // REVOLUTIONARY REACTIVE PARTICLE SYSTEM
@@ -287,7 +287,7 @@ const InteractiveEnergyWaves = () => {
 // ===============================
 const FloatingOrb = ({ size = 200, color = "cyan", delay = 0, x = "50%", y = "50%" }) => (
   <motion.div
-    className={`absolute rounded-full filter blur-3xl opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-screen
+    className={`absolute rounded-full filter blur-3xl opacity-20 pointer-events-none mix-blend-screen
       ${color === 'cyan' ? 'from-cyan-400' : 
         color === 'purple' ? 'from-purple-400' : 
         color === 'green' ? 'from-green-400' : 
@@ -635,7 +635,7 @@ const AnimatedDivider = () => {
   return (
     <div className="w-full max-w-6xl mx-auto my-20 md:my-32 px-4 relative">
       {/* Main divider line */}
-      <motion.div className="h-px relative overflow-hidden bg-gradient-to-r from-transparent via-gray-300/50 dark:via-gray-600/50 to-transparent">
+      <motion.div className="h-px relative overflow-hidden bg-gradient-to-r from-transparent via-gray-600/50 to-transparent">
         {/* Flowing gradient lines */}
         <motion.div
           className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
@@ -785,7 +785,7 @@ const InteractiveCard = ({ children, className }: { children: ReactNode, classNa
     >
       {/* Main card surface */}
       <div 
-        className="relative p-8 rounded-3xl backdrop-blur-3xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 dark:from-white/5 dark:via-white/2 dark:to-white/5 border border-white/20 dark:border-white/10 shadow-2xl overflow-hidden"
+        className="relative p-8 rounded-3xl backdrop-blur-3xl bg-gradient-to-br from-white/5 via-white/2 to-white/5 border border-white/10 shadow-2xl overflow-hidden"
         style={{ transform: 'translateZ(40px)' }}
       >
         {/* Animated border gradient */}
@@ -873,58 +873,10 @@ const AnimatedNumber = ({ value }: { value: number }) => {
   );
 };
 
-// Theme Toggle Button Component - CORRECTED
-const ThemeToggleButton = () => {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
-
-  // Avoid hydration mismatch by not rendering on the server or until mounted.
-  if (!mounted) {
-    // Render a placeholder or null during server-side rendering and initial client-side mount
-    return <div className="p-2 rounded-lg w-[40px] h-[40px]" aria-label="Loading theme toggle" />; // Adjust size to match button
-  }
-
-  return (
-    <motion.button
-      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="p-2 rounded-lg bg-slate-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-slate-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md border border-gray-300/50 dark:border-gray-600/50 flex items-center justify-center"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      aria-label="Toggle theme"
-      type="button"
-    >
-      <AnimatePresence mode="wait" initial={false}>
-        {theme === 'dark' ? (
-          <motion.div
-            key="moon"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <MoonIcon className="w-5 h-5 text-yellow-400" />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="sun"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <SunIcon className="w-5 h-5 text-orange-500" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.button>
-  );
-};
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
 
@@ -949,8 +901,8 @@ export default function Home() {
     toggleMobileMenu();
   }, [toggleMobileMenu]);
 
-  // Dynamic background variants
-  const backgroundVariants = useMemo(() => mounted && theme === 'dark' ? {
+  // Dynamic background variants for dark theme only
+  const backgroundVariants = useMemo(() => ({
     initial: { 
       background: "radial-gradient(ellipse at top, #0f172a 0%, #020617 50%, #000000 100%)" 
     },
@@ -961,18 +913,7 @@ export default function Home() {
         "radial-gradient(ellipse at bottom, #020617 0%, #0f172a 25%, #1e293b 50%, #000000 100%)",
       ],
     }
-  } : {
-    initial: { 
-      background: "radial-gradient(ellipse at top, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)" 
-    },
-    animate: {
-      background: [
-        "radial-gradient(ellipse at top left, #f1f5f9 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 100%)",
-        "radial-gradient(ellipse at top right, #e2e8f0 0%, #f1f5f9 25%, #cbd5e1 50%, #94a3b8 100%)",
-        "radial-gradient(ellipse at bottom, #cbd5e1 0%, #e2e8f0 25%, #f1f5f9 50%, #94a3b8 100%)",
-      ],
-    }
-  }, [mounted, theme]);
+  }), [mounted]);
 
   const AnimatedSection = ({ children, className, id }: { children: ReactNode, className?: string, id?: string }) => {
     const controls = useAnimation();
@@ -1005,7 +946,7 @@ export default function Home() {
       <InteractiveEnergyWaves />
       
       <motion.main
-        className="relative flex flex-col items-center justify-center min-h-screen text-gray-700 dark:text-white overflow-x-hidden antialiased"
+        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased"
         initial="initial"
         animate="animate"
         variants={backgroundVariants}
@@ -1086,7 +1027,7 @@ export default function Home() {
                 >
                   <Link 
                     href={link.href} 
-                    className="relative z-10 text-gray-700 dark:text-gray-200 group-hover:text-white transition-colors duration-300 font-medium"
+                    className="relative z-10 text-gray-200 group-hover:text-white transition-colors duration-300 font-medium"
                     onClick={(e) => handleSmoothScroll(e, link.href)}
                   >
                     {link.label}
@@ -1128,7 +1069,7 @@ export default function Home() {
                   href="https://github.com/guilhermegranchopro/Eco-AI.ly"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-2xl bg-gradient-to-r from-gray-100/80 to-gray-200/80 dark:from-gray-700/80 dark:to-gray-800/80 backdrop-blur-sm border border-white/20 hover:border-cyan-400/50 transition-all duration-300 group"
+                  className="p-3 rounded-2xl bg-gradient-to-r from-gray-700/80 to-gray-800/80 backdrop-blur-sm border border-white/20 hover:border-cyan-400/50 transition-all duration-300 group"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -1138,7 +1079,6 @@ export default function Home() {
                     transition={{ duration: 0.3 }}
                   />
                 </motion.a>
-                <ThemeToggleButton />
               </div>
             </nav>
             
@@ -1147,16 +1087,15 @@ export default function Home() {
                 href="https://github.com/guilhermegranchopro/Eco-AI.ly"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-xl bg-gradient-to-r from-gray-100/80 to-gray-200/80 dark:from-gray-700/80 dark:to-gray-800/80 backdrop-blur-sm border border-white/20"
+                className="p-2 rounded-xl bg-gradient-to-r from-gray-700/80 to-gray-800/80 backdrop-blur-sm border border-white/20"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <GitHubIcon />
               </motion.a>
-              <ThemeToggleButton />
               <motion.button 
                 onClick={toggleMobileMenu} 
-                className="p-2 rounded-xl bg-gradient-to-r from-gray-100/80 to-gray-200/80 dark:from-gray-700/80 dark:to-gray-800/80 backdrop-blur-sm border border-white/20 text-gray-600 dark:text-gray-300"
+                className="p-2 rounded-xl bg-gradient-to-r from-gray-700/80 to-gray-800/80 backdrop-blur-sm border border-white/20 text-gray-300"
                 whileTap={{ scale: 0.9 }}
               >
                 {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
@@ -1239,7 +1178,7 @@ export default function Home() {
                     href={link.href} 
                     className={link.isButton 
                       ? "relative group w-full max-w-xs text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 overflow-hidden"
-                      : "relative group text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300 font-medium px-6 py-3 rounded-xl backdrop-blur-sm hover:bg-white/20 dark:hover:bg-white/10"} 
+                      : "relative group text-gray-200 hover:text-green-400 transition-all duration-300 font-medium px-6 py-3 rounded-xl backdrop-blur-sm hover:bg-white/10"} 
                     onClick={(e) => {
                       if (!link.isExternal) {
                         handleSmoothScroll(e, link.href);
@@ -1347,7 +1286,7 @@ export default function Home() {
                   Eco AI.ly
                 </motion.span>
                 <motion.span
-                  className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-600 dark:text-gray-300"
+                  className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 1 }}
@@ -1357,7 +1296,7 @@ export default function Home() {
               </motion.h1>
               
               <motion.p 
-                className="text-xl sm:text-2xl lg:text-3xl text-gray-600 dark:text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
+                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
@@ -1376,7 +1315,7 @@ export default function Home() {
               </motion.p>
               
               <motion.p 
-                className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-4xl mx-auto mb-12 leading-relaxed"
+                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-12 leading-relaxed"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
@@ -1420,7 +1359,7 @@ export default function Home() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
                     href="#features" 
-                    className="group relative inline-flex items-center justify-center bg-transparent border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-10 py-5 rounded-2xl font-bold text-xl backdrop-blur-sm hover:border-cyan-400 transition-all duration-500"
+                    className="group relative inline-flex items-center justify-center bg-transparent border-2 border-gray-600 text-gray-300 px-10 py-5 rounded-2xl font-bold text-xl backdrop-blur-sm hover:border-cyan-400 transition-all duration-500"
                     onClick={(e) => handleSmoothScroll(e, "#features")}
                   >
                     <span className="relative z-10">Learn More</span>
@@ -1434,7 +1373,7 @@ export default function Home() {
 
         {/* Key Features Section - Enhanced */}
         <AnimatedSection id="features" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-300 mb-12 sm:mb-16 text-center">
             ✨ Our Core Capabilities
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -1444,13 +1383,13 @@ export default function Home() {
             ].map((feature) => (
               <InteractiveCard 
                 key={feature.title} 
-                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/50 hover:border-green-400/40 dark:hover:border-green-500/30" // Updated backgrounds and borders
+                className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-md bg-gray-800/70 backdrop-blur-sm border border-gray-700/50 hover:border-green-500/30" // Updated backgrounds and borders
               >
                 <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {feature.icon}
                 </motion.div>
-                <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-4">{feature.title}</h3>
-                <ul className="list-none space-y-2 text-gray-600 dark:text-gray-400 text-sm">
+                <h3 className="text-2xl font-semibold text-green-400 mb-4">{feature.title}</h3>
+                <ul className="list-none space-y-2 text-gray-400 text-sm">
                   {feature.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
               </InteractiveCard>
@@ -1463,21 +1402,21 @@ export default function Home() {
         {/* Explore Our Platform Section - Enhanced */}
         <AnimatedSection 
           id="platform" 
-          className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-slate-100/80 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200/40 dark:border-gray-700/30 rounded-3xl relative overflow-hidden" // Updated light background
+          className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-900/50 backdrop-blur-sm border border-gray-700/30 rounded-3xl relative overflow-hidden" // Updated light background
         >
           {/* Decorative elements */}
-          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-gray-700/20 dark:border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
-          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-gray-600/10 dark:border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
+          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
+          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
 
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-gray-700 dark:text-white">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-white">
             Dive Into Our Platform
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-500 dark:text-gray-300">
+          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-300">
             Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
           </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-gray-700 dark:text-white">🇵🇹 Portugal Data Dashboard</h3>
-            <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-700 dark:text-green-200">
+            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-white">🇵🇹 Portugal Data Dashboard</h3>
+            <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-200">
               <li>Comprehensive energy consumption metrics</li>
               <li>Real-time carbon intensity updates</li>
               <li>Historical trend analysis & AI predictions</li>

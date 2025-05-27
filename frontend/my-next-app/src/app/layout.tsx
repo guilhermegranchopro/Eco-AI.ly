@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./theme-provider";
 import { Toaster } from 'react-hot-toast';
 
 const geistSans = Geist({
@@ -20,10 +19,7 @@ export const metadata: Metadata = {
   keywords: "environmental AI, sustainability, carbon tracking, renewable energy, climate intelligence",
   authors: [{ name: "Eco AI.ly Team" }],
   viewport: "width=device-width, initial-scale=1",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#10b981" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" }
-  ],
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -32,11 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-gray-100`}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
+        <Toaster />
       </body>
     </html>
   );
