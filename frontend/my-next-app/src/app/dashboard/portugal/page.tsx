@@ -344,13 +344,13 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
     );
   };
 
-  // Create subtle gradient definitions for each data entry
+  // Create enhanced gradient definitions for subtle glow effect on hover
   const gradientDefs = data.map((entry, index) => (
     <defs key={`gradient-${index}`}>
       <radialGradient id={`gradient-${index}`} cx="50%" cy="50%">
-        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.1)" />
-        <stop offset="50%" stopColor={entry.color} stopOpacity="0.9" />
-        <stop offset="100%" stopColor={entry.color} stopOpacity="0.7" />
+        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.15)" />
+        <stop offset="40%" stopColor={entry.color} stopOpacity="1" />
+        <stop offset="100%" stopColor={entry.color} stopOpacity="0.85" />
       </radialGradient>
     </defs>
   ));
@@ -447,8 +447,8 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
               cy="50%"
               labelLine={false}
               label={renderCustomizedLabel}
-              outerRadius={120}
-              innerRadius={75} // Larger inner radius for more modern look
+              outerRadius={hoveredIndex !== null ? 125 : 120} // Slight size increase on hover
+              innerRadius={75}
               fill="#8884d8"
               dataKey="value"
               animationBegin={300}
@@ -461,11 +461,12 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
                 <Cell 
                   key={`cell-${index}`} 
                   fill={hoveredIndex === index ? `url(#gradient-${index})` : entry.color}
-                  stroke={hoveredIndex === index ? "rgba(255, 255, 255, 0.6)" : "rgba(255, 255, 255, 0.1)"}
-                  strokeWidth={hoveredIndex === index ? 1.5 : 0.5}
+                  stroke="rgba(255, 255, 255, 0.15)"
+                  strokeWidth={hoveredIndex === index ? 1 : 0.5}
                   style={{
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.25s ease-out',
+                    filter: hoveredIndex === index ? 'brightness(1.1) saturate(1.2)' : 'none'
                   }}
                 />
               ))}
@@ -533,12 +534,14 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
           >
             <div className="flex items-center space-x-3">
               <motion.div 
-                className="w-3 h-3 rounded-full shadow-sm border border-white/20"
+                className="w-3 h-3 rounded-full border border-white/20"
                 style={{ backgroundColor: entry.color }}
                 animate={hoveredIndex === index ? { 
-                  scale: 1.2
+                  scale: 1.15,
+                  filter: 'brightness(1.2) saturate(1.3)'
                 } : { 
-                  scale: 1
+                  scale: 1,
+                  filter: 'none'
                 }}
                 transition={{ type: "spring", bounce: 0.4, duration: 0.2 }}
               />
