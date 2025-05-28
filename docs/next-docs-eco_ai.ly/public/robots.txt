@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: http://localhost:3000/sitemap.xml
+
+# Block access to source maps and other development files
+Disallow: /*.map$
+Disallow: /_next/
+Disallow: /api/
+
+# Allow crawling of documentation pages
+Allow: /
+Allow: /quick-start
+Allow: /features
+Allow: /installation
+Allow: /ai-models
+Allow: /api-reference
+Allow: /contributing
