@@ -301,7 +301,7 @@ const PredictionBadge = ({ predictionClass, type }: {
   );
 };
 
-// Enhanced Power Breakdown Pie Chart Component with Eco AI.ly Branding
+// Enhanced Power Breakdown Pie Chart Component with Modern Minimalistic Design
 const PowerBreakdownChart = ({ title, data, icon, total }: {
   title: string;
   data: PieDataPoint[];
@@ -321,86 +321,130 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
     if (percent < 0.08) return null; // Only show labels for segments > 8%
     
     const RADIAN = Math.PI / 180;
-    const radius = outerRadius + 25; // Position labels outside the chart
+    const radius = outerRadius + 28; // Position labels outside the chart
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text 
+      <motion.text 
         x={x} 
         y={y} 
-        fill="#374151" 
-        className="dark:fill-white"
+        fill="#6B7280" 
+        className="dark:fill-gray-300"
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={11}
-        fontWeight="600"
+        fontSize={10}
+        fontWeight="500"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.2 + percent, duration: 0.3 }}
       >
         {`${(percent * 100).toFixed(1)}%`}
-      </text>
+      </motion.text>
     );
   };
 
-  // Create gradient definitions for each data entry
+  // Create subtle gradient definitions for each data entry
   const gradientDefs = data.map((entry, index) => (
     <defs key={`gradient-${index}`}>
-      <radialGradient id={`gradient-${index}`} cx="30%" cy="30%">
-        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.4)" />
-        <stop offset="50%" stopColor={entry.color} />
-        <stop offset="100%" stopColor={entry.color} />
+      <radialGradient id={`gradient-${index}`} cx="50%" cy="50%">
+        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.2)" />
+        <stop offset="30%" stopColor={entry.color} stopOpacity="0.9" />
+        <stop offset="100%" stopColor={entry.color} stopOpacity="0.8" />
       </radialGradient>
+      <filter id={`glow-${index}`}>
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge> 
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
     </defs>
   ));
 
   return (
     <motion.div
       ref={ref}
-      className="relative bg-gradient-to-br from-white via-green-50/30 to-blue-50/20 dark:from-gray-800/40 dark:via-gray-800/30 dark:to-gray-900/20 backdrop-blur-xl border border-green-200/50 dark:border-gray-700/30 rounded-2xl p-6 shadow-xl"
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      className="relative backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 border border-white/20 dark:border-gray-700/30 rounded-3xl p-8 shadow-2xl overflow-hidden"
+      initial={{ opacity: 0, y: 40, scale: 0.9 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.8, delay: 0.2, type: "spring", bounce: 0.3 }}
-      style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(247,251,252,0.8) 25%, rgba(89,165,44,0.1) 100%)',
+      transition={{ duration: 1, delay: 0.1, type: "spring", bounce: 0.2 }}
+      whileHover={{ 
+        scale: 1.02,
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05)"
       }}
     >
-      {/* Eco AI.ly Branding Badge */}
+      {/* Subtle background gradient overlay */}
       <motion.div
-        className="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg"
-        initial={{ opacity: 0, scale: 0 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ delay: 0.8, type: "spring", bounce: 0.4 }}
-      >
-        Eco AI.ly
-      </motion.div>
+        className="absolute inset-0 opacity-30 dark:opacity-20"
+        style={{
+          background: 'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)',
+        }}
+        animate={{
+          background: [
+            'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)'
+          ]
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-      {/* Enhanced Header */}
-      <div className="flex items-center justify-between mb-8">
+      {/* Minimalistic Header */}
+      <div className="flex items-center justify-between mb-6 relative z-10">
         <div className="flex items-center space-x-4">
           <motion.div 
-            className="p-3 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ type: "spring", bounce: 0.4 }}
+            className="p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-2xl text-gray-700 dark:text-gray-200 shadow-lg"
+            whileHover={{ scale: 1.05, rotate: 2 }}
+            transition={{ type: "spring", bounce: 0.6 }}
           >
             {icon}
           </motion.div>
           <div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
-            <div className="flex items-center space-x-2">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Total: <span className="font-semibold text-green-600 dark:text-green-400">{total.toFixed(1)} MW</span>
+            <motion.h3 
+              className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1"
+              initial={{ opacity: 0, x: -20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              {title}
+            </motion.h3>
+            <motion.div 
+              className="flex items-center space-x-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Total: <span className="font-medium text-gray-700 dark:text-gray-300">{total.toFixed(1)} MW</span>
               </p>
               <motion.div
-                className="w-2 h-2 bg-green-500 rounded-full"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                className="w-1.5 h-1.5 bg-green-500 rounded-full"
+                animate={{ 
+                  scale: [1, 1.4, 1],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
-            </div>
+            </motion.div>
           </div>
         </div>
+
+        {/* Subtle status indicator */}
+        <motion.div
+          className="px-3 py-1 bg-green-50/80 dark:bg-green-900/30 border border-green-200/50 dark:border-green-700/50 rounded-full"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ delay: 0.5, duration: 0.4 }}
+        >
+          <div className="text-xs font-medium text-green-700 dark:text-green-300">
+            Live Data
+          </div>
+        </motion.div>
       </div>
 
-      {/* Enhanced Donut Chart */}
-      <div className="h-96 relative">
+      {/* Modern Minimalistic Donut Chart */}
+      <div className="h-80 relative">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             {gradientDefs}
@@ -410,12 +454,12 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
               cy="50%"
               labelLine={false}
               label={renderCustomizedLabel}
-              outerRadius={140}
-              innerRadius={60} // Creates donut effect
+              outerRadius={120}
+              innerRadius={75} // Larger inner radius for more modern look
               fill="#8884d8"
               dataKey="value"
-              animationBegin={0}
-              animationDuration={1500}
+              animationBegin={300}
+              animationDuration={1200}
               animationEasing="ease-out"
               onMouseEnter={(_, index) => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -424,74 +468,96 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
                 <Cell 
                   key={`cell-${index}`} 
                   fill={hoveredIndex === index ? `url(#gradient-${index})` : entry.color}
-                  stroke={hoveredIndex === index ? "#ffffff" : "transparent"}
-                  strokeWidth={hoveredIndex === index ? 3 : 0}
+                  stroke={hoveredIndex === index ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.1)"}
+                  strokeWidth={hoveredIndex === index ? 2 : 1}
                   style={{
-                    filter: hoveredIndex === index ? 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15))' : 'none',
-                    cursor: 'pointer'
+                    filter: hoveredIndex === index ? `url(#glow-${index})` : 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
                   }}
                 />
               ))}
             </Pie>
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
                 border: 'none',
-                borderRadius: '12px',
+                borderRadius: '16px',
                 color: 'white',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
-                backdropFilter: 'blur(10px)'
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
+                backdropFilter: 'blur(16px)',
+                fontSize: '14px',
+                padding: '12px 16px'
               }}
               formatter={(value: number, name: string) => [
                 `${value.toFixed(0)} MW`, 
                 name
               ]}
-              labelStyle={{ color: '#10B981', fontWeight: 'bold' }}
+              labelStyle={{ color: '#22C55E', fontWeight: '600', marginBottom: '4px' }}
             />
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Center Content - Total Value */}
+        {/* Minimalistic Center Content */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 1 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ delay: 0.8, duration: 0.6 }}
         >
           <div className="text-center">
             <motion.div
-              className="text-3xl font-bold text-gray-900 dark:text-gray-100"
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
+              className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1"
+              animate={{ 
+                scale: [1, 1.02, 1]
+              }}
+              transition={{ 
+                duration: 4, 
+                repeat: Infinity, 
+                ease: "easeInOut"
+              }}
             >
               {total.toFixed(0)}
             </motion.div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">MW Total</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide uppercase">
+              MW Total
+            </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Enhanced Legend with Hover Effects */}
-      <div className="mt-6 space-y-3 max-h-48 overflow-y-auto custom-scrollbar">
+      {/* Clean, Minimalistic Legend */}
+      <div className="mt-8 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
         {data.map((entry, index) => (
           <motion.div
             key={index}
-            className="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 dark:bg-gray-700/30 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-all duration-200 cursor-pointer"
-            whileHover={{ scale: 1.02, x: 4 }}
+            className="flex items-center justify-between p-3 rounded-2xl bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 cursor-pointer group"
+            whileHover={{ scale: 1.01, x: 2 }}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 + index * 0.05, duration: 0.4 }}
           >
             <div className="flex items-center space-x-3">
               <motion.div 
-                className="w-4 h-4 rounded-full shadow-sm border-2 border-white"
+                className="w-3 h-3 rounded-full shadow-sm border border-white/30"
                 style={{ backgroundColor: entry.color }}
-                animate={hoveredIndex === index ? { scale: 1.2 } : { scale: 1 }}
-                transition={{ type: "spring", bounce: 0.4 }}
+                animate={hoveredIndex === index ? { 
+                  scale: 1.3,
+                  boxShadow: `0 0 20px ${entry.color}40`
+                } : { 
+                  scale: 1,
+                  boxShadow: '0 0 0px transparent'
+                }}
+                transition={{ type: "spring", bounce: 0.6, duration: 0.3 }}
               />
-              <span className="text-gray-800 dark:text-gray-200 font-medium">{entry.name}</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
+                {entry.name}
+              </span>
             </div>
             <div className="text-right">
-              <div className="text-gray-900 dark:text-gray-100 font-semibold">
+              <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                 {entry.value.toFixed(0)} MW
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -500,82 +566,79 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
             </div>
           </motion.div>
         ))}
-        {data.length > 6 && (
-          <motion.div 
-            className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-600"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-          >
-            Showing all {data.length} energy sources
-          </motion.div>
-        )}
       </div>
-
-      {/* Subtle Animation Overlay */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none rounded-2xl"
-        style={{
-          background: 'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)'
-        }}
-        animate={{
-          background: [
-            'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)',
-            'radial-gradient(circle at 80% 80%, rgba(111,202,58,0.1) 0%, transparent 50%)',
-            'radial-gradient(circle at 20% 20%, rgba(89,165,44,0.1) 0%, transparent 50%)'
-          ]
-        }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
     </motion.div>
   );
 };
 
-// Time Frame Selector Component
+// Minimalistic Time Frame Selector Component
 const TimeFrameSelector = ({ selectedTimeFrame, onTimeFrameChange }: {
   selectedTimeFrame: TimeFrameOption;
   onTimeFrameChange: (timeFrame: TimeFrameOption) => void;
 }) => {
   return (
     <motion.div
-      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-4 mb-6"
+      className="backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 border border-white/20 dark:border-gray-700/30 rounded-3xl p-6 mb-8 shadow-xl"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <motion.h3 
+            className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             Power Breakdown Time Frame
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          </motion.h3>
+          <motion.p 
+            className="text-sm text-gray-500 dark:text-gray-400"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
             {selectedTimeFrame.description}
-          </p>
+          </motion.p>
         </div>
         
-        <div className="flex flex-wrap gap-2">
-          {TIME_FRAME_OPTIONS.map((option) => (
+        <motion.div 
+          className="flex flex-wrap gap-2"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          {TIME_FRAME_OPTIONS.map((option, index) => (
             <motion.button
               key={option.hours}
               onClick={() => onTimeFrameChange(option)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300 backdrop-blur-sm border ${
                 selectedTimeFrame.hours === option.hours
-                  ? 'bg-green-600 text-white shadow-lg'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-green-500/90 text-white border-green-400/50 shadow-lg shadow-green-500/25'
+                  : 'bg-white/60 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border-white/30 dark:border-gray-700/30 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:border-gray-300/50 dark:hover:border-gray-600/50'
               }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: selectedTimeFrame.hours === option.hours 
+                  ? "0 10px 25px -5px rgba(34, 197, 94, 0.3)"
+                  : "0 4px 15px -2px rgba(0, 0, 0, 0.1)"
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.05, duration: 0.3 }}
             >
               {option.label}
             </motion.button>
           ))}
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );
 };
 
-// Zero Data Animation Component
+// Minimalistic Zero Data Animation Component
 const ZeroDataAnimation = ({ title, icon, timeFrame }: {
   title: string;
   icon: React.ReactNode;
@@ -586,43 +649,98 @@ const ZeroDataAnimation = ({ title, icon, timeFrame }: {
   return (
     <motion.div
       ref={ref}
-      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6"
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: 0.2 }}
+      className="relative backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 border border-white/20 dark:border-gray-700/30 rounded-3xl p-8 shadow-2xl overflow-hidden"
+      initial={{ opacity: 0, y: 40, scale: 0.9 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 1, delay: 0.1, type: "spring", bounce: 0.2 }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
-          <div className="text-green-500">
+      {/* Subtle background gradient overlay */}
+      <motion.div
+        className="absolute inset-0 opacity-20 dark:opacity-10"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, rgba(107, 114, 128, 0.1) 0%, transparent 50%)',
+        }}
+        animate={{
+          background: [
+            'radial-gradient(circle at 50% 50%, rgba(107, 114, 128, 0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 30% 70%, rgba(107, 114, 128, 0.08) 0%, transparent 50%)',
+            'radial-gradient(circle at 50% 50%, rgba(107, 114, 128, 0.1) 0%, transparent 50%)'
+          ]
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Minimalistic Header */}
+      <div className="flex items-center justify-between mb-6 relative z-10">
+        <div className="flex items-center space-x-4">
+          <motion.div 
+            className="p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-2xl text-gray-400 dark:text-gray-500 shadow-lg"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={inView ? { scale: 1, opacity: 1 } : {}}
+            transition={{ delay: 0.3, type: "spring", bounce: 0.4 }}
+          >
             {icon}
-          </div>
+          </motion.div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <motion.h3 
+              className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1"
+              initial={{ opacity: 0, x: -20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              {title}
+            </motion.h3>
+            <motion.p 
+              className="text-sm text-gray-500 dark:text-gray-400"
+              initial={{ opacity: 0, x: -20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.5, duration: 0.6 }}
+            >
               Total: 0 MW
-            </p>
+            </motion.p>
           </div>
         </div>
+
+        {/* Status indicator */}
+        <motion.div
+          className="px-3 py-1 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-600/50 rounded-full"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ delay: 0.6, duration: 0.4 }}
+        >
+          <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+            No Data
+          </div>
+        </motion.div>
       </div>
 
       <div className="h-80 flex flex-col items-center justify-center">
-        {/* Animated Zero Data Visualization */}
+        {/* Minimalistic Zero Data Visualization */}
         <motion.div
           className="relative"
           initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          animate={inView ? { scale: 1, opacity: 1 } : {}}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          {/* Outer Circle */}
+          {/* Outer Circle with subtle animation */}
           <motion.div
-            className="w-32 h-32 border-4 border-gray-200 dark:border-gray-600 rounded-full flex items-center justify-center"
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            className="w-24 h-24 border-2 border-gray-200/60 dark:border-gray-600/60 rounded-full flex items-center justify-center backdrop-blur-sm"
+            animate={{ 
+              rotate: [0, 360],
+              borderColor: [
+                "rgba(156, 163, 175, 0.3)",
+                "rgba(156, 163, 175, 0.5)", 
+                "rgba(156, 163, 175, 0.3)"
+              ]
+            }}
+            transition={{ 
+              rotate: { duration: 12, repeat: Infinity, ease: "linear" },
+              borderColor: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+            }}
           >
-            {/* Inner Animated Dots */}
+            {/* Inner animated dots */}
             <motion.div
-              className="relative w-20 h-20"
+              className="relative w-16 h-16"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -630,7 +748,7 @@ const ZeroDataAnimation = ({ title, icon, timeFrame }: {
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full"
+                  className="absolute w-1.5 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full"
                   style={{
                     top: '50%',
                     left: '50%',
@@ -638,72 +756,73 @@ const ZeroDataAnimation = ({ title, icon, timeFrame }: {
                   }}
                   initial={{ 
                     rotate: i * 120,
-                    x: -4,
-                    y: -4,
+                    x: -3,
+                    y: -3,
                     scale: 0 
                   }}
                   animate={{ 
                     rotate: i * 120,
-                    x: -4,
-                    y: -4,
+                    x: -3,
+                    y: -3,
                     scale: [0, 1, 0] 
                   }}
                   transition={{
                     scale: {
-                      duration: 2,
+                      duration: 2.5,
                       repeat: Infinity,
-                      delay: i * 0.3,
+                      delay: i * 0.4,
                       ease: "easeInOut"
                     }
                   }}
                 />
               ))}
-              
-              {/* Center Icon */}
-              <motion.div
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-              >
-                <div className="w-6 h-6">
-                  {icon}
-                </div>
-              </motion.div>
             </motion.div>
           </motion.div>
         </motion.div>
 
-        {/* Zero Data Message */}
+        {/* Minimalistic message */}
         <motion.div
-          className="text-center mt-6 space-y-2"
+          className="text-center mt-8 space-y-3"
           initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          animate={inView ? { y: 0, opacity: 1 } : {}}
           transition={{ delay: 1, duration: 0.6 }}
         >
-          <h4 className="text-lg font-medium text-gray-600 dark:text-gray-400">
+          <h4 className="text-base font-medium text-gray-600 dark:text-gray-400">
             No Data Available
           </h4>
-          <p className="text-sm text-gray-500 dark:text-gray-500 max-w-xs">
+          <p className="text-sm text-gray-500 dark:text-gray-500 max-w-xs mx-auto leading-relaxed">
             No {title.toLowerCase()} activity recorded during the {timeFrame.toLowerCase()}.
           </p>
           
-          {/* Animated Pulse Effect */}
+          {/* Subtle pulse effect */}
           <motion.div
-            className="w-12 h-1 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-auto mt-4 rounded-full"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: [0, 1, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-auto mt-6 rounded-full"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ 
+              scaleX: [0, 1, 0],
+              opacity: [0, 0.6, 0]
+            }}
+            transition={{ 
+              duration: 3, 
+              repeat: Infinity, 
+              ease: "easeInOut",
+              delay: 1.5
+            }}
           />
         </motion.div>
       </div>
 
-      {/* Zero Data Legend */}
-      <div className="mt-4 text-center">
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+      {/* Clean suggestion text */}
+      <motion.div 
+        className="mt-6 text-center"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 1.2, duration: 0.6 }}
+      >
+        <div className="text-xs text-gray-400 dark:text-gray-500 bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-200/30 dark:border-gray-700/30">
           Try selecting a different time frame to view data from other periods.
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
