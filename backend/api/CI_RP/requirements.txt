@@ -6,3 +6,4 @@ numpy
 scikit-learn
 joblib
 tensorflow == 2.18.0
+dotenv
