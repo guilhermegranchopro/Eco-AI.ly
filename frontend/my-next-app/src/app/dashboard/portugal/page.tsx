@@ -85,32 +85,32 @@ const TIME_FRAME_OPTIONS: TimeFrameOption[] = [
 // Constants
 // Using internal API routes to avoid CORS issues
 
-// Dark theme aligned power source colors for Eco AI.ly branding
+// Dark theme aligned power source colors with transparency for Eco AI.ly branding
 const POWER_SOURCE_COLORS: { [key: string]: string } = {
-  // Renewables (darker eco-friendly colors for minimalistic UI)
-  'solar': '#FBBF24', // Warm amber for solar energy
-  'wind': '#10B981', // Eco green for wind (Tailwind emerald-500)
-  'hydro': '#3B82F6', // Blue for hydro (Tailwind blue-500)
-  'hydro discharge': '#06B6D4', // Cyan for hydro discharge (Tailwind cyan-500)
-  'hydro pumped storage': '#8B5CF6', // Purple for pumped storage (Tailwind violet-500)
-  'biomass': '#84CC16', // Lime green for biomass (Tailwind lime-500)
-  'geothermal': '#EF4444', // Red for geothermal (Tailwind red-500)
-  'nuclear': '#A855F7', // Purple for nuclear (Tailwind purple-500)
+  // Renewables (darker eco-friendly colors with transparency for minimalistic UI)
+  'solar': 'rgba(251, 191, 36, 0.7)', // Warm amber for solar energy with transparency
+  'wind': 'rgba(16, 185, 129, 0.7)', // Eco green for wind with transparency
+  'hydro': 'rgba(59, 130, 246, 0.7)', // Blue for hydro with transparency
+  'hydro discharge': 'rgba(6, 182, 212, 0.7)', // Cyan for hydro discharge with transparency
+  'hydro pumped storage': 'rgba(139, 92, 246, 0.7)', // Purple for pumped storage with transparency
+  'biomass': 'rgba(132, 204, 22, 0.7)', // Lime green for biomass with transparency
+  'geothermal': 'rgba(239, 68, 68, 0.7)', // Red for geothermal with transparency
+  'nuclear': 'rgba(168, 85, 247, 0.7)', // Purple for nuclear with transparency
   
-  // Fossil fuels (muted colors to indicate environmental impact)
-  'gas': '#F87171', // Lighter red to indicate emissions (Tailwind red-400)
-  'coal': '#6B7280', // Gray for coal (Tailwind gray-500)
-  'oil': '#A3A3A3', // Neutral gray for oil (Tailwind neutral-400)
+  // Fossil fuels (muted colors with transparency to indicate environmental impact)
+  'gas': 'rgba(248, 113, 113, 0.6)', // Lighter red to indicate emissions with transparency
+  'coal': 'rgba(107, 114, 128, 0.6)', // Gray for coal with transparency
+  'oil': 'rgba(163, 163, 163, 0.6)', // Neutral gray for oil with transparency
   
-  // Import/Export (professional grays and greens)
-  'imports': '#64748B', // Slate gray for imports (Tailwind slate-500)
-  'exports': '#22C55E', // Green for exports (Tailwind green-500)
+  // Import/Export (professional grays and greens with transparency)
+  'imports': 'rgba(100, 116, 139, 0.7)', // Slate gray for imports with transparency
+  'exports': 'rgba(34, 197, 94, 0.7)', // Green for exports with transparency
   
-  // Other/Unknown (neutral dark theme colors)
-  'unknown': '#9CA3AF', // Gray for unknown (Tailwind gray-400)
-  'other': '#D1D5DB', // Light gray for other (Tailwind gray-300)
-  'battery': '#F59E0B', // Amber for battery (Tailwind amber-500)
-  'battery discharge': '#FB923C', // Orange for battery discharge (Tailwind orange-400)
+  // Other/Unknown (neutral dark theme colors with transparency)
+  'unknown': 'rgba(156, 163, 175, 0.6)', // Gray for unknown with transparency
+  'other': 'rgba(209, 213, 219, 0.6)', // Light gray for other with transparency
+  'battery': 'rgba(245, 158, 11, 0.7)', // Amber for battery with transparency
+  'battery discharge': 'rgba(251, 146, 60, 0.7)', // Orange for battery discharge with transparency
 };
 
 // Prediction class descriptions
@@ -432,18 +432,19 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
             </Pie>
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(17, 24, 39, 0.95)', // dark:bg-gray-900/95
-                border: 'none',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', // Light background for better visibility
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(229, 231, 235, 0.8)', // Light border
                 borderRadius: '8px',
-                color: 'white',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
-                backdropFilter: 'blur(10px)'
+                color: '#374151', // Dark text for contrast
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+                fontSize: '14px'
               }}
               formatter={(value: number, name: string) => [
                 `${value.toFixed(0)} MW`, 
                 name
               ]}
-              labelStyle={{ color: '#10B981', fontWeight: 'bold' }}
+              labelStyle={{ color: '#059669', fontWeight: 'bold' }}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -583,26 +584,49 @@ const ZeroDataAnimation = ({ title, icon, timeFrame }: {
   return (
     <motion.div
       ref={ref}
-      className="bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6"
+      className="relative bg-white dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700/50 rounded-xl p-6 shadow-lg"
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: 0.2 }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
-          <div className="text-green-500">
+      {/* Eco AI.ly Branding Badge - Darker theme */}
+      <motion.div
+        className="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ delay: 0.8, type: "spring", bounce: 0.4 }}
+      >
+        Eco AI.ly
+      </motion.div>
+
+      {/* Enhanced Header - Dark theme aligned */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-4">
+          <motion.div 
+            className="p-3 bg-gradient-to-br from-green-500/80 to-green-600/80 text-white rounded-xl shadow-md backdrop-blur-sm"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", bounce: 0.4 }}
+          >
             {icon}
-          </div>
+          </motion.div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Total: 0 MW
-            </p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
+            <div className="flex items-center space-x-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Total: <span className="font-semibold text-green-600 dark:text-green-400">0 MW</span>
+              </p>
+              <motion.div
+                className="w-2 h-2 bg-gray-400 rounded-full"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="h-80 flex flex-col items-center justify-center">
+      {/* Match the exact height of the pie chart section */}
+      <div className="h-96 flex flex-col items-center justify-center">
         {/* Animated Zero Data Visualization */}
         <motion.div
           className="relative"
@@ -695,12 +719,44 @@ const ZeroDataAnimation = ({ title, icon, timeFrame }: {
         </motion.div>
       </div>
 
-      {/* Zero Data Legend */}
-      <div className="mt-4 text-center">
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          Try selecting a different time frame to view data from other periods.
-        </div>
+      {/* Match legend section height to maintain consistent card size */}
+      <div className="mt-6 space-y-3 max-h-48 overflow-y-auto custom-scrollbar">
+        <motion.div
+          className="flex items-center justify-center p-6 rounded-lg bg-gray-50/80 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+        >
+          <div className="text-center">
+            <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              Try selecting a different time frame to view data from other periods.
+            </div>
+            <motion.div
+              className="text-xs text-gray-400 dark:text-gray-500"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              Data will appear here when available
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* Subtle Dark Theme Animation Overlay */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none rounded-xl opacity-30"
+        style={{
+          background: 'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%)'
+        }}
+        animate={{
+          background: [
+            'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%)'
+          ]
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
     </motion.div>
   );
 };
