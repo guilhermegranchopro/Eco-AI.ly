@@ -63,21 +63,21 @@ The pie charts in the Eco AI.ly dashboard have been completely redesigned with a
 
 ## Color Mapping (Updated)
 
-### Renewable Sources (Eco-Friendly Palette)
-- Solar: `#F59E0B` (Vibrant amber representing sunlight)
-- Wind: `#059669` (Natural green for wind energy)
-- Hydro: `#0EA5E9` (Clean blue for water power)
-- Biomass: `#65A30D` (Organic green for biomass)
+### Renewable Sources (Muted Eco-Friendly Palette)
+- Solar: `#D97706` (Muted amber representing sunlight)
+- Wind: `#047857` (Darker natural green for wind energy)
+- Hydro: `#0891B2` (Muted blue for water power)
+- Biomass: `#4D7C0F` (Darker organic green for biomass)
 
-### Fossil Fuels (Environmental Awareness)
-- Gas: `#EF4444` (Warning red for environmental impact)
+### Fossil Fuels (Muted Environmental Awareness)
+- Gas: `#DC2626` (Muted warning red for environmental impact)
 - Coal: `#374151` (Dark gray representing coal)
-- Oil: `#92400E` (Brown for petroleum products)
+- Oil: `#78350F` (Darker brown for petroleum products)
 
-### Grid Operations
-- Imports: `#1E40AF` (Professional blue for grid imports)
-- Exports: `#059669` (Positive green for energy exports)
-- Battery: `#FBBF24` (Energy yellow for storage systems)
+### Grid Operations (Muted Professional Tones)
+- Imports: `#1E3A8A` (Darker professional blue for grid imports)
+- Exports: `#047857` (Muted positive green for energy exports)
+- Battery: `#D97706` (Muted energy amber for storage systems)
 
 ## Design Philosophy
 

@@ -85,32 +85,32 @@ const TIME_FRAME_OPTIONS: TimeFrameOption[] = [
 // Constants
 // Using internal API routes to avoid CORS issues
 
-// Enhanced power source colors for Eco AI.ly branding
+// Enhanced power source colors with muted tones to match dark UI theme
 const POWER_SOURCE_COLORS: { [key: string]: string } = {
-  // Renewables (eco-friendly greens and natural colors)
-  'solar': '#F59E0B', // Vibrant amber for solar energy
-  'wind': '#059669', // Eco green for wind
-  'hydro': '#0EA5E9', // Clean blue for hydro
-  'hydro discharge': '#06B6D4', // Cyan for hydro discharge
-  'hydro pumped storage': '#3B82F6', // Bright blue for pumped storage
-  'biomass': '#65A30D', // Natural green for biomass
-  'geothermal': '#DC2626', // Earth red for geothermal
-  'nuclear': '#7C3AED', // Purple for nuclear
+  // Renewables (muted eco-friendly tones with better transparency compatibility)
+  'solar': '#D97706', // Muted amber for solar energy
+  'wind': '#047857', // Darker eco green for wind
+  'hydro': '#0891B2', // Muted blue for hydro
+  'hydro discharge': '#0891B2', // Consistent cyan for hydro discharge
+  'hydro pumped storage': '#2563EB', // Muted blue for pumped storage
+  'biomass': '#4D7C0F', // Darker natural green for biomass
+  'geothermal': '#B91C1C', // Muted earth red for geothermal
+  'nuclear': '#6D28D9', // Darker purple for nuclear
   
-  // Fossil fuels (warmer, less vibrant colors to show environmental impact)
-  'gas': '#EF4444', // Red to indicate emissions
+  // Fossil fuels (muted tones to show environmental impact without being harsh)
+  'gas': '#DC2626', // Muted red to indicate emissions
   'coal': '#374151', // Dark gray for coal
-  'oil': '#92400E', // Brown for oil
+  'oil': '#78350F', // Darker brown for oil
   
-  // Import/Export (professional blues)
-  'imports': '#1E40AF', // Deep blue for imports
-  'exports': '#059669', // Eco green for exports (positive)
+  // Import/Export (muted professional tones)
+  'imports': '#1E3A8A', // Darker blue for imports
+  'exports': '#047857', // Muted eco green for exports (positive)
   
-  // Other/Unknown (neutral eco-friendly tones)
+  // Other/Unknown (neutral tones that blend with dark theme)
   'unknown': '#6B7280', // Neutral gray
   'other': '#9CA3AF', // Light gray
-  'battery': '#FBBF24', // Golden yellow for battery
-  'battery discharge': '#F59E0B', // Amber for battery discharge
+  'battery': '#D97706', // Muted golden for battery
+  'battery discharge': '#D97706', // Consistent amber for battery discharge
 };
 
 // Prediction class descriptions
@@ -348,17 +348,10 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
   const gradientDefs = data.map((entry, index) => (
     <defs key={`gradient-${index}`}>
       <radialGradient id={`gradient-${index}`} cx="50%" cy="50%">
-        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.2)" />
-        <stop offset="30%" stopColor={entry.color} stopOpacity="0.9" />
-        <stop offset="100%" stopColor={entry.color} stopOpacity="0.8" />
+        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.1)" />
+        <stop offset="50%" stopColor={entry.color} stopOpacity="0.9" />
+        <stop offset="100%" stopColor={entry.color} stopOpacity="0.7" />
       </radialGradient>
-      <filter id={`glow-${index}`}>
-        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-        <feMerge> 
-          <feMergeNode in="coloredBlur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
     </defs>
   ));
 
@@ -468,10 +461,9 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
                 <Cell 
                   key={`cell-${index}`} 
                   fill={hoveredIndex === index ? `url(#gradient-${index})` : entry.color}
-                  stroke={hoveredIndex === index ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.1)"}
-                  strokeWidth={hoveredIndex === index ? 2 : 1}
+                  stroke={hoveredIndex === index ? "rgba(255, 255, 255, 0.6)" : "rgba(255, 255, 255, 0.1)"}
+                  strokeWidth={hoveredIndex === index ? 1.5 : 0.5}
                   style={{
-                    filter: hoveredIndex === index ? `url(#glow-${index})` : 'none',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease'
                   }}
@@ -480,20 +472,20 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
             </Pie>
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                border: 'none',
-                borderRadius: '16px',
-                color: 'white',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
-                backdropFilter: 'blur(16px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                borderRadius: '12px',
+                color: '#1F2937',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                backdropFilter: 'blur(8px)',
                 fontSize: '14px',
-                padding: '12px 16px'
+                padding: '8px 12px'
               }}
               formatter={(value: number, name: string) => [
                 `${value.toFixed(0)} MW`, 
                 name
               ]}
-              labelStyle={{ color: '#22C55E', fontWeight: '600', marginBottom: '4px' }}
+              labelStyle={{ color: '#059669', fontWeight: '600', marginBottom: '2px' }}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -541,16 +533,14 @@ const PowerBreakdownChart = ({ title, data, icon, total }: {
           >
             <div className="flex items-center space-x-3">
               <motion.div 
-                className="w-3 h-3 rounded-full shadow-sm border border-white/30"
+                className="w-3 h-3 rounded-full shadow-sm border border-white/20"
                 style={{ backgroundColor: entry.color }}
                 animate={hoveredIndex === index ? { 
-                  scale: 1.3,
-                  boxShadow: `0 0 20px ${entry.color}40`
+                  scale: 1.2
                 } : { 
-                  scale: 1,
-                  boxShadow: '0 0 0px transparent'
+                  scale: 1
                 }}
-                transition={{ type: "spring", bounce: 0.6, duration: 0.3 }}
+                transition={{ type: "spring", bounce: 0.4, duration: 0.2 }}
               />
               <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                 {entry.name}
@@ -890,10 +880,12 @@ const ChartCard = ({ title, data, type, prediction }: {
             />
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                border: 'none',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                border: '1px solid rgba(0, 0, 0, 0.1)',
                 borderRadius: '8px',
-                color: 'white'
+                color: '#1F2937',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                fontSize: '14px'
               }}
               labelFormatter={(value) => `Time: ${value}`}
               formatter={(value: number | string) => [
