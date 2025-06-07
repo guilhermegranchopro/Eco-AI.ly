@@ -999,8 +999,7 @@ export default function Home() {
             <nav className="hidden md:flex items-center space-x-1">
               {[ 
                 { href: "#features", label: "Features" }, 
-                { href: "#platform", label: "Technology" }, 
-                { href: "#impact", label: "Our Impact" },
+                { href: "#platform", label: "Technology" },
               ].map(link => (
                 <motion.div 
                   key={link.href} 
@@ -1439,36 +1438,6 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
-        <AnimatedDivider />
-
-        {/* Our Impact in Numbers Section - NEW */}
-        <AnimatedSection id="impact" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
-            📈 Our Impact in Numbers
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[ { label: "Tons of CO2 Offset Annually", value: 15000, displaySuffix: "+" },
-              { label: "Renewable Energy Projects Optimized", value: 300, displaySuffix: "+" },
-              { label: "Data Points Processed Daily", value: 10, displaySuffix: "M+" }
-            ].map(stat => (
-              <motion.div // Wrap InteractiveCard with motion.div to apply variants
-                key={stat.label}
-                variants={fadeInUp} // Apply variants to the motion.div wrapper
-              >
-                <InteractiveCard
-                  className="p-6 sm:p-8 rounded-2xl shadow-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm text-center border border-gray-200/60 dark:border-gray-700/50 hover:border-green-400/40 dark:hover:border-green-400/30" // Updated backgrounds and borders
-                >
-                  <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
-                    <AnimatedNumber value={stat.value} />{stat.displaySuffix}
-                  </div>
-                  <p className="text-md sm:text-lg text-gray-700 dark:text-gray-300">{stat.label}</p>
-                </InteractiveCard>
-              </motion.div>
-            ))}
-          </div>
-        </AnimatedSection>
-
-        <AnimatedDivider />
 
         {/* Dashboard Section - NEW */}
         <AnimatedSection id="dashboard" className="py-16 md:py-24">
