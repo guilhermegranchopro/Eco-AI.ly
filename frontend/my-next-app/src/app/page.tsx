@@ -1015,7 +1015,7 @@ export default function Home() {
                     {link.label}
                   </Link>
                   <motion.div 
-                    className="absolute inset-0 bg-gradient-to-r from-green-500/80 to-emerald-500/80 rounded-xl backdrop-blur-sm"
+                    className="absolute inset-0 bg-gradient-to-r"
                     variants={{ 
                       initial: { opacity: 0, scale: 0.8 }, 
                       hover: { opacity: 1, scale: 1 }    
@@ -1036,7 +1036,7 @@ export default function Home() {
               <motion.div className="ml-6" whileHover={{ scale: 1.05 }}>
                 <Link 
                   href="/dashboard/portugal" 
-                  className="relative group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl backdrop-blur-sm border border-white/20"
+                  className="relative group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
                 >
                   <span className="relative z-10">View Dashboard</span>
                   <motion.div
