@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, ReactNode, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, animate, useScroll } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 
@@ -834,33 +834,6 @@ const InteractiveCard = ({ children, className }: { children: ReactNode, classNa
     </motion.div>
   );
 };
-
-// Animated Number Component - REVISED and TYPED
-const AnimatedNumber = ({ value }: { value: number }) => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    if (inView) {
-      const animationControls = animate(0, value, {
-        duration: 2,
-        ease: "easeOut",
-        onUpdate: (latest) => {
-          setDisplayValue(Math.round(latest));
-        }
-      });
-      return () => animationControls.stop(); // Cleanup animation
-    }
-  }, [inView, value]); // Effect dependencies
-
-  return (
-    <span ref={ref}> {/* Ref for useInView */}
-      {displayValue.toLocaleString()}
-    </span>
-  );
-};
-
-
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
