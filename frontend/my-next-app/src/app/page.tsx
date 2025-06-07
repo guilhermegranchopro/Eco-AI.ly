@@ -1031,7 +1031,7 @@ export default function Home() {
       <InteractiveEnergyWaves />
       
       <motion.main
-        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased"
+        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-visible antialiased"
         initial="initial"
         animate="animate"
         variants={backgroundVariants}
@@ -1070,7 +1070,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -50, scale: 0.95 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 z-40 min-h-screen rounded-b-3xl overflow-hidden"
+            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 z-40 min-h-screen rounded-b-3xl overflow-visible"
             style={{
               background: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.15) 100%)",
               backdropFilter: "blur(40px)",
@@ -1168,7 +1168,7 @@ export default function Home() {
         <main className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-8 sm:mt-12">
           {/* Revolutionary Hero Section */}
           <motion.div 
-            className="relative text-center my-16 sm:my-24 p-12 sm:p-16 rounded-[3rem] w-full overflow-hidden"
+            className="relative text-center my-16 sm:my-24 p-12 sm:p-16 rounded-[3rem] w-full overflow-visible"
             style={{ 
               y: heroY,
               background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%)",
@@ -1220,44 +1220,54 @@ export default function Home() {
             
             <motion.div 
               variants={fadeInUp} 
-              className="relative z-10"
+              className="relative z-10 overflow-visible"
             >
-              <motion.h1 
-                className="text-5xl sm:text-6xl lg:text-8xl font-black mb-8 relative z-10 leading-tight"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.7 }}
-              >
-                <motion.span
-                  className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500"
-                  style={{ 
-                    backgroundSize: "300% auto",
-                    filter: "drop-shadow(0 0 30px rgba(34,197,94,0.3))"
-                  }}
-                  animate={{ 
-                    backgroundPosition: ["0% center", "200% center", "0% center"],
-                  }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+
+            <motion.h1 
+                className="toverflow-visible text-5xl sm:text-6xl lg:text-8xl font-black mb-8 relative z-10 leading-tight flex flex-col items-center"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
                 >
-                  GAIA
-                </motion.span>
-                <motion.span
-                  className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300"
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 1 }}
-                >
-                  The Future of Environmental Intelligence
-                </motion.span>
-              </motion.h1>
-              
+                  {/* title + dog in a row */}
+                  <div className="flex items-center space-x-3">
+                    <motion.span
+                      className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500"
+                      style={{ backgroundSize: '300% auto', filter: 'drop-shadow(0 0 30px rgba(34,197,94,0.3))' }}
+                      animate={{ backgroundPosition: ['0% center','200% center','0% center'] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                    >
+                      GAIA
+                    </motion.span>
+                    <Image
+                      src="/assets/images/dog-wink.png"
+                      alt="Winking dog"
+                      width={95}
+                      height={95}
+                      className="rounded-full"
+                      style={{ overflow: 'visible' }}
+                      priority
+                    />
+                  </div>
+
+                  {/* subtitle now drops below because parent is flex-col */}
+                  <motion.span
+                    className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 1 }}
+                  >
+                    Your Green AI Assistant
+                  </motion.span>
+                </motion.h1>
+
               <motion.p 
                 className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
               >
-                Harnessing <motion.strong 
+                Responsible <motion.strong 
                   className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
                   whileHover={{ scale: 1.05 }}
                 >
@@ -1276,8 +1286,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
               >
-                Revolutionizing environmental decision-making with cutting-edge predictive analytics, real-time insights, and AI-driven forecasts. 
-                Join us in building a greener, more resilient future.
+                Revolutionizing environmental decision-making real-time insights and AI-driven forecasts
               </motion.p>
               
               <motion.div 
@@ -1296,7 +1305,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                     />
                     <span className="relative z-10 flex items-center">
-                      Explore Portugal Dashboard
+                      When to train
                       <motion.svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-6 w-6 ml-3" 
@@ -1311,14 +1320,30 @@ export default function Home() {
                     </span>
                   </Link>
                 </motion.div>
-                
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
-                    href="#features" 
-                    className="group relative inline-flex items-center justify-center bg-transparent border-2 border-gray-600 text-gray-300 px-10 py-5 rounded-2xl font-bold text-xl backdrop-blur-sm hover:border-cyan-400 transition-all duration-500"
-                    onClick={(e) => handleSmoothScroll(e, "#features")}
+                    href="/dashboard/portugal" 
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
                   >
-                    <span className="relative z-10">Learn More</span>
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
+                      transition={{ duration: 0.5 }}
+                    />
+                    <span className="relative z-10 flex items-center">
+                      Find best GPU
+                      <motion.svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-6 w-6 ml-3" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </motion.svg>
+                    </span>
                   </Link>
                 </motion.div>
               </motion.div>
