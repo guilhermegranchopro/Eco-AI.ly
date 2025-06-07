@@ -923,47 +923,13 @@ export default function Home() {
   
   return (
     <>
-      {/* Revolutionary Reactive Effects */}
-      <ReactiveParticleSystem />
-      <LiquidEnergyFlows />
-      <InteractiveEnergyWaves />
-      
-      <motion.main
-        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased"
-        initial="initial"
-        animate="animate"
-        variants={backgroundVariants}
-        style={{ y: backgroundY }}
-        transition={{
-          background: { 
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear",
-          }
-        }}
-      >
-        {/* Floating orbs */}
-        <FloatingOrb size={300} color="cyan" delay={0} x="10%" y="20%" />
-        <FloatingOrb size={250} color="purple" delay={5} x="85%" y="30%" />
-        <FloatingOrb size={200} color="green" delay={10} x="70%" y="80%" />
-        <FloatingOrb size={180} color="pink" delay={15} x="15%" y="70%" />
-
-        {/* SVG Definitions for gradients */}
-        <svg width="0" height="0" className="absolute">
-          <defs>
-            <linearGradient id="gradPulse" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor: 'rgba(56,189,248,0.7)', stopOpacity: 1}} />
-              <stop offset="100%" style={{stopColor: 'rgba(168,85,247,0.7)', stopOpacity: 1}} />
-            </linearGradient>
-          </defs>
-        </svg>
 
         {/* Revolutionary Header */}
         <motion.header
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="fixed top-0 z-50 w-full flex justify-center py-4 sm:py-6"
+          className="fixed top-0 z-50 w-full flex justify-center py-2 sm:py-3"
           style={{
             backdropFilter: "blur(20px)",
             background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
@@ -1085,6 +1051,43 @@ export default function Home() {
             </div>
           </div>
         </motion.header>
+
+      {/* Revolutionary Reactive Effects */}
+      <ReactiveParticleSystem />
+      <LiquidEnergyFlows />
+      <InteractiveEnergyWaves />
+      
+      <motion.main
+        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased"
+        initial="initial"
+        animate="animate"
+        variants={backgroundVariants}
+        style={{ y: backgroundY }}
+        transition={{
+          background: { 
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          }
+        }}
+      >
+        {/* Floating orbs */}
+        <FloatingOrb size={300} color="cyan" delay={0} x="10%" y="20%" />
+        <FloatingOrb size={250} color="purple" delay={5} x="85%" y="30%" />
+        <FloatingOrb size={200} color="green" delay={10} x="70%" y="80%" />
+        <FloatingOrb size={180} color="pink" delay={15} x="15%" y="70%" />
+
+        {/* SVG Definitions for gradients */}
+        <svg width="0" height="0" className="absolute">
+          <defs>
+            <linearGradient id="gradPulse" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{stopColor: 'rgba(56,189,248,0.7)', stopOpacity: 1}} />
+              <stop offset="100%" style={{stopColor: 'rgba(168,85,247,0.7)', stopOpacity: 1}} />
+            </linearGradient>
+          </defs>
+        </svg>
+
+
 
       {/* Revolutionary Mobile Menu */}
       <AnimatePresence>
@@ -1263,7 +1266,7 @@ export default function Home() {
                   }}
                   transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                 >
-                  Eco AI.ly
+                  GAIA
                 </motion.span>
                 <motion.span
                   className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300"
