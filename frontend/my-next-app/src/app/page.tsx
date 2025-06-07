@@ -1323,7 +1323,7 @@ export default function Home() {
 
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
-                    href="/dashboard/portugal" 
+                    href="/find-gpu" 
                     className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
                   >
                     <motion.div
