@@ -21,9 +21,9 @@ const getEfficiencyTag = (efficiency: string) =>
   clsx(
     'inline-flex items-center justify-center text-[10px] font-medium px-1.5 py-0.5 rounded-full',
     {
-      high: 'bg-green-50 text-green-700 ring-1 ring-green-600/20',
-      medium: 'bg-yellow-50 text-yellow-800 ring-1 ring-yellow-600/20',
-      low: 'bg-red-50 text-red-700 ring-1 ring-red-600/10',
+      high: 'bg-green-50 text-green-700 ring-1 ring-green-600/20 dark:bg-green-800 dark:text-green-300 dark:ring-green-500/40',
+      medium: 'bg-yellow-50 text-yellow-800 ring-1 ring-yellow-600/20 dark:bg-yellow-800 dark:text-yellow-300 dark:ring-yellow-500/40',
+      low: 'bg-red-50 text-red-700 ring-1 ring-red-600/10 dark:bg-red-800 dark:text-red-300 dark:ring-red-500/30',
     }[efficiency]
   )
 
@@ -39,14 +39,18 @@ const ScoreWeightCard = ({
     infoText = (
       <span>
         You value the price{' '}
-        <span className="font-semibold text-indigo-800">{100}%</span>
+        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+          100%
+        </span>
       </span>
     )
   } else if (carbonPercent === 100) {
     infoText = (
       <span>
         You value the carbon intensity{' '}
-        <span className="font-semibold text-indigo-800">{100}%</span>
+        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+          100%
+        </span>
       </span>
     )
   } else if (carbonPercent > pricePercent) {
@@ -54,8 +58,10 @@ const ScoreWeightCard = ({
     infoText = (
       <span>
         You value the carbon intensity{' '}
-        <span className="font-semibold text-indigo-800">{factor}×</span> more
-        than price
+        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+          {factor}×
+        </span>{' '}
+        more than price
       </span>
     )
   } else {
@@ -63,39 +69,51 @@ const ScoreWeightCard = ({
     infoText = (
       <span>
         You value the price{' '}
-        <span className="font-semibold text-indigo-800">{factor}×</span> more
-        than carbon
+        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+          {factor}×
+        </span>{' '}
+        more than carbon
       </span>
     )
   }
 
   return (
-    <div className="w-full max-w-md bg-gradient-to-br from-indigo-50 via-white to-green-50 border border-indigo-200 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
+    <div className="w-full max-w-md
+                    bg-gradient-to-br from-indigo-50 via-white to-green-50
+                    dark:from-gray-800 dark:via-gray-900 dark:to-gray-800
+                    border border-indigo-200 dark:border-gray-700
+                    rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
       <div className="flex items-center justify-center space-x-2 mb-4">
-        <Info className="w-5 h-5 text-indigo-600" />
-        <h2 className="text-sm uppercase tracking-wide text-indigo-600 font-semibold">
+        <Info className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
+        <h2 className="text-sm uppercase tracking-wide text-indigo-600 dark:text-indigo-300 font-semibold">
           Move slider to balance price vs carbon
         </h2>
       </div>
-      <p className="mb-6 text-center text-gray-700">{infoText}</p>
+      <p className="mb-6 text-center text-gray-700 dark:text-gray-200">
+        {infoText}
+      </p>
       <div className="flex justify-center items-center space-x-16">
         <div className="flex flex-col items-center space-y-0 -ml-3">
           <div className="flex items-center space-x-2">
-            <DollarSign className="w-6 h-6 text-blue-600" />
-            <span className="text-2xl font-bold text-blue-800">
+            <DollarSign className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <span className="text-2xl font-bold text-blue-800 dark:text-blue-300">
               {pricePercent}%
             </span>
           </div>
-          <span className="text-sm text-gray-600 uppercase">Price</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400 uppercase">
+            Price
+          </span>
         </div>
         <div className="flex flex-col items-center space-y-0">
           <div className="flex items-center space-x-2">
-            <Leaf className="w-6 h-6 text-green-600" />
-            <span className="text-2xl font-bold text-green-800">
+            <Leaf className="w-6 h-6 text-green-600 dark:text-green-400" />
+            <span className="text-2xl font-bold text-green-800 dark:text-green-300">
               {carbonPercent}%
             </span>
           </div>
-          <span className="text-sm text-gray-600 uppercase">Carbon</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400 uppercase">
+            Carbon
+          </span>
         </div>
       </div>
     </div>
@@ -142,15 +160,7 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
       return { ...gpu, score: totalScore }
     })
     return scored.sort((a, b) => b.score - a.score)
-  }, [
-    pricePercent,
-    carbonPercent,
-    minPrice,
-    maxPrice,
-    minCarbon,
-    maxCarbon,
-    gpus,
-  ])
+  }, [pricePercent, carbonPercent, minPrice, maxPrice, minCarbon, maxCarbon, gpus])
 
   const rankRef = useRef<Record<number, number>>({})
   const freshRankMap = useMemo(() => {
@@ -160,7 +170,6 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
     })
     return m
   }, [gpusWithScores])
-
   const currentRankMap = useMemo(() => {
     const prev = rankRef.current
     const changed = Object.keys(freshRankMap).some(
@@ -192,41 +201,47 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
       <div className="w-full max-w-md">
         <div className="flex items-center">
           <div className="flex flex-col items-center">
-            <DollarSign className="w-5 h-5 text-blue-600" />
-            <span className="mt-1 text-xs text-gray-600">Price</span>
+            <DollarSign className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <span className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+              Price
+            </span>
           </div>
           <div className="relative flex-1 mx-4">
             <Slider.Root
-            value={[carbonPercent]}
-            max={100}
-            step={1}
-            onValueChange={(vals: number[]) => setPricePercent(100 - vals[0])}
-            className="relative flex h-8 items-center"
+              value={[carbonPercent]}
+              max={100}
+              step={1}
+              onValueChange={vals => setPricePercent(100 - vals[0])}
+              className="relative flex h-8 items-center"
             >
               <Slider.Track className="relative flex-1 h-2 bg-gradient-to-r from-blue-500 via-blue-400 to-green-500 rounded-full shadow-inner">
                 <Slider.Range className="absolute h-full rounded-full bg-transparent" />
               </Slider.Track>
-              <Slider.Thumb className="relative flex h-6 w-6 items-center justify-center rounded-full bg-white border-2 border-gray-300 shadow-md transform transition-transform hover:scale-110" />
+              <Slider.Thumb className="relative flex h-6 w-6 items-center justify-center rounded-full bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 shadow-md transform transition-transform hover:scale-110" />
             </Slider.Root>
             <div className="absolute inset-0 flex justify-between items-center pointer-events-none">
               {[0, 1, 2, 3, 4].map(i => (
-                <span key={i} className="w-px h-4 bg-gray-300" />
+                <span key={i} className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
               ))}
             </div>
           </div>
           <div className="flex flex-col items-center">
-            <Leaf className="w-5 h-5 text-green-600" />
-            <span className="mt-1 text-xs text-gray-600">Carbon</span>
+            <Leaf className="w-5 h-5 text-green-600 dark:text-green-400" />
+            <span className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+              Carbon
+            </span>
           </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50 text-gray-600 text-xs font-medium uppercase tracking-wide">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <thead className="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wide">
             <tr>
-              <th className="px-6 py-4 text-left text-black">Score</th>
+              <th className="px-6 py-4 text-left text-black dark:text-white">
+                Score
+              </th>
               <th className="px-6 py-4 text-left">GPU</th>
               <th className="px-6 py-4 text-left">Provider</th>
               <th className="px-6 py-4 text-right">Price/hr</th>
@@ -234,7 +249,10 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
               <th className="px-6 py-4 text-center">Efficiency</th>
             </tr>
           </thead>
-          <motion.tbody layout className="divide-y divide-gray-100 text-gray-800">
+          <motion.tbody
+            layout
+            className="divide-y divide-gray-100 dark:divide-gray-700 text-gray-800 dark:text-gray-200"
+          >
             <AnimatePresence initial={false}>
               {gpusWithScores.map(gpu => (
                 <motion.tr
@@ -244,9 +262,9 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.3 }}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <td className="px-6 py-4 text-center font-bold text-black text-base whitespace-nowrap">
+                  <td className="px-6 py-4 text-center font-bold text-black dark:text-white text-base whitespace-nowrap">
                     <div className="inline-flex items-center space-x-2">
                       <span>{gpu.score}</span>
                       <div className="w-4 h-4 flex-shrink-0 flex items-center justify-center">
@@ -270,23 +288,28 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-black whitespace-nowrap">
+                  <td className="px-6 py-4 text-black dark:text-white whitespace-nowrap">
                     {gpu.type}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium">
+                    <div className="text-sm dark:text-gray-200">
                       {gpu.provider}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       {gpu.region}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right text-gray-700 whitespace-nowrap">
-                    {gpu.price.toFixed(2)} <span className="text-xs text-gray-500">USD</span>
+                  <td className="px-6 py-4 text-right text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                    {gpu.price.toFixed(2)}{' '}
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      USD
+                    </span>
                   </td>
-                  <td className="px-6 py-4 text-right text-gray-700 whitespace-nowrap">
+                  <td className="px-6 py-4 text-right text-gray-700 dark:text-gray-300 whitespace-nowrap">
                     {gpu.carbonIntensity}{' '}
-                    <span className="text-xs text-gray-500">gCO₂/kWh</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      gCO₂/kWh
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-center whitespace-nowrap">
                     <span className={getEfficiencyTag(gpu.efficiency)}>
@@ -299,12 +322,7 @@ export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
           </motion.tbody>
         </table>
       </div>
-
-      <div className="w-full max-w-md bg-gradient-to-br from-indigo-50 via-white to-green-50 border border-indigo-200 rounded-2xl shadow-lg p-6 mt-4">
-        <p className="text-center text-gray-700">
-          Only the top 15 GPUs are displayed
-        </p>
-      </div>
     </div>
   )
 }
+

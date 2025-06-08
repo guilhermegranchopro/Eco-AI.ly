@@ -1,5 +1,6 @@
 // app/find-gpu/page.tsx
 import GPUComparisonTable from './GPUComparisonTable'
+import AnimatedBackground from './AnimatedBackground';
 import { Pool } from 'pg'
 
 console.log({
@@ -45,5 +46,9 @@ export default async function FindGpuPage() {
   `)
   client.release()
 
-  return <GPUComparisonTable gpus={gpus} />
+  return (
+    <AnimatedBackground>
+      <GPUComparisonTable gpus={gpus} />
+    </AnimatedBackground>
+  );
 }
