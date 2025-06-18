@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CarbonIntensityCard from '@/app/components/cards/CarbonIntensityCard';
+import Footer from '@/app/components/Footer';
 
 
 // ===============================
@@ -1285,7 +1286,7 @@ export default function Home() {
               </motion.p>
               
               <motion.p 
-                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-3"
+                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-6"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
@@ -1308,7 +1309,7 @@ export default function Home() {
                       className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
                       transition={{ duration: 0.5 }}
                     />
-                    <span className="relative z-10 flex items-center">
+                    <span className="relative z-3 flex items-center">
                       When to train
                       <motion.svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -1334,7 +1335,7 @@ export default function Home() {
                       className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
                       transition={{ duration: 0.5 }}
                     />
-                    <span className="relative z-10 flex items-center">
+                    <span className="relative z-3 flex items-center">
                       Find best GPU
                       <motion.svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -1391,17 +1392,29 @@ export default function Home() {
 
         <AnimatedDivider />
 
-        {/* Explore Our Platform Section - Enhanced */}
-        <AnimatedSection 
-          id="platform" 
-          className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-900/50 backdrop-blur-sm border border-gray-700/30 rounded-3xl relative overflow-hidden" // Updated light background
-        >
-          {/* Decorative elements */}
-          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-green-500/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
-          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-green-500/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
+      {/* Explore Our Platform Section - Enhanced */}
+      <AnimatedSection 
+        id="platform" 
+        className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-900/50 backdrop-blur-sm border border-gray-700/30 rounded-3xl relative overflow-hidden"
+      >
+        {/* Decorative elements */}
+        <motion.div 
+          className="absolute -top-10 -left-10 w-48 h-48 border-4 border-green-500/20 rounded-full opacity-30" 
+          animate={{ rotate: 360 }} 
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }} 
+        />
+        <motion.div 
+          className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-green-500/10 rounded-xl opacity-20" 
+          animate={{ rotate: -360 }} 
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }} 
+        />
+
+        {/* Glowing gradient border wrapper */}
+        <div className="relative w-full max-w-5xl mx-auto">
+          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-50 blur-lg animate-pulse z-0" />
 
           {/* Centered content block */}
-          <div className="relative z-10 text-center">
+          <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-3 text-green-100">
               Dive Into Our Platform
             </motion.h2>
@@ -1437,7 +1450,8 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </div>
-        </AnimatedSection>
+        </div>
+      </AnimatedSection>
 
         <AnimatedDivider />
 
@@ -1510,127 +1524,11 @@ export default function Home() {
           </motion.div>
         </AnimatedSection>
       </main>
-      {/* Revolutionary Footer */}
-      <motion.footer 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative w-full py-12 text-center text-gray-300 dark:text-gray-200 border-t border-gray-200/60 dark:border-gray-700/50 mt-8 md:mt-12 rounded-t-3xl overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.9) 30%, rgba(15,23,42,0.95) 70%, rgba(0,0,0,0.98) 100%)",
-          backdropFilter: "blur(20px)",
-          borderTop: "1px solid rgba(34,197,94,0.3)",
-        }}
-      >
-        {/* Animated background elements */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-cyan-400/10 to-purple-400/10"
-          animate={{
-            background: [
-              "linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(6,182,212,0.1) 50%, rgba(168,85,247,0.1) 100%)",
-              "linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(168,85,247,0.1) 50%, rgba(34,197,94,0.1) 100%)",
-              "linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(34,197,94,0.1) 50%, rgba(6,182,212,0.1) 100%)",
-            ],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        />
-        
-        {/* Revolutionary energy grid overlay */}
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(34,197,94,0.3) 0%, transparent 50%),
-                             radial-gradient(circle at 75% 75%, rgba(6,182,212,0.3) 0%, transparent 50%)`,
-          }}
-          animate={{
-            opacity: [0.1, 0.3, 0.1],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        
-        {/* Optimized floating orbs in footer - reduced count and simplified */}
-        <motion.div
-          className="absolute top-4 left-10 w-12 h-12 bg-gradient-to-r from-green-400/30 to-emerald-400/30 rounded-full filter blur-2xl"
-          animate={{
-            y: [-6, 6, -6], // Reduced movement
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }} // Simplified easing
-        />
-        <motion.div
-          className="absolute bottom-6 right-16 w-10 h-10 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full filter blur-2xl"
-          animate={{
-            y: [-5, 5, -5], // Reduced movement
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 2 }} // Simplified easing
-        />
-        
-        <div className="relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-3"
-          >
-            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-2 drop-shadow-lg">
-              GAIA
-            </h3>
-            <p className="text-lg font-medium text-gray-200"> Your Green AI Assistant</p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex justify-center space-x-8 mb-3"
-          >
-            {[
-              { href: "https://github.com/guilhermegranchopro/Eco-AI.ly", icon: GitHubIcon, label: "GitHub" },
-              { href: "#features", icon: () => <span className="text-2xl">🌿</span>, label: "Features" },
-              { href: "#impact", icon: () => <span className="text-2xl">📊</span>, label: "Impact" },
-            ].map((social, index) => (
-              <motion.a
-                key={social.href}
-                href={social.href}
-                className="group relative p-3 rounded-2xl bg-gradient-to-r from-gray-800/80 to-gray-700/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-sm border border-gray-600/30 hover:border-green-400/50 transition-all duration-300 text-gray-200"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + index * 0.1, duration: 0.5 }}
-                {...(social.href.startsWith('http') && { target: "_blank", rel: "noopener noreferrer" })}
-              >
-                <social.icon />
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-2xl opacity-0 group-hover:opacity-100"
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.a>
-            ))}
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.3 }}
-            className="border-t border-gray-600/40 dark:border-gray-500/40 pt-6"
-          >
-            <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} GAIA. All rights reserved.</p>
-            <motion.p 
-              className="text-xs mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
-              animate={{
-                backgroundPosition: ["0% center", "200% center", "0% center"],
-              }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              style={{ backgroundSize: "300% auto" }}
-            >
-              Powered by AI • Built for Sustainability • Designed for the Future
-            </motion.p>
-          </motion.div>
-        </div>
-      </motion.footer>
-      </motion.main>
-    </>
-  );
+  </motion.main>
+
+  <div className="max-w-7xl mx-auto px-4">
+    <Footer />
+  </div>
+</>
+);
 }
