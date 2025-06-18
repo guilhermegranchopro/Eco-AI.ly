@@ -930,7 +930,7 @@ export default function Home() {
                   }}
                 />
                 <div className="relative z-10">
-                  <Image src="/assets/images/logo.png" alt="Eco AI.ly Logo" width={200} height={40} priority className="h-10 sm:h-12 w-auto"/>
+                  <Image src="/assets/images/logo.png" alt="Gaia Logo" width={200} height={40} priority className="h-10 sm:h-12 w-auto"/>
                 </div>
               </motion.div>
             </Link>
@@ -1386,30 +1386,46 @@ export default function Home() {
           className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-900/50 backdrop-blur-sm border border-gray-700/30 rounded-3xl relative overflow-hidden" // Updated light background
         >
           {/* Decorative elements */}
-          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
-          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
+          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-green-500/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
+          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-green-500/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
 
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-white">
-            Dive Into Our Platform
-          </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-300">
-            Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
-          </motion.p>
-          <motion.div variants={fadeInUp} className="relative z-10">
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-white">🇵🇹 Portugal Data Dashboard</h3>
-            <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-200">
-              <li>Comprehensive energy consumption metrics</li>
-              <li>Real-time carbon intensity updates</li>
-              <li>Historical trend analysis & AI predictions</li>
-              <li>Actionable insights for energy arbitrage</li>
-            </ul>
-            <div>
-              <Link href="/dashboard/portugal" className="group inline-flex items-center justify-center bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-gray-100 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-500"> {/* Ensure rounded-xl */}
-                View Live Dashboard
-                <ArrowRightIcon />
-              </Link>
-            </div>
-          </motion.div>
+          {/* Centered content block */}
+          <div className="relative z-10 text-center">
+            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 text-green-100">
+              Dive Into Our Platform
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-12 max-w-2xl mx-auto text-green-200">
+              Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
+            </motion.p>
+
+            <motion.div variants={fadeInUp}>
+              <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-green-100">
+                🇵🇹 Portugal Data Dashboard
+              </h3>
+              <ul className="list-disc list-inside inline-block text-left space-y-2 mb-10 text-green-200">
+                <li>Comprehensive energy consumption metrics</li>
+                <li>Real-time carbon intensity updates</li>
+                <li>Historical trend analysis & AI predictions</li>
+                <li>Actionable insights for energy arbitrage</li>
+              </ul>
+
+              {/* Centered and animated button */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="flex justify-center"
+              >
+                <Link
+                  href="/dashboard/portugal"
+                  className="group inline-flex items-center justify-center bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-600 hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-500"
+                >
+                  View Live Dashboard
+                  <ArrowRightIcon className="ml-2 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            </motion.div>
+          </div>
         </AnimatedSection>
 
         <AnimatedDivider />
@@ -1440,29 +1456,7 @@ export default function Home() {
         </AnimatedSection>
 
 
-        {/* Dashboard Section - NEW */}
-        <AnimatedSection id="dashboard" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-8 text-center">
-            🇵🇹 Live Portugal Energy Dashboard
-          </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12 text-center">
-            Explore real-time carbon intensity and renewable energy data for Portugal. See AI predictions and insights powered by our advanced analytics.
-          </motion.p>
-          <motion.div variants={fadeInUp} className="text-center">
-            <Link 
-              href="/dashboard/portugal" 
-              className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-5 rounded-xl font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800"
-            >
-              <div className="flex items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-                </svg>
-                <span>View Portugal Dashboard</span>
-                <ArrowRightIcon />
-              </div>
-            </Link>
-          </motion.div>
-        </AnimatedSection>
+
 
         <AnimatedDivider />
 
