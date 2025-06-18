@@ -1224,42 +1224,45 @@ export default function Home() {
             >
 
             <motion.h1 
-                className="toverflow-visible text-5xl sm:text-6xl lg:text-8xl font-black mb-8 relative z-10 leading-tight flex flex-col items-center"
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.7 }}
-                >
-                  {/* title + dog in a row */}
-                  <div className="flex items-center space-x-3">
-                    <motion.span
-                      className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500"
-                      style={{ backgroundSize: '300% auto', filter: 'drop-shadow(0 0 30px rgba(34,197,94,0.3))' }}
-                      animate={{ backgroundPosition: ['0% center','200% center','0% center'] }}
-                      transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                    >
-                      GAIA
-                    </motion.span>
-                    <Image
-                      src="/assets/images/dog-wink.png"
-                      alt="Winking dog"
-                      width={95}
-                      height={95}
-                      className="rounded-full"
-                      style={{ overflow: 'visible' }}
-                      priority
-                    />
-                  </div>
-
-                  {/* subtitle now drops below because parent is flex-col */}
+              className="overflow-visible text-5xl sm:text-6xl lg:text-8xl font-black mb-8 relative z-10 leading-tight flex flex-col items-center"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+            >
+              {/* wrap GAIA in a centered block */}
+              <div className="relative flex flex-col items-center">
+                <div className="flex items-center space-x-3">
                   <motion.span
-                    className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 1 }}
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500"
+                    style={{ backgroundSize: '300% auto', filter: 'drop-shadow(0 0 30px rgba(34,197,94,0.3))' }}
+                    animate={{ backgroundPosition: ['0% center','200% center','0% center'] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
                   >
-                    Your Green AI Assistant
+                    GAIA
                   </motion.span>
-                </motion.h1>
+                  <Image
+                    src="/assets/images/dog-wink.png"
+                    alt="Winking dog"
+                    width={95}
+                    height={95}
+                    className="rounded-full"
+                    style={{ overflow: 'visible' }}
+                    priority
+                  />
+                </div>
+
+                {/* now centered under GAIA only */}
+                <motion.span
+                  className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300 text-center"
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 1 }}
+                >
+                  Your Green AI Assistant
+                </motion.span>
+              </div>
+            </motion.h1>
+
 
               <motion.p 
                 className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
@@ -1267,17 +1270,17 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
               >
-                Responsible <motion.strong 
+                <motion.span
                   className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
                   whileHover={{ scale: 1.05 }}
                 >
-                  Artificial Intelligence
-                </motion.strong> for a <motion.strong 
+                  Train AI models
+                </motion.span> responsibly for a <motion.span
                   className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500"
                   whileHover={{ scale: 1.05 }}
                 >
                   Sustainable Planet
-                </motion.strong> 🌍
+                </motion.span> 🌍
               </motion.p>
               
               <motion.p 
@@ -1286,7 +1289,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
               >
-                Revolutionizing environmental decision-making real-time insights and AI-driven forecasts
+                Gaia helps you make the most informed sustainable decision when training AI models
               </motion.p>
               
               <motion.div 
