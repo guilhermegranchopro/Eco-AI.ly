@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import CarbonIntensityCard from '@/app/components/cards/CarbonIntensityCard';
 
 
 // ===============================
@@ -1265,7 +1266,7 @@ export default function Home() {
 
 
               <motion.p 
-                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
+                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
@@ -1284,7 +1285,7 @@ export default function Home() {
               </motion.p>
               
               <motion.p 
-                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-12 leading-relaxed"
+                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-12"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
@@ -1352,6 +1353,13 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </motion.div>
+
+        <AnimatedSection id="carbon-intensity" className="py-20">
+        <div className="flex justify-center">
+          <CarbonIntensityCard />
+        </div>
+      </AnimatedSection>
+
 
         <AnimatedDivider />
 
