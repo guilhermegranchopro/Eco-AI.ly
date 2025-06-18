@@ -31,94 +31,121 @@ const ScoreWeightCard = ({
   pricePercent,
   carbonPercent,
 }: {
-  pricePercent: number
-  carbonPercent: number
+  pricePercent: number;
+  carbonPercent: number;
 }) => {
-  let infoText: React.ReactNode
+  let infoText: React.ReactNode;
+
   if (pricePercent === 100) {
     infoText = (
       <span>
         You value the price{' '}
-        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+        <span className="font-semibold text-blue-400 dark:text-indigo-300">
           100%
         </span>
       </span>
-    )
+    );
   } else if (carbonPercent === 100) {
     infoText = (
       <span>
         You value the carbon intensity{' '}
-        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+        <span className="font-semibold text-green-400 dark:text-indigo-300">
           100%
         </span>
       </span>
-    )
-  } else if (carbonPercent > pricePercent) {
-    const factor = (carbonPercent / pricePercent).toFixed(2)
-    infoText = (
-      <span>
-        You value the carbon intensity{' '}
-        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
-          {factor}×
-        </span>{' '}
-        more than price
-      </span>
-    )
+    );
   } else {
-    const factor = (pricePercent / carbonPercent).toFixed(2)
-    infoText = (
-      <span>
-        You value the price{' '}
-        <span className="font-semibold text-indigo-800 dark:text-indigo-300">
-          {factor}×
-        </span>{' '}
-        more than carbon
-      </span>
-    )
+    const factor = (carbonPercent / pricePercent).toFixed(2);
+    const factorValue = parseFloat(factor);
+
+    const colorClass =
+      factorValue > 1
+        ? 'text-green-400'
+        : factorValue < 1
+        ? 'text-blue-400'
+        : 'text-gray-400';
+
+    if (factorValue === 1) {
+      infoText = (
+        <span>
+          You value price and carbon intensity equally{' '}
+          <span className={`font-semibold ${colorClass}`}>1×</span>
+        </span>
+      );
+    } else if (factorValue > 1) {
+      infoText = (
+        <span>
+          You value the carbon intensity{' '}
+          <span className={`font-semibold ${colorClass}`}>{factor}×</span>{' '}
+          more than price
+        </span>
+      );
+    } else {
+      const inverseFactor = (pricePercent / carbonPercent).toFixed(2);
+      infoText = (
+        <span>
+          You value the price{' '}
+          <span className="font-semibold text-blue-400">{inverseFactor}×</span>{' '}
+          more than carbon
+        </span>
+      );
+    }
   }
 
+
   return (
-    <div className="w-full max-w-md
-                    bg-gradient-to-br from-indigo-50 via-white to-green-50
-                    dark:from-gray-800 dark:via-gray-900 dark:to-gray-800
-                    border border-indigo-200 dark:border-gray-700
-                    rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
-      <div className="flex items-center justify-center space-x-2 mb-4">
-        <Info className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
-        <h2 className="text-sm uppercase tracking-wide text-indigo-600 dark:text-indigo-300 font-semibold">
-          Move slider to balance price vs carbon
-        </h2>
-      </div>
-      <p className="mb-6 text-center text-gray-700 dark:text-gray-200">
-        {infoText}
-      </p>
-      <div className="flex justify-center items-center space-x-16">
-        <div className="flex flex-col items-center space-y-0 -ml-3">
-          <div className="flex items-center space-x-2">
-            <DollarSign className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            <span className="text-2xl font-bold text-blue-800 dark:text-blue-300">
-              {pricePercent}%
-            </span>
-          </div>
-          <span className="text-sm text-gray-600 dark:text-gray-400 uppercase">
-            Price
-          </span>
+    <div className="
+      w-full max-w-md mx-auto p-1 rounded-3xl shadow-2xl
+      bg-gradient-to-br from-cyan-500 via-purple-700 to-pink-600
+    ">
+      <div className="
+        rounded-[calc(1.5rem-4px)] bg-gray-900/90 backdrop-blur-md
+        p-6 border border-gray-700
+      ">
+        {/* Header */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Info className="w-5 h-5 text-purple-300" />
+          <h2 className="text-xs sm:text-sm tracking-wider uppercase font-medium text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+            Price vs Carbon Tradeoff
+          </h2>
         </div>
-        <div className="flex flex-col items-center space-y-0">
-          <div className="flex items-center space-x-2">
-            <Leaf className="w-6 h-6 text-green-600 dark:text-green-400" />
-            <span className="text-2xl font-bold text-green-800 dark:text-green-300">
-              {carbonPercent}%
+
+        {/* Body Text */}
+        <p className="mb-6 text-center text-gray-300 text-sm sm:text-base leading-relaxed">
+          {infoText}
+        </p>
+
+        {/* Price vs Carbon Row */}
+        <div className="flex justify-center items-center space-x-10">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center space-x-2">
+              <DollarSign className="w-5 h-5 text-blue-400" />
+              <span className="text-3xl font-bold text-blue-200 drop-shadow-sm">
+                {pricePercent}%
+              </span>
+            </div>
+            <span className="text-xs text-gray-400 uppercase mt-1 tracking-wide">
+              Price
             </span>
           </div>
-          <span className="text-sm text-gray-600 dark:text-gray-400 uppercase">
-            Carbon
-          </span>
+
+          <div className="flex flex-col items-center">
+            <div className="flex items-center space-x-2">
+              <Leaf className="w-5 h-5 text-green-400" />
+              <span className="text-3xl font-bold text-green-200 drop-shadow-sm">
+                {carbonPercent}%
+              </span>
+            </div>
+            <span className="text-xs text-gray-400 uppercase mt-1 tracking-wide">
+              Carbon
+            </span>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
+
 
 export default function GPUComparisonTable({ gpus }: { gpus: GPU[] }) {
   const carbonWeight = 1

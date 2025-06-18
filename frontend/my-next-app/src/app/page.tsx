@@ -327,7 +327,7 @@ const PredictiveAnalyticsIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4 text-transparent"
+      className="w-16 h-16 mb-2 text-transparent"
       whileHover={{ scale: 1.2, rotate: 5 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -376,7 +376,7 @@ const DataVisualizationIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, y: -5 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -426,7 +426,7 @@ const AIPoweredInsightsIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, rotate: 10 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -495,7 +495,7 @@ const BackendTechIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, x: -3 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -544,7 +544,7 @@ const FrontendTechIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, y: -3 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -1166,7 +1166,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-        <main className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-8 sm:mt-12">
+        <main className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-4 sm:mt-6">
           {/* Revolutionary Hero Section */}
           <motion.div 
             className="relative text-center my-16 sm:my-24 p-12 sm:p-16 rounded-[3rem] w-full overflow-visible"
@@ -1225,7 +1225,7 @@ export default function Home() {
             >
 
             <motion.h1 
-              className="overflow-visible text-5xl sm:text-6xl lg:text-8xl font-black mb-8 relative z-10 leading-tight flex flex-col items-center"
+              className="overflow-visible text-5xl sm:text-6xl lg:text-8xl font-black mb-4 relative z-10 leading-tight flex flex-col items-center"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
@@ -1254,7 +1254,7 @@ export default function Home() {
 
                 {/* now centered under GAIA only */}
                 <motion.span
-                  className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300 text-center"
+                  className="block text-2xl sm:text-3xl lg:text-4xl mt-2 font-light text-gray-300 text-center"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 1 }}
@@ -1266,7 +1266,7 @@ export default function Home() {
 
 
               <motion.p 
-                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto"
+                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-3 max-w-4xl mx-auto"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
@@ -1285,7 +1285,7 @@ export default function Home() {
               </motion.p>
               
               <motion.p 
-                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-12"
+                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-3"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
@@ -1354,7 +1354,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-        <AnimatedSection id="carbon-intensity" className="py-20">
+        <AnimatedSection id="carbon-intensity" className="py-0">
         <div className="flex justify-center">
           <CarbonIntensityCard />
         </div>
@@ -1365,7 +1365,7 @@ export default function Home() {
 
         {/* Key Features Section - Enhanced */}
         <AnimatedSection id="features" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-300 mb-6 sm:mb-8 text-center">
             ✨ Our Core Capabilities
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -1380,7 +1380,7 @@ export default function Home() {
                 <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {feature.icon}
                 </motion.div>
-                <h3 className="text-2xl font-semibold text-green-400 mb-4">{feature.title}</h3>
+                <h3 className="text-2xl font-semibold text-green-400 mb-2">{feature.title}</h3>
                 <ul className="list-none space-y-2 text-gray-400 text-sm">
                   {feature.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
@@ -1402,18 +1402,18 @@ export default function Home() {
 
           {/* Centered content block */}
           <div className="relative z-10 text-center">
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 text-green-100">
+            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-3 text-green-100">
               Dive Into Our Platform
             </motion.h2>
-            <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-12 max-w-2xl mx-auto text-green-200">
+            <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-6 max-w-2xl mx-auto text-green-200">
               Experience firsthand how Gaia transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
             </motion.p>
 
             <motion.div variants={fadeInUp}>
-              <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-green-100">
+              <h3 className="text-2xl sm:text-3xl font-semibold mb-2 text-green-100">
                 🇵🇹 Portugal Data Dashboard
               </h3>
-              <ul className="list-disc list-inside inline-block text-left space-y-2 mb-10 text-green-200">
+              <ul className="list-disc list-inside inline-block text-left space-y-2 mb-5 text-green-200">
                 <li>Comprehensive energy consumption metrics</li>
                 <li>Real-time carbon intensity updates</li>
                 <li>Historical trend analysis & AI predictions</li>
@@ -1443,7 +1443,7 @@ export default function Home() {
 
         {/* Technology Stack Section - Enhanced */}
         <AnimatedSection id="tech-stack" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-6 sm:mb-8 text-center">
             ⚙️ Built With Cutting-Edge Technology
           </motion.h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -1457,7 +1457,7 @@ export default function Home() {
                  <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {tech.icon}
                 </motion.div>
-                <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-4">{tech.title}</h3>
+                <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-2">{tech.title}</h3>
                 <ul className="list-none space-y-2 text-gray-600 dark:text-gray-400 text-sm">
                   {tech.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
@@ -1486,7 +1486,7 @@ export default function Home() {
             animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           />
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10 text-gray-700 dark:text-white">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 relative z-10 text-gray-700 dark:text-white">
             Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500">Greener Future</span>?
           </motion.h2>
             <motion.p
@@ -1498,7 +1498,7 @@ export default function Home() {
 
             <motion.p
               variants={fadeInUp}
-              className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-10 text-center relative z-10"
+              className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-5 text-center relative z-10"
             >
               Our inbox is open and the planet is waiting
             </motion.p>
@@ -1515,7 +1515,7 @@ export default function Home() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative w-full py-12 text-center text-gray-300 dark:text-gray-200 border-t border-gray-200/60 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-3xl overflow-hidden"
+        className="relative w-full py-12 text-center text-gray-300 dark:text-gray-200 border-t border-gray-200/60 dark:border-gray-700/50 mt-8 md:mt-12 rounded-t-3xl overflow-hidden"
         style={{
           background: "linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.9) 30%, rgba(15,23,42,0.95) 70%, rgba(0,0,0,0.98) 100%)",
           backdropFilter: "blur(20px)",
@@ -1571,7 +1571,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-6"
+            className="mb-3"
           >
             <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-2 drop-shadow-lg">
               GAIA
@@ -1583,7 +1583,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex justify-center space-x-8 mb-6"
+            className="flex justify-center space-x-8 mb-3"
           >
             {[
               { href: "https://github.com/guilhermegranchopro/Eco-AI.ly", icon: GitHubIcon, label: "GitHub" },
