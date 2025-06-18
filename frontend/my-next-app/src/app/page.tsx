@@ -321,24 +321,23 @@ FloatingOrb.displayName = 'FloatingOrb';
 // ENHANCED SVG ICONS WITH LIQUID ANIMATIONS
 // ===============================
 const PredictiveAnalyticsIcon = () => (
-  <motion.div className="relative">
+  <motion.div className="relative w-16 h-16 mb-2">
     <motion.svg
-      xmlns="http://www.w3.org/2000/svg" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      strokeWidth={1.5} 
-      stroke="currentColor" 
-      className="w-16 h-16 mb-2 text-transparent"
-      whileHover={{ scale: 1.2, rotate: 5 }}
-      animate={{ 
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="url(#gradientPredictive)"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
+      animate={{
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
       }}
-      transition={{ 
-        filter: { duration: 8, repeat: Infinity, ease: "linear" },
-        hover: { type: "spring", stiffness: 400 }
+      transition={{
+        filter: { duration: 10, repeat: Infinity, ease: "linear" },
       }}
       style={{
-        stroke: "url(#gradientPredictive)",
         filter: "drop-shadow(0 0 20px rgba(34, 197, 94, 0.5))",
       }}
     >
@@ -349,23 +348,14 @@ const PredictiveAnalyticsIcon = () => (
           <stop offset="100%" stopColor="#8b5cf6" />
         </linearGradient>
       </defs>
-      <motion.path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        d="M3.75 13.5l3.045-3.045m0 0A18.75 18.75 0 0121.5 12M6.795 10.455A18.75 18.75 0 002.5 12m4.295-1.545l2.016 2.016m-2.016-2.016L6.75 8.25m2.016 4.268L6.75 10.455m1.06 6.273l2.016-2.016m-2.016 2.016L6.75 16.75m2.016-4.268L6.75 14.732m9-3.232h.008v.008H15.75V11.5m0 2.25h.008v.008H15.75V13.75m0 2.25h.008v.008H15.75V16m0 2.25h.008v.008H15.75V18.25M12 11.5h.008v.008H12V11.5m0 2.25h.008v.008H12V13.75m0 2.25h.008v.008H12V16m0 2.25h.008v.008H12V18.25m-3.75-6.75h.008v.008H8.25V11.5m0 2.25h.008v.008H8.25V13.75m0 2.25h.008v.008H8.25V16m0 2.25h.008v.008H8.25V18.25M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 2, ease: "easeInOut" }}
-      />
+
+      {/* Chart grid */}
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="url(#gradientPredictive)" />
+      {/* Predictive upward trend */}
+      <polyline points="7 14 10 11 13 13 17 9" stroke="url(#gradientPredictive)" fill="none" />
+      {/* Forecasting arrow */}
+      <path d="M17 9l-1 3" stroke="url(#gradientPredictive)" />
     </motion.svg>
-    <motion.div
-      className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-cyan-400/20 filter blur-xl"
-      animate={{
-        scale: [1, 1.3, 1],
-        opacity: [0.3, 0.6, 0.3],
-      }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-    />
   </motion.div>
 );
 
@@ -420,24 +410,21 @@ const DataVisualizationIcon = () => (
 );
 
 const AIPoweredInsightsIcon = () => (
-  <motion.div className="relative">
-    <motion.svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      strokeWidth={1.5} 
-      stroke="currentColor" 
-      className="w-16 h-16 mb-2"
-      whileHover={{ scale: 1.2, rotate: 10 }}
-      animate={{ 
-        filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
-      }}
-      transition={{ 
-        filter: { duration: 5, repeat: Infinity, ease: "linear" },
-        hover: { type: "spring", stiffness: 400 }
-      }}
+  <motion.div
+    className="relative w-16 h-16 mb-2"
+    animate={{ filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"] }}
+    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="url(#gradientAI)"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
       style={{
-        stroke: "url(#gradientAI)",
         filter: "drop-shadow(0 0 25px rgba(168, 85, 247, 0.6))",
       }}
     >
@@ -448,45 +435,13 @@ const AIPoweredInsightsIcon = () => (
           <stop offset="100%" stopColor="#f59e0b" />
         </linearGradient>
       </defs>
-      <motion.path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M12 3v1.5M12 21v-1.5M12 8.25v7.5M15.75 3v1.5M15.75 21v-1.5M19.5 8.25H12M19.5 15.75H12"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 2.5, ease: "easeInOut", delay: 1 }}
-      />
-      <motion.circle
-        cx="12"
-        cy="12"
-        r="3"
-        fill="none"
-        stroke="url(#gradientAI)"
-        strokeWidth="2"
-        initial={{ scale: 0 }}
-        animate={{ 
-          scale: [0, 1.2, 1],
-          opacity: [0, 1, 0.8],
-        }}
-        transition={{ 
-          duration: 3, 
-          repeat: Infinity, 
-          ease: "easeInOut",
-          delay: 1.5 
-        }}
-      />
-    </motion.svg>
-    <motion.div
-      className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/30 to-pink-400/30 filter blur-xl"
-      animate={{
-        scale: [1, 1.5, 1],
-        opacity: [0.3, 0.7, 0.3],
-        rotate: [0, -180, 0],
-      }}
-      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-    />
+
+      {/* Funnel shape to symbolize data integration */}
+      <path d="M3 4h18l-6.5 7.5v5l-5 3v-8.1L3 4z" />
+    </svg>
   </motion.div>
 );
+
 
 const BackendTechIcon = () => (
   <motion.div className="relative">
@@ -1303,13 +1258,13 @@ export default function Home() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
                     href="/dashboard/portugal" 
-                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-8 py-4 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
                   >
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
                       transition={{ duration: 0.5 }}
                     />
-                    <span className="relative z-3 flex items-center">
+                    <span className="relative z-1 flex items-center">
                       When to train
                       <motion.svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -1329,13 +1284,13 @@ export default function Home() {
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
                     href="/find-gpu" 
-                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-8 py-4 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
                   >
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
                       transition={{ duration: 0.5 }}
                     />
-                    <span className="relative z-3 flex items-center">
+                    <span className="relative z-1 flex items-center">
                       Find best GPU
                       <motion.svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -1367,18 +1322,18 @@ export default function Home() {
         {/* Key Features Section - Enhanced */}
         <AnimatedSection id="features" className="py-16 md:py-24">
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-300 mb-6 sm:mb-8 text-center">
-            ✨ Our Core Capabilities
+            What makes Gaia special?
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[ { icon: <PredictiveAnalyticsIcon />, title: "Predictive Analytics", items: ["Real-time energy forecasts", "Environmental impact predictions", "Trend analysis & pattern recognition"] },
-              { icon: <DataVisualizationIcon />, title: "Data Visualization", items: ["Interactive dashboards", "Dynamic charts & graphs", "Customizable data views"] },
-              { icon: <AIPoweredInsightsIcon />, title: "AI-Powered Insights", items: ["Advanced machine learning models", "Actionable pattern recognition", "Automated sustainability reporting"] }
+            {[ { icon: <PredictiveAnalyticsIcon />, title: "Predictive Analytics", items: ["Energy and carbon intensity prediction", "Actionable insights: schedule training"] },
+              { icon: <DataVisualizationIcon />, title: "Data Visualization", items: ["Full region energy power breakdown", "Interactive dashboards and GPU table"] },
+              { icon: <AIPoweredInsightsIcon />, title: "Data Engine", items: ["Data pre-processing from APIs", "Actionable relevant data presented"] }
             ].map((feature) => (
               <InteractiveCard 
                 key={feature.title} 
                 className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-md bg-gray-800/70 backdrop-blur-sm border border-gray-700/50 hover:border-green-500/30" // Updated backgrounds and borders
               >
-                <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
+                <motion.div className="flex justify-center items-center mb-4">
                   {feature.icon}
                 </motion.div>
                 <h3 className="text-2xl font-semibold text-green-400 mb-2">{feature.title}</h3>
@@ -1409,48 +1364,39 @@ export default function Home() {
           transition={{ duration: 50, repeat: Infinity, ease: "linear" }} 
         />
 
-        {/* Glowing gradient border wrapper */}
-        <div className="relative w-full max-w-5xl mx-auto">
-          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-50 blur-lg animate-pulse z-0" />
+    {/* Glowing gradient border wrapper */}
+    <div className="relative w-full max-w-5xl mx-auto">
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-50 blur-lg animate-pulse z-0" />
 
-          {/* Centered content block */}
-          <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl">
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-3 text-green-100">
-              Dive Into Our Platform
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-6 max-w-2xl mx-auto text-green-200">
-              Experience firsthand how Gaia transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
-            </motion.p>
+      {/* Centered content block */}
+      <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl">
+        <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-3 text-green-100">
+          Predictive Analytics
+        </motion.h2>
+        <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-6 max-w-2xl mx-auto text-gray-400">
+          Gaia uses AI to predict energy consumption and carbon intensity of your local energy grid, suggesting when to train your models
+        </motion.p>
 
-            <motion.div variants={fadeInUp}>
-              <h3 className="text-2xl sm:text-3xl font-semibold mb-2 text-green-100">
-                🇵🇹 Portugal Data Dashboard
-              </h3>
-              <ul className="list-disc list-inside inline-block text-left space-y-2 mb-5 text-green-200">
-                <li>Comprehensive energy consumption metrics</li>
-                <li>Real-time carbon intensity updates</li>
-                <li>Historical trend analysis & AI predictions</li>
-                <li>Actionable insights for energy arbitrage</li>
-              </ul>
+        <motion.div variants={fadeInUp} className="mb-6">
+          <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-green-100">
+            🇵🇹 Portugal Data Dashboard
+          </h3>
+          <Link href="/dashboard/portugal" passHref>
+            <p className="text-green-200 text-lg mb-2 cursor-pointer hover:underline transition">
+              When to train my models in Portugal?
+            </p>
+          </Link>
+          <p className="text-gray-400 text-lg mb-4">
+            Promoting environmental awareness with full power breakdown
+          </p>
 
-              {/* Centered and animated button */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="flex justify-center"
-              >
-                <Link
-                  href="/dashboard/portugal"
-                  className="group inline-flex items-center justify-center bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-600 hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-500"
-                >
-                  View Live Dashboard
-                  <ArrowRightIcon/>
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
+        <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+          More predictive dashboards for other countries coming soon...
+        </p>
+        </motion.div>
+      </div>
+    </div>
+
       </AnimatedSection>
 
         <AnimatedDivider />

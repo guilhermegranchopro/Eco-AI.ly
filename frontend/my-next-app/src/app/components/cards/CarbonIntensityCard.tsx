@@ -9,7 +9,7 @@ const CarbonIntensityCard = () => {
       <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-50 blur-lg animate-pulse z-0" />
 
       {/* Actual card */}
-      <div className="relative z-10 p-12 bg-gray-900 border border-gray-700 rounded-3xl shadow-xl">
+      <div className="relative z-0 p-14 bg-gray-900 border border-gray-700 rounded-3xl shadow-xl">
         <h3 className="text-4xl font-bold text-green-300 text-center mb-6">
           Carbon Intensity
         </h3>
@@ -26,12 +26,12 @@ const CarbonIntensityCard = () => {
         </p>
 
         <p className="text-green-300 text-center mb-4 font-medium">
-          Understand and reduce your emissions when training AI
+          Gaia monitors carbon intensity to inform you how to reduce your impact
         </p>
 
-        <ul className="list-disc pl-8 text-gray-300 text-base space-y-2 max-w-xl mx-auto">
+        <ul className="list-disc pl-8 text-gray-300 text-base space-y-2 mx-auto">
           <li>
-            <strong>Training locally?</strong>{' '}
+            <strong>Training models locally?</strong>{' '}
             Use the{' '}
             <Link href="/dashboard" className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 hover:underline">
               Dashboard
@@ -39,7 +39,7 @@ const CarbonIntensityCard = () => {
             to find the best time to train.
           </li>
           <li>
-            <strong>Training on the cloud?</strong>{' '}
+            <strong>Training models on cloud?</strong>{' '}
             <Link href="/find-gpu" className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 hover:underline">
               GPU Finder
             </Link>{' '}
