@@ -1,7 +1,7 @@
-# Eco AI.ly 🌱
+# GAIA: Your Green AI Assistant
 
 <div align="center">
-  <img src="branding/eco_ai.ly/Captura de ecrã 2025-01-22 105858.png" alt="Eco AI.ly Logo" width="800"/>
+  <img src="branding/gaia/Captura de ecrã 2025-01-22 105858.png" alt="Eco AI.ly Logo" width="800"/>
 </div>
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
@@ -22,10 +22,7 @@
 
 ## 🌟 Overview
 
-**Eco AI.ly** is a cutting-edge environmental technology startup that revolutionizes sustainability monitoring through artificial intelligence. Our comprehensive platform combines state-of-the-art machine learning models, real-time data analytics, and intuitive user interfaces to deliver actionable environmental insights.
-
-### 🎯 Mission
-To democratize environmental data and empower decision-makers worldwide with AI-driven insights that drive sustainable practices and environmental responsibility.
+Introducing **Gaia** your Green AI Assistant and loyal companion. This plataform aims to assist any developer or company in reducing the environmental impact when training AI models. It was co-founded by Duarte Alexandrino and Guilherme Grancho, two Imperial College London students.
 
 ### 🔬 What We Do
 - **Real-time Environmental Monitoring**: Live tracking of carbon intensity, renewable energy production, and power grid analytics
@@ -505,8 +502,7 @@ Eco-AI.ly/
 │       └── renewable_percentage/ # Notebooks for renewable percentage analysis/modeling
 │           └── Live_Predictions_LSTM_Renewable_Percentage.ipynb
 ├── branding/                # Branding assets (logos, color palettes, images)
-│   ├── carbon_sensei/       # Assets for Carbon Sensei sub-brand (if applicable)
-│   └── eco_ai.ly/           # Main Eco AI.ly logos and visual assets
+│   └── gaia/           # Main Eco AI.ly logos and visual assets
 ├── frontend/                # Frontend applications
 │   ├── next/                # Next.js frontend (placeholder or future development)
 │   │   └── main.py          # Example file
