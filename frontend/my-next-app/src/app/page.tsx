@@ -1347,26 +1347,11 @@ export default function Home() {
 
         <AnimatedDivider />
 
-      {/* Explore Our Platform Section - Enhanced */}
-      <AnimatedSection 
-        id="platform" 
-        className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-900/50 backdrop-blur-sm border border-gray-700/30 rounded-3xl relative overflow-hidden"
-      >
-        {/* Decorative elements */}
-        <motion.div 
-          className="absolute -top-10 -left-10 w-48 h-48 border-4 border-green-500/20 rounded-full opacity-30" 
-          animate={{ rotate: 360 }} 
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }} 
-        />
-        <motion.div 
-          className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-green-500/10 rounded-xl opacity-20" 
-          animate={{ rotate: -360 }} 
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }} 
-        />
-
+      
     {/* Glowing gradient border wrapper */}
-    <div className="relative w-full max-w-5xl mx-auto">
-      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-50 blur-lg animate-pulse z-0" />
+    <section className="px-6 sm:px-8 md:px-12 lg:px-16 py-16 md:py-24">
+    <div className="relative w-full max-w-5xl mx-auto isolate">
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-30 blur-md animate-pulse" />
 
       {/* Centered content block */}
       <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl">
@@ -1378,11 +1363,11 @@ export default function Home() {
         </motion.p>
 
         <motion.div variants={fadeInUp} className="mb-6">
-          <h3 className="text-2xl sm:text-3xl font-semibold mb-4 text-green-100">
+          <h4 className="text-2xl font-semibold mb-4 text-green-100">
             🇵🇹 Portugal Data Dashboard
-          </h3>
+          </h4>
           <Link href="/dashboard/portugal" passHref>
-            <p className="text-green-200 text-lg mb-2 cursor-pointer hover:underline transition">
+            <p className="text-green-200 text-lg mb-2 cursor-pointer transition">
               When to train my models in Portugal?
             </p>
           </Link>
@@ -1390,15 +1375,70 @@ export default function Home() {
             Promoting environmental awareness with full power breakdown
           </p>
 
-        <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
-          More predictive dashboards for other countries coming soon...
-        </p>
+      <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+        More predictive dashboards for other countries coming soon...
+      </p>
         </motion.div>
       </div>
     </div>
+    </section>
 
-      </AnimatedSection>
+  {/* Glowing gradient border wrapper */}
+  <section className="px-6 sm:px-8 md:px-12 lg:px-16 py-16 md:py-24">
+    <div className="relative w-full max-w-5xl mx-auto isolate">
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-30 blur-md animate-pulse" />
 
+      {/* Centered content block */}
+      <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl space-y-6">
+        {/* Main Title */}
+        <motion.h2
+          variants={fadeInUp}
+          className="text-3xl sm:text-4xl font-extrabold text-green-100 mb-4"
+        >
+          Data Visualization
+        </motion.h2>
+
+        {/* Subtitle: Local */}
+        <div className="space-y-1">
+          <p className="text-lg sm:text-xl font-semibold text-green-200 mb-3">
+            Training Locally?
+          </p>
+
+          <Link href="/dashboard/portugal" passHref>
+            <p className="text-gray-300">
+              View the full power breakdown of your local energy grid
+            </p>
+          </Link>
+
+        </div>
+
+        {/* Subtitle: Cloud */}
+        <div className="space-y-1">
+          <p className="text-lg sm:text-xl font-semibold text-green-200 mb-3">
+            Training on the Cloud?
+          </p>
+          <Link href="/find-gpu" passHref>
+          <p className="text-gray-300 cursor-pointer transition">
+          Gaia presents the first open-source GPU Finder that considers environmental impact
+          </p>
+          </Link>
+        </div>
+
+
+
+        {/* Footer Gradient Text */}
+        <motion.div variants={fadeInUp}>
+          <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+            More GPU options from new cloud providers coming soon...
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  </section>
+
+
+
+      {/* Explore Our Platform Section - Enhanced */}
         <AnimatedDivider />
 
         {/* Technology Stack Section - Enhanced */}
