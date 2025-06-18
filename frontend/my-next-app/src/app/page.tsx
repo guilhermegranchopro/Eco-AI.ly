@@ -213,7 +213,7 @@ const InteractiveEnergyWaves = React.memo(() => {
   }, [throttledMouseMove]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
       {/* Reduced reactive wave rings */}
       {Array.from({ length: 3 }, (_, i) => ( // Reduced from 5 to 3
         <motion.div
@@ -1395,7 +1395,7 @@ export default function Home() {
               Dive Into Our Platform
             </motion.h2>
             <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-12 max-w-2xl mx-auto text-green-200">
-              Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
+              Experience firsthand how Gaia transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
             </motion.p>
 
             <motion.div variants={fadeInUp}>
@@ -1421,7 +1421,7 @@ export default function Home() {
                   className="group inline-flex items-center justify-center bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-600 hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-500"
                 >
                   View Live Dashboard
-                  <ArrowRightIcon className="ml-2 transition-transform group-hover:translate-x-1" />
+                  <ArrowRightIcon/>
                 </Link>
               </motion.div>
             </motion.div>
@@ -1478,9 +1478,19 @@ export default function Home() {
           <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10 text-gray-700 dark:text-white">
             Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500">Greener Future</span>?
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-10 relative z-10">
-            Join us in leveraging AI for sustainability. Explore our solutions or get in touch to discuss how Eco AI.ly can help your organization achieve its environmental goals.
-          </motion.p>
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-2 text-center relative z-10"
+            >
+              Want to chat? Collaborate or pitch? Nerd out over AI or sustainability?
+            </motion.p>
+
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-10 text-center relative z-10"
+            >
+              Our inbox is open and the planet is waiting
+            </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
             <Link href="/contact" className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800">
               Contact Us
@@ -1553,9 +1563,9 @@ export default function Home() {
             className="mb-6"
           >
             <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-2 drop-shadow-lg">
-              Eco AI.ly
+              GAIA
             </h3>
-            <p className="text-lg font-medium text-gray-200">Innovating for a Greener Future 🌱</p>
+            <p className="text-lg font-medium text-gray-200"> Your Green AI Assistant</p>
           </motion.div>
           
           <motion.div
@@ -1595,7 +1605,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 1.3 }}
             className="border-t border-gray-600/40 dark:border-gray-500/40 pt-6"
           >
-            <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
+            <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} GAIA. All rights reserved.</p>
             <motion.p 
               className="text-xs mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
               animate={{
