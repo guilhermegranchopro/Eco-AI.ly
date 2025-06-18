@@ -1,7 +1,7 @@
 # GAIA: Your Green AI Assistant
 
 <div align="center">
-  <img src="branding/gaia/Captura de ecrã 2025-01-22 105858.png" alt="Eco AI.ly Logo" width="800"/>
+  <img src="branding/gaia/logo.png" alt="Gaia Logo" width="800"/>
 </div>
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
@@ -502,7 +502,7 @@ Eco-AI.ly/
 │       └── renewable_percentage/ # Notebooks for renewable percentage analysis/modeling
 │           └── Live_Predictions_LSTM_Renewable_Percentage.ipynb
 ├── branding/                # Branding assets (logos, color palettes, images)
-│   └── gaia/           # Main Eco AI.ly logos and visual assets
+│   └── gaia/           # Main gaia logos and visual assets
 ├── frontend/                # Frontend applications
 │   ├── next/                # Next.js frontend (placeholder or future development)
 │   │   └── main.py          # Example file
@@ -715,7 +715,7 @@ python scripts/retrain_models.py --data-path ./data --epochs 50
 
 ### 🧠 Model Architecture Overview
 
-Eco AI.ly leverages state-of-the-art LSTM (Long Short-Term Memory) neural networks to provide accurate environmental predictions. Our AI system processes 24-hour historical data windows to generate reliable forecasts for carbon intensity and renewable energy percentage.
+Gaia leverages state-of-the-art LSTM (Long Short-Term Memory) neural networks to provide accurate environmental predictions. Our AI system processes 24-hour historical data windows to generate reliable forecasts for carbon intensity and renewable energy percentage.
 
 ### 🌡️ Carbon Intensity Prediction Model
 
@@ -936,7 +936,7 @@ def predict_carbon_intensity(data):
 
 ## 🛠️ Development & Contributing
 
-Welcome to the Eco AI.ly development community! We're building the future of environmental monitoring through AI, and we'd love your contribution.
+We encourage any developer that as foud this project interesting to creates issues and pull requests! Helps us build the future of environmental monitoring of AI models.
 
 ### 🚀 Development Setup
 
@@ -992,46 +992,12 @@ cp frontend/my-next-app/.env.local.example frontend/my-next-app/.env.local
 cp backend/api/CI_RP/.env.example backend/api/CI_RP/.env
 ```
 
-### 🧪 Testing Framework
-
-#### 🔬 Running Tests
-```bash
-# Run all Python tests
-python -m pytest tests/ -v
-
-# Run tests with coverage
-python -m pytest --cov=backend tests/
-
-# Run specific test modules
-python -m pytest tests/test_api.py -v
-
-# Run Next.js tests
-cd frontend/my-next-app
-npm test
-
-# Run end-to-end tests
-npm run test:e2e
-```
 
 #### 📊 Test Coverage
 - **Backend API**: >85% code coverage required
 - **Frontend Components**: >80% coverage for critical paths
 - **Model Functions**: >90% coverage for ML pipelines
 - **Integration Tests**: Full workflow testing
-
-#### 🧪 Test Structure
-```bash
-tests/
-├── unit/               # Unit tests for individual functions
-│   ├── test_models.py  # ML model testing
-│   ├── test_api.py     # API endpoint testing
-│   └── test_utils.py   # Utility function testing
-├── integration/        # Integration tests
-│   ├── test_workflows.py
-│   └── test_api_integration.py
-├── fixtures/           # Test data and fixtures
-└── conftest.py         # Pytest configuration
-```
 
 ### 🎨 Code Style & Quality
 
@@ -1053,68 +1019,6 @@ mypy backend/
 cd frontend/my-next-app
 npm run lint
 npm run type-check
-```
-
-#### 📝 Code Style Guidelines
-
-**Python Code Style:**
-- **PEP 8** compliance with line length of 88 characters
-- **Type hints** required for all function signatures
-- **Docstrings** for all public functions and classes
-- **Black** formatting with **isort** for imports
-
-**TypeScript Code Style:**
-- **ESLint** configuration with Next.js recommended rules
-- **Prettier** for consistent formatting
-- **Strict TypeScript** configuration enabled
-- **Component naming**: PascalCase for React components
-
-**Example Python Function:**
-```python
-def predict_carbon_intensity(
-    historical_data: List[float], 
-    model_path: str
-) -> Dict[str, Union[float, int]]:
-    """
-    Predict carbon intensity using trained LSTM model.
-    
-    Args:
-        historical_data: List of 24 hourly carbon intensity values
-        model_path: Path to the trained model file
-        
-    Returns:
-        Dictionary containing prediction class and confidence score
-    """
-    # Implementation here
-    pass
-```
-
-### 🔄 Git Workflow & Branch Strategy
-
-#### 🌿 Branch Naming Convention
-```bash
-# Feature branches
-feature/carbon-intensity-model-v2
-feature/next-js-dashboard-enhancement
-
-# Bug fixes
-bugfix/api-response-formatting
-hotfix/critical-security-patch
-
-# Documentation updates
-docs/readme-enhancement
-docs/api-documentation-update
-```
-
-#### 📝 Commit Message Format
-```bash
-# Format: <type>(<scope>): <subject>
-
-feat(api): add carbon intensity prediction endpoint
-fix(streamlit): resolve dashboard loading issue
-docs(readme): update installation instructions
-test(models): add unit tests for LSTM prediction
-refactor(utils): improve data preprocessing pipeline
 ```
 
 #### 🔄 Pull Request Process
@@ -1279,7 +1183,7 @@ We recognize contributors through:
 
 ## 🚀 Deployment
 
-Eco AI.ly supports multiple deployment strategies, from local development to production cloud environments. Choose the deployment method that best fits your needs.
+Gaia supports multiple deployment strategies, from local development to production cloud environments. Choose the deployment method that best fits your needs.
 
 ### 🌐 Live Production Deployment
 
@@ -1579,91 +1483,11 @@ GET /health/dependencies    # External dependency status
 - ElectricityMaps API quota usage
 ```
 
-### 🔧 Troubleshooting Deployment
-
-#### 🐛 Common Issues
-
-**Port Conflicts:**
-```bash
-# Check port usage
-lsof -i :8080
-lsof -i :8501
-lsof -i :3000
-
-# Kill processes using ports
-kill -9 $(lsof -t -i :8080)
-```
-
-**Environment Variables:**
-```bash
-# Verify environment variables
-docker exec eco-ai-ly-api env | grep ELECTRICITY
-cat .env | grep API_KEY
-```
-
-**Model Loading Issues:**
-```bash
-# Check model files
-ls -la backend/api/CI_RP/models/
-python -c "import tensorflow as tf; print(tf.__version__)"
-```
-
-**Memory Issues:**
-```bash
-# Monitor resource usage
-docker stats
-htop
-free -h
-```
-
-#### 🔧 Debug Commands
-```bash
-# API Debug
-curl -X GET "http://localhost:8080/health"
-curl -X GET "http://localhost:8080/api/carbon-intensity"
-
-# Container Debug
-docker logs eco-ai-ly-api --follow
-docker exec -it eco-ai-ly-api bash
-
-# Network Debug
-docker network ls
-docker network inspect eco-ai-ly_default
-```
-
-### 📋 Deployment Checklist
-
-Before deploying to production:
-
-- [ ] **Environment Variables**: All secrets configured securely
-- [ ] **API Keys**: Valid ElectricityMaps API key with sufficient quota
-- [ ] **Model Files**: All required model files present and accessible
-- [ ] **Dependencies**: All requirements.txt and package.json updated
-- [ ] **Tests**: All unit and integration tests passing
-- [ ] **Security**: HTTPS enabled, CORS properly configured
-- [ ] **Monitoring**: Health checks and alerting configured
-- [ ] **Backup**: Database and model backups configured
-- [ ] **Documentation**: Deployment runbook updated
-- [ ] **Rollback Plan**: Rollback strategy documented and tested
-
-## 📄 License & Legal
-
-### 📋 License Information
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for complete details.
-
-**MIT License Summary:**
-- ✅ **Commercial Use**: Use in commercial projects
-- ✅ **Modification**: Modify and adapt the code
-- ✅ **Distribution**: Share and distribute freely
-- ✅ **Private Use**: Use in private projects
-- ❗ **License Notice**: Include license and copyright notice
-- ❗ **No Warranty**: Software provided "as is"
 
 ### 🔒 Data Privacy & Compliance
 
 #### 📊 Data Usage Policy
-- **No Personal Data Collection**: Eco AI.ly does not collect personal user information
+- **No Personal Data Collection**: Gaia does not collect personal user information
 - **Public Energy Data**: Uses publicly available energy grid data from ElectricityMaps
 - **API Data**: ElectricityMaps data subject to their terms of service
 - **Local Processing**: All AI predictions processed locally/server-side
@@ -1695,7 +1519,7 @@ All dependencies listed in `requirements.txt` and `package.json` files maintain 
 
 ### 🤝 Contributing Agreement
 
-By contributing to Eco AI.ly, you agree that:
+By contributing to Gaia, you agree that:
 - Your contributions are your original work or properly attributed
 - You have the right to submit your contributions under the MIT License
 - Your contributions will be licensed under the same MIT License
@@ -1790,7 +1614,7 @@ For business partnerships, licensing, or commercial support:
 - **Design Tools**: Figma, Adobe Creative Suite
 
 #### 🌱 Environmental Impact
-Eco AI.ly is committed to environmental responsibility:
+Gaia is committed to environmental responsibility:
 - **Carbon Neutral Hosting**: Using green hosting providers when possible
 - **Efficient Code**: Optimized algorithms to minimize computational resources
 - **Sustainable Development**: Remote-first development to reduce travel emissions
@@ -1807,11 +1631,5 @@ Eco AI.ly is committed to environmental responsibility:
 <img src="https://img.shields.io/badge/For%20the-🌍%20Planet-green?style=for-the-badge" alt="For the Planet"/>
 
 **"Technology is best when it brings people together for a better tomorrow."**
-
----
-
-**Eco AI.ly** | Revolutionizing Environmental Monitoring Through Artificial Intelligence
-
-*© 2025 Eco AI.ly. All rights reserved. | Built in Portugal 🇵🇹 with 🌱 sustainability in mind.*
 
 </div>
