@@ -1,7 +1,7 @@
 # GAIA: Your Green AI Assistant
 
 <div align="center">
-  <img src="branding/gaia/logo.png" alt="Gaia Logo" width="800"/>
+  <img src="branding/gaia/logo.png" alt="Gaia Logo" width="400"/>
 </div>
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
