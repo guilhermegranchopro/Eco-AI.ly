@@ -1,4 +1,4 @@
-# GAIA: Your Green AI Assistant by Eco AI.ly
+# **GAIA**: Your Green AI Assistant by **Eco AI.ly**
 
 <div align="center">
   <img src="branding/gaia/logo.png" alt="Gaia Logo" width="400"/>
