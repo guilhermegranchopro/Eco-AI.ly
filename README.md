@@ -4,6 +4,7 @@
   <img src="branding/gaia/logo.png" alt="Gaia Logo" width="400"/>
 </div>
 
+<div align="center">
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![Node.js Version](https://img.shields.io/badge/node.js-18%2B-green)](https://nodejs.org/)
@@ -20,6 +21,8 @@
 [![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
 [![API Status](https://img.shields.io/badge/API-Operational-success)](https://github.com/guilhermegranchopro/Eco-AI.ly)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF)](https://github.com/guilhermegranchopro/Eco-AI.ly/actions)
+
+</div>
 
 ## 🌟 Overview
 
