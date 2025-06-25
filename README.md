@@ -4,23 +4,22 @@
   <img src="branding/gaia/logo.png" alt="Gaia Logo" width="400"/>
 </div>
 
-<div align="center">
-  [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
-  [![Node.js Version](https://img.shields.io/badge/node.js-18%2B-green)](https://nodejs.org/)
-  [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-  [![Streamlit](https://img.shields.io/badge/Streamlit-1.16.0-FF4B4B)](https://streamlit.io/)
-  [![Next.js](https://img.shields.io/badge/Next.js-15.3.2-black)](https://nextjs.org/)
-  [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688)](https://fastapi.tiangolo.com/)
-  [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.18.0-FF6F00)](https://www.tensorflow.org/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC)](https://tailwindcss.com/)
-  [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED)](https://www.docker.com/)
-  [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-  [![Ruff](https://img.shields.io/badge/Ruff-0.11.5-blue)](https://github.com/astral-sh/ruff)
-  [![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
-  [![API Status](https://img.shields.io/badge/API-Operational-success)](https://github.com/guilhermegranchopro/Eco-AI.ly)
-  [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF)](https://github.com/guilhermegranchopro/Eco-AI.ly/actions)
-</div>
+
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![Node.js Version](https://img.shields.io/badge/node.js-18%2B-green)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.16.0-FF4B4B)](https://streamlit.io/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.3.2-black)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688)](https://fastapi.tiangolo.com/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.18.0-FF6F00)](https://www.tensorflow.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC)](https://tailwindcss.com/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED)](https://www.docker.com/)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/badge/Ruff-0.11.5-blue)](https://github.com/astral-sh/ruff)
+[![Deploy Status](https://img.shields.io/badge/deploy-live-success)](https://ecoaily.streamlit.app/)
+[![API Status](https://img.shields.io/badge/API-Operational-success)](https://github.com/guilhermegranchopro/Eco-AI.ly)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF)](https://github.com/guilhermegranchopro/Eco-AI.ly/actions)
 
 ## 🌟 Overview
 
