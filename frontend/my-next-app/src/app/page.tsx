@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useRef, ReactNode, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, animate, useScroll } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import CarbonIntensityCard from '@/app/components/cards/CarbonIntensityCard';
+import Footer from '@/app/components/Footer';
 
 
 // ===============================
@@ -213,7 +215,7 @@ const InteractiveEnergyWaves = React.memo(() => {
   }, [throttledMouseMove]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
       {/* Reduced reactive wave rings */}
       {Array.from({ length: 3 }, (_, i) => ( // Reduced from 5 to 3
         <motion.div
@@ -319,24 +321,23 @@ FloatingOrb.displayName = 'FloatingOrb';
 // ENHANCED SVG ICONS WITH LIQUID ANIMATIONS
 // ===============================
 const PredictiveAnalyticsIcon = () => (
-  <motion.div className="relative">
+  <motion.div className="relative w-16 h-16 mb-2">
     <motion.svg
-      xmlns="http://www.w3.org/2000/svg" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      strokeWidth={1.5} 
-      stroke="currentColor" 
-      className="w-16 h-16 mb-4 text-transparent"
-      whileHover={{ scale: 1.2, rotate: 5 }}
-      animate={{ 
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="url(#gradientPredictive)"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
+      animate={{
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
       }}
-      transition={{ 
-        filter: { duration: 8, repeat: Infinity, ease: "linear" },
-        hover: { type: "spring", stiffness: 400 }
+      transition={{
+        filter: { duration: 10, repeat: Infinity, ease: "linear" },
       }}
       style={{
-        stroke: "url(#gradientPredictive)",
         filter: "drop-shadow(0 0 20px rgba(34, 197, 94, 0.5))",
       }}
     >
@@ -347,23 +348,14 @@ const PredictiveAnalyticsIcon = () => (
           <stop offset="100%" stopColor="#8b5cf6" />
         </linearGradient>
       </defs>
-      <motion.path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        d="M3.75 13.5l3.045-3.045m0 0A18.75 18.75 0 0121.5 12M6.795 10.455A18.75 18.75 0 002.5 12m4.295-1.545l2.016 2.016m-2.016-2.016L6.75 8.25m2.016 4.268L6.75 10.455m1.06 6.273l2.016-2.016m-2.016 2.016L6.75 16.75m2.016-4.268L6.75 14.732m9-3.232h.008v.008H15.75V11.5m0 2.25h.008v.008H15.75V13.75m0 2.25h.008v.008H15.75V16m0 2.25h.008v.008H15.75V18.25M12 11.5h.008v.008H12V11.5m0 2.25h.008v.008H12V13.75m0 2.25h.008v.008H12V16m0 2.25h.008v.008H12V18.25m-3.75-6.75h.008v.008H8.25V11.5m0 2.25h.008v.008H8.25V13.75m0 2.25h.008v.008H8.25V16m0 2.25h.008v.008H8.25V18.25M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 2, ease: "easeInOut" }}
-      />
+
+      {/* Chart grid */}
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="url(#gradientPredictive)" />
+      {/* Predictive upward trend */}
+      <polyline points="7 14 10 11 13 13 17 9" stroke="url(#gradientPredictive)" fill="none" />
+      {/* Forecasting arrow */}
+      <path d="M17 9l-1 3" stroke="url(#gradientPredictive)" />
     </motion.svg>
-    <motion.div
-      className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-cyan-400/20 filter blur-xl"
-      animate={{
-        scale: [1, 1.3, 1],
-        opacity: [0.3, 0.6, 0.3],
-      }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-    />
   </motion.div>
 );
 
@@ -375,7 +367,7 @@ const DataVisualizationIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, y: -5 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -418,24 +410,21 @@ const DataVisualizationIcon = () => (
 );
 
 const AIPoweredInsightsIcon = () => (
-  <motion.div className="relative">
-    <motion.svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      strokeWidth={1.5} 
-      stroke="currentColor" 
-      className="w-16 h-16 mb-4"
-      whileHover={{ scale: 1.2, rotate: 10 }}
-      animate={{ 
-        filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
-      }}
-      transition={{ 
-        filter: { duration: 5, repeat: Infinity, ease: "linear" },
-        hover: { type: "spring", stiffness: 400 }
-      }}
+  <motion.div
+    className="relative w-16 h-16 mb-2"
+    animate={{ filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"] }}
+    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="url(#gradientAI)"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
       style={{
-        stroke: "url(#gradientAI)",
         filter: "drop-shadow(0 0 25px rgba(168, 85, 247, 0.6))",
       }}
     >
@@ -446,45 +435,13 @@ const AIPoweredInsightsIcon = () => (
           <stop offset="100%" stopColor="#f59e0b" />
         </linearGradient>
       </defs>
-      <motion.path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M12 3v1.5M12 21v-1.5M12 8.25v7.5M15.75 3v1.5M15.75 21v-1.5M19.5 8.25H12M19.5 15.75H12"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 2.5, ease: "easeInOut", delay: 1 }}
-      />
-      <motion.circle
-        cx="12"
-        cy="12"
-        r="3"
-        fill="none"
-        stroke="url(#gradientAI)"
-        strokeWidth="2"
-        initial={{ scale: 0 }}
-        animate={{ 
-          scale: [0, 1.2, 1],
-          opacity: [0, 1, 0.8],
-        }}
-        transition={{ 
-          duration: 3, 
-          repeat: Infinity, 
-          ease: "easeInOut",
-          delay: 1.5 
-        }}
-      />
-    </motion.svg>
-    <motion.div
-      className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/30 to-pink-400/30 filter blur-xl"
-      animate={{
-        scale: [1, 1.5, 1],
-        opacity: [0.3, 0.7, 0.3],
-        rotate: [0, -180, 0],
-      }}
-      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-    />
+
+      {/* Funnel shape to symbolize data integration */}
+      <path d="M3 4h18l-6.5 7.5v5l-5 3v-8.1L3 4z" />
+    </svg>
   </motion.div>
 );
+
 
 const BackendTechIcon = () => (
   <motion.div className="relative">
@@ -494,7 +451,7 @@ const BackendTechIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, x: -3 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -543,7 +500,7 @@ const FrontendTechIcon = () => (
       viewBox="0 0 24 24" 
       strokeWidth={1.5} 
       stroke="currentColor" 
-      className="w-16 h-16 mb-4"
+      className="w-16 h-16 mb-2"
       whileHover={{ scale: 1.2, y: -3 }}
       animate={{ 
         filter: ["hue-rotate(0deg)", "hue-rotate(360deg)", "hue-rotate(0deg)"],
@@ -835,33 +792,6 @@ const InteractiveCard = ({ children, className }: { children: ReactNode, classNa
   );
 };
 
-// Animated Number Component - REVISED and TYPED
-const AnimatedNumber = ({ value }: { value: number }) => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    if (inView) {
-      const animationControls = animate(0, value, {
-        duration: 2,
-        ease: "easeOut",
-        onUpdate: (latest) => {
-          setDisplayValue(Math.round(latest));
-        }
-      });
-      return () => animationControls.stop(); // Cleanup animation
-    }
-  }, [inView, value]); // Effect dependencies
-
-  return (
-    <span ref={ref}> {/* Ref for useInView */}
-      {displayValue.toLocaleString()}
-    </span>
-  );
-};
-
-
-
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -923,47 +853,13 @@ export default function Home() {
   
   return (
     <>
-      {/* Revolutionary Reactive Effects */}
-      <ReactiveParticleSystem />
-      <LiquidEnergyFlows />
-      <InteractiveEnergyWaves />
-      
-      <motion.main
-        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-x-hidden antialiased"
-        initial="initial"
-        animate="animate"
-        variants={backgroundVariants}
-        style={{ y: backgroundY }}
-        transition={{
-          background: { 
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear",
-          }
-        }}
-      >
-        {/* Floating orbs */}
-        <FloatingOrb size={300} color="cyan" delay={0} x="10%" y="20%" />
-        <FloatingOrb size={250} color="purple" delay={5} x="85%" y="30%" />
-        <FloatingOrb size={200} color="green" delay={10} x="70%" y="80%" />
-        <FloatingOrb size={180} color="pink" delay={15} x="15%" y="70%" />
-
-        {/* SVG Definitions for gradients */}
-        <svg width="0" height="0" className="absolute">
-          <defs>
-            <linearGradient id="gradPulse" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor: 'rgba(56,189,248,0.7)', stopOpacity: 1}} />
-              <stop offset="100%" style={{stopColor: 'rgba(168,85,247,0.7)', stopOpacity: 1}} />
-            </linearGradient>
-          </defs>
-        </svg>
 
         {/* Revolutionary Header */}
         <motion.header
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="fixed top-0 z-50 w-full flex justify-center py-4 sm:py-6"
+          className="fixed top-0 z-50 w-full flex justify-center py-2 sm:py-3"
           style={{
             backdropFilter: "blur(20px)",
             background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
@@ -991,7 +887,7 @@ export default function Home() {
                   }}
                 />
                 <div className="relative z-10">
-                  <Image src="/assets/images/logo.png" alt="Eco AI.ly Logo" width={200} height={40} priority className="h-10 sm:h-12 w-auto"/>
+                  <Image src="/assets/images/logo.png" alt="Gaia Logo" width={200} height={40} priority className="h-10 sm:h-12 w-auto"/>
                 </div>
               </motion.div>
             </Link>
@@ -999,8 +895,7 @@ export default function Home() {
             <nav className="hidden md:flex items-center space-x-1">
               {[ 
                 { href: "#features", label: "Features" }, 
-                { href: "#platform", label: "Technology" }, 
-                { href: "#impact", label: "Our Impact" },
+                { href: "#platform", label: "Technology" },
               ].map(link => (
                 <motion.div 
                   key={link.href} 
@@ -1016,7 +911,7 @@ export default function Home() {
                     {link.label}
                   </Link>
                   <motion.div 
-                    className="absolute inset-0 bg-gradient-to-r from-green-500/80 to-emerald-500/80 rounded-xl backdrop-blur-sm"
+                    className="absolute inset-0 bg-gradient-to-r"
                     variants={{ 
                       initial: { opacity: 0, scale: 0.8 }, 
                       hover: { opacity: 1, scale: 1 }    
@@ -1037,7 +932,7 @@ export default function Home() {
               <motion.div className="ml-6" whileHover={{ scale: 1.05 }}>
                 <Link 
                   href="/dashboard/portugal" 
-                  className="relative group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl backdrop-blur-sm border border-white/20"
+                  className="relative group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
                 >
                   <span className="relative z-10">View Dashboard</span>
                   <motion.div
@@ -1087,6 +982,43 @@ export default function Home() {
           </div>
         </motion.header>
 
+      {/* Revolutionary Reactive Effects */}
+      <ReactiveParticleSystem />
+      <LiquidEnergyFlows />
+      <InteractiveEnergyWaves />
+      
+      <motion.main
+        className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-visible antialiased"
+        initial="initial"
+        animate="animate"
+        variants={backgroundVariants}
+        style={{ y: backgroundY }}
+        transition={{
+          background: { 
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          }
+        }}
+      >
+        {/* Floating orbs */}
+        <FloatingOrb size={300} color="cyan" delay={0} x="10%" y="20%" />
+        <FloatingOrb size={250} color="purple" delay={5} x="85%" y="30%" />
+        <FloatingOrb size={200} color="green" delay={10} x="70%" y="80%" />
+        <FloatingOrb size={180} color="pink" delay={15} x="15%" y="70%" />
+
+        {/* SVG Definitions for gradients */}
+        <svg width="0" height="0" className="absolute">
+          <defs>
+            <linearGradient id="gradPulse" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{stopColor: 'rgba(56,189,248,0.7)', stopOpacity: 1}} />
+              <stop offset="100%" style={{stopColor: 'rgba(168,85,247,0.7)', stopOpacity: 1}} />
+            </linearGradient>
+          </defs>
+        </svg>
+
+
+
       {/* Revolutionary Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -1095,7 +1027,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -50, scale: 0.95 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 z-40 min-h-screen rounded-b-3xl overflow-hidden"
+            className="md:hidden fixed inset-x-0 top-0 pt-20 p-6 z-40 min-h-screen rounded-b-3xl overflow-visible"
             style={{
               background: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.15) 100%)",
               backdropFilter: "blur(40px)",
@@ -1190,10 +1122,10 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-        <main className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-8 sm:mt-12">
+        <main className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center mt-4 sm:mt-6">
           {/* Revolutionary Hero Section */}
           <motion.div 
-            className="relative text-center my-16 sm:my-24 p-12 sm:p-16 rounded-[3rem] w-full overflow-hidden"
+            className="relative text-center my-16 sm:my-24 p-12 sm:p-16 rounded-[3rem] w-full overflow-visible"
             style={{ 
               y: heroY,
               background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%)",
@@ -1245,64 +1177,76 @@ export default function Home() {
             
             <motion.div 
               variants={fadeInUp} 
-              className="relative z-10"
+              className="relative z-10 overflow-visible"
             >
-              <motion.h1 
-                className="text-5xl sm:text-6xl lg:text-8xl font-black mb-8 relative z-10 leading-tight"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.7 }}
-              >
+
+            <motion.h1 
+              className="overflow-visible text-5xl sm:text-6xl lg:text-8xl font-black mb-4 relative z-10 leading-tight flex flex-col items-center"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+            >
+              {/* wrap GAIA in a centered block */}
+              <div className="relative flex flex-col items-center">
+                <div className="flex items-center space-x-3">
+                  <motion.span
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500"
+                    style={{ backgroundSize: '300% auto', filter: 'drop-shadow(0 0 30px rgba(34,197,94,0.3))' }}
+                    animate={{ backgroundPosition: ['0% center','200% center','0% center'] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                  >
+                    GAIA
+                  </motion.span>
+                  <Image
+                    src="/assets/images/dog-wink.png"
+                    alt="Winking dog"
+                    width={95}
+                    height={95}
+                    className="rounded-full"
+                    style={{ overflow: 'visible' }}
+                    priority
+                  />
+                </div>
+
+                {/* now centered under GAIA only */}
                 <motion.span
-                  className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500"
-                  style={{ 
-                    backgroundSize: "300% auto",
-                    filter: "drop-shadow(0 0 30px rgba(34,197,94,0.3))"
-                  }}
-                  animate={{ 
-                    backgroundPosition: ["0% center", "200% center", "0% center"],
-                  }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                >
-                  Eco AI.ly
-                </motion.span>
-                <motion.span
-                  className="block text-2xl sm:text-3xl lg:text-4xl mt-4 font-light text-gray-300"
+                  className="block text-2xl sm:text-3xl lg:text-4xl mt-2 font-light text-gray-300 text-center"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 1 }}
                 >
-                  The Future of Environmental Intelligence
+                  Your Green AI Assistant
                 </motion.span>
-              </motion.h1>
-              
+              </div>
+            </motion.h1>
+
+
               <motion.p 
-                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
+                className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-3 max-w-4xl mx-auto"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
               >
-                Harnessing <motion.strong 
+                <motion.span
                   className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
                   whileHover={{ scale: 1.05 }}
                 >
-                  Artificial Intelligence
-                </motion.strong> for a <motion.strong 
+                  Train AI models
+                </motion.span> responsibly for a <motion.span
                   className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500"
                   whileHover={{ scale: 1.05 }}
                 >
                   Sustainable Planet
-                </motion.strong> 🌍
+                </motion.span> 🌍
               </motion.p>
               
               <motion.p 
-                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-12 leading-relaxed"
+                className="text-lg sm:text-xl text-gray-400 max-w-4xl mx-auto mb-6"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.4 }}
               >
-                Revolutionizing environmental decision-making with cutting-edge predictive analytics, real-time insights, and AI-driven forecasts. 
-                Join us in building a greener, more resilient future.
+                Gaia helps you make the most informed sustainable decision when training AI models
               </motion.p>
               
               <motion.div 
@@ -1314,14 +1258,14 @@ export default function Home() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
                     href="/dashboard/portugal" 
-                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-8 py-4 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
                   >
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
                       transition={{ duration: 0.5 }}
                     />
-                    <span className="relative z-10 flex items-center">
-                      Explore Portugal Dashboard
+                    <span className="relative z-1 flex items-center">
+                      When to train
                       <motion.svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-6 w-6 ml-3" 
@@ -1336,40 +1280,63 @@ export default function Home() {
                     </span>
                   </Link>
                 </motion.div>
-                
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link 
-                    href="#features" 
-                    className="group relative inline-flex items-center justify-center bg-transparent border-2 border-gray-600 text-gray-300 px-10 py-5 rounded-2xl font-bold text-xl backdrop-blur-sm hover:border-cyan-400 transition-all duration-500"
-                    onClick={(e) => handleSmoothScroll(e, "#features")}
+                    href="/find-gpu" 
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-8 py-4 rounded-2xl font-bold text-xl shadow-2xl overflow-hidden transition-all duration-500"
                   >
-                    <span className="relative z-10">Learn More</span>
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100"
+                      transition={{ duration: 0.5 }}
+                    />
+                    <span className="relative z-1 flex items-center">
+                      Find best GPU
+                      <motion.svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-6 w-6 ml-3" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </motion.svg>
+                    </span>
                   </Link>
                 </motion.div>
               </motion.div>
             </motion.div>
           </motion.div>
 
+        <AnimatedSection id="carbon-intensity" className="py-0">
+        <div className="flex justify-center">
+          <CarbonIntensityCard />
+        </div>
+      </AnimatedSection>
+
+
         <AnimatedDivider />
 
         {/* Key Features Section - Enhanced */}
         <AnimatedSection id="features" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-300 mb-12 sm:mb-16 text-center">
-            ✨ Our Core Capabilities
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-300 mb-6 sm:mb-8 text-center">
+            What makes Gaia special?
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[ { icon: <PredictiveAnalyticsIcon />, title: "Predictive Analytics", items: ["Real-time energy forecasts", "Environmental impact predictions", "Trend analysis & pattern recognition"] },
-              { icon: <DataVisualizationIcon />, title: "Data Visualization", items: ["Interactive dashboards", "Dynamic charts & graphs", "Customizable data views"] },
-              { icon: <AIPoweredInsightsIcon />, title: "AI-Powered Insights", items: ["Advanced machine learning models", "Actionable pattern recognition", "Automated sustainability reporting"] }
+            {[ { icon: <PredictiveAnalyticsIcon />, title: "Predictive Analytics", items: ["Energy and carbon intensity prediction", "Actionable insights: schedule training"] },
+              { icon: <DataVisualizationIcon />, title: "Data Visualization", items: ["Full region energy power breakdown", "Interactive dashboards and GPU table"] },
+              { icon: <AIPoweredInsightsIcon />, title: "Data Engine", items: ["Data pre-processing from APIs", "Actionable relevant data presented"] }
             ].map((feature) => (
               <InteractiveCard 
                 key={feature.title} 
                 className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl shadow-md bg-gray-800/70 backdrop-blur-sm border border-gray-700/50 hover:border-green-500/30" // Updated backgrounds and borders
               >
-                <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
+                <motion.div className="flex justify-center items-center mb-4">
                   {feature.icon}
                 </motion.div>
-                <h3 className="text-2xl font-semibold text-green-400 mb-4">{feature.title}</h3>
+                <h3 className="text-2xl font-semibold text-green-400 mb-2">{feature.title}</h3>
                 <ul className="list-none space-y-2 text-gray-400 text-sm">
                   {feature.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
@@ -1380,43 +1347,103 @@ export default function Home() {
 
         <AnimatedDivider />
 
-        {/* Explore Our Platform Section - Enhanced */}
-        <AnimatedSection 
-          id="platform" 
-          className="py-16 md:py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gray-900/50 backdrop-blur-sm border border-gray-700/30 rounded-3xl relative overflow-hidden" // Updated light background
+      
+    {/* Glowing gradient border wrapper */}
+    <section className="px-6 sm:px-8 md:px-12 lg:px-16 py-16 md:py-24">
+    <div className="relative w-full max-w-5xl mx-auto isolate">
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-30 blur-md animate-pulse" />
+
+      {/* Centered content block */}
+      <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl">
+        <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-3 text-green-100">
+          Predictive Analytics
+        </motion.h2>
+        <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-6 max-w-2xl mx-auto text-gray-400">
+          Gaia uses AI to predict energy consumption and carbon intensity of your local energy grid, suggesting when to train your models
+        </motion.p>
+
+        <motion.div variants={fadeInUp} className="mb-6">
+          <h4 className="text-2xl font-semibold mb-4 text-green-100">
+            🇵🇹 Portugal Data Dashboard
+          </h4>
+          <Link href="/dashboard/portugal" passHref>
+            <p className="text-green-200 text-lg mb-2 cursor-pointer transition">
+              When to train my models in Portugal?
+            </p>
+          </Link>
+          <p className="text-gray-400 text-lg mb-4">
+            Promoting environmental awareness with full power breakdown
+          </p>
+
+      <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+        More predictive dashboards for other countries coming soon...
+      </p>
+        </motion.div>
+      </div>
+    </div>
+    </section>
+
+  {/* Glowing gradient border wrapper */}
+  <section className="px-6 sm:px-8 md:px-12 lg:px-16 py-16 md:py-24">
+    <div className="relative w-full max-w-5xl mx-auto isolate">
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-30 blur-md animate-pulse" />
+
+      {/* Centered content block */}
+      <div className="relative z-10 text-center p-10 rounded-3xl bg-gray-900 border border-gray-700 shadow-xl space-y-6">
+        {/* Main Title */}
+        <motion.h2
+          variants={fadeInUp}
+          className="text-3xl sm:text-4xl font-extrabold text-green-100 mb-4"
         >
-          {/* Decorative elements */}
-          <motion.div className="absolute -top-10 -left-10 w-48 h-48 border-4 border-white/20 rounded-full opacity-30" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
-          <motion.div className="absolute -bottom-12 -right-12 w-60 h-60 border-8 border-white/10 rounded-xl opacity-20" animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} />
+          Data Visualization
+        </motion.h2>
 
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold mb-6 relative z-10 text-white">
-            Dive Into Our Platform
-          </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto relative z-10 text-gray-300">
-            Experience firsthand how Eco AI.ly transforms complex data into clear, actionable environmental intelligence. Our Portugal dashboard is just the beginning.
-          </motion.p>
-          <motion.div variants={fadeInUp} className="relative z-10">
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-3 text-white">🇵🇹 Portugal Data Dashboard</h3>
-            <ul className="list-disc list-inside inline-block text-left space-y-2 mb-8 text-green-200">
-              <li>Comprehensive energy consumption metrics</li>
-              <li>Real-time carbon intensity updates</li>
-              <li>Historical trend analysis & AI predictions</li>
-              <li>Actionable insights for energy arbitrage</li>
-            </ul>
-            <div>
-              <Link href="/dashboard/portugal" className="group inline-flex items-center justify-center bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-gray-100 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-500"> {/* Ensure rounded-xl */}
-                View Live Dashboard
-                <ArrowRightIcon />
-              </Link>
-            </div>
-          </motion.div>
-        </AnimatedSection>
+        {/* Subtitle: Local */}
+        <div className="space-y-1">
+          <p className="text-lg sm:text-xl font-semibold text-green-200 mb-3">
+            Training Locally?
+          </p>
 
+          <Link href="/dashboard/portugal" passHref>
+            <p className="text-gray-300">
+              View the full power breakdown of your local energy grid
+            </p>
+          </Link>
+
+        </div>
+
+        {/* Subtitle: Cloud */}
+        <div className="space-y-1">
+          <p className="text-lg sm:text-xl font-semibold text-green-200 mb-3">
+            Training on the Cloud?
+          </p>
+          <Link href="/find-gpu" passHref>
+          <p className="text-gray-300 cursor-pointer transition">
+          Gaia presents the first open-source GPU Finder that considers environmental impact
+          </p>
+          </Link>
+        </div>
+
+
+
+        {/* Footer Gradient Text */}
+        <motion.div variants={fadeInUp}>
+          <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+            More GPU options from new cloud providers coming soon...
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  </section>
+
+
+
+      {/* Explore Our Platform Section - Enhanced */}
         <AnimatedDivider />
 
         {/* Technology Stack Section - Enhanced */}
         <AnimatedSection id="tech-stack" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-6 sm:mb-8 text-center">
             ⚙️ Built With Cutting-Edge Technology
           </motion.h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -1430,7 +1457,7 @@ export default function Home() {
                  <motion.div whileHover={{ /* Icon specific hover is now on icon component */ }}>
                   {tech.icon}
                 </motion.div>
-                <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-4">{tech.title}</h3>
+                <h3 className="text-2xl font-semibold text-green-700 dark:text-green-400 mb-2">{tech.title}</h3>
                 <ul className="list-none space-y-2 text-gray-600 dark:text-gray-400 text-sm">
                   {tech.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
@@ -1439,60 +1466,8 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
-        <AnimatedDivider />
 
-        {/* Our Impact in Numbers Section - NEW */}
-        <AnimatedSection id="impact" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-12 sm:mb-16 text-center">
-            📈 Our Impact in Numbers
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[ { label: "Tons of CO2 Offset Annually", value: 15000, displaySuffix: "+" },
-              { label: "Renewable Energy Projects Optimized", value: 300, displaySuffix: "+" },
-              { label: "Data Points Processed Daily", value: 10, displaySuffix: "M+" }
-            ].map(stat => (
-              <motion.div // Wrap InteractiveCard with motion.div to apply variants
-                key={stat.label}
-                variants={fadeInUp} // Apply variants to the motion.div wrapper
-              >
-                <InteractiveCard
-                  className="p-6 sm:p-8 rounded-2xl shadow-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm text-center border border-gray-200/60 dark:border-gray-700/50 hover:border-green-400/40 dark:hover:border-green-400/30" // Updated backgrounds and borders
-                >
-                  <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-3">
-                    <AnimatedNumber value={stat.value} />{stat.displaySuffix}
-                  </div>
-                  <p className="text-md sm:text-lg text-gray-700 dark:text-gray-300">{stat.label}</p>
-                </InteractiveCard>
-              </motion.div>
-            ))}
-          </div>
-        </AnimatedSection>
 
-        <AnimatedDivider />
-
-        {/* Dashboard Section - NEW */}
-        <AnimatedSection id="dashboard" className="py-16 md:py-24">
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300 mb-8 text-center">
-            🇵🇹 Live Portugal Energy Dashboard
-          </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12 text-center">
-            Explore real-time carbon intensity and renewable energy data for Portugal. See AI predictions and insights powered by our advanced analytics.
-          </motion.p>
-          <motion.div variants={fadeInUp} className="text-center">
-            <Link 
-              href="/dashboard/portugal" 
-              className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-5 rounded-xl font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800"
-            >
-              <div className="flex items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-                </svg>
-                <span>View Portugal Dashboard</span>
-                <ArrowRightIcon />
-              </div>
-            </Link>
-          </motion.div>
-        </AnimatedSection>
 
         <AnimatedDivider />
 
@@ -1511,12 +1486,22 @@ export default function Home() {
             animate={{ scale: [1, 1.5, 0.8, 1.6, 1], opacity: [0.3, 0.6, 0.2, 0.7, 0.3], rotate: [0, 90, -60, 100, 0] }}
             transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           />
-          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 relative z-10 text-gray-700 dark:text-white">
+          <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 relative z-10 text-gray-700 dark:text-white">
             Ready to Build a <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-500">Greener Future</span>?
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-10 relative z-10">
-            Join us in leveraging AI for sustainability. Explore our solutions or get in touch to discuss how Eco AI.ly can help your organization achieve its environmental goals.
-          </motion.p>
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-2 text-center relative z-10"
+            >
+              Want to chat? Collaborate or pitch? Nerd out over AI or sustainability?
+            </motion.p>
+
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg sm:text-xl text-gray-500 dark:text-gray-300 max-w-2xl mx-auto mb-5 text-center relative z-10"
+            >
+              Our inbox is open and the planet is waiting
+            </motion.p>
           <motion.div variants={fadeInUp} className="relative z-10">
             <Link href="/contact" className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800">
               Contact Us
@@ -1525,127 +1510,11 @@ export default function Home() {
           </motion.div>
         </AnimatedSection>
       </main>
-      {/* Revolutionary Footer */}
-      <motion.footer 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative w-full py-12 text-center text-gray-300 dark:text-gray-200 border-t border-gray-200/60 dark:border-gray-700/50 mt-16 md:mt-24 rounded-t-3xl overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.9) 30%, rgba(15,23,42,0.95) 70%, rgba(0,0,0,0.98) 100%)",
-          backdropFilter: "blur(20px)",
-          borderTop: "1px solid rgba(34,197,94,0.3)",
-        }}
-      >
-        {/* Animated background elements */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-cyan-400/10 to-purple-400/10"
-          animate={{
-            background: [
-              "linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(6,182,212,0.1) 50%, rgba(168,85,247,0.1) 100%)",
-              "linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(168,85,247,0.1) 50%, rgba(34,197,94,0.1) 100%)",
-              "linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(34,197,94,0.1) 50%, rgba(6,182,212,0.1) 100%)",
-            ],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        />
-        
-        {/* Revolutionary energy grid overlay */}
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(34,197,94,0.3) 0%, transparent 50%),
-                             radial-gradient(circle at 75% 75%, rgba(6,182,212,0.3) 0%, transparent 50%)`,
-          }}
-          animate={{
-            opacity: [0.1, 0.3, 0.1],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        
-        {/* Optimized floating orbs in footer - reduced count and simplified */}
-        <motion.div
-          className="absolute top-4 left-10 w-12 h-12 bg-gradient-to-r from-green-400/30 to-emerald-400/30 rounded-full filter blur-2xl"
-          animate={{
-            y: [-6, 6, -6], // Reduced movement
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }} // Simplified easing
-        />
-        <motion.div
-          className="absolute bottom-6 right-16 w-10 h-10 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full filter blur-2xl"
-          animate={{
-            y: [-5, 5, -5], // Reduced movement
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 2 }} // Simplified easing
-        />
-        
-        <div className="relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-6"
-          >
-            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-2 drop-shadow-lg">
-              Eco AI.ly
-            </h3>
-            <p className="text-lg font-medium text-gray-200">Innovating for a Greener Future 🌱</p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex justify-center space-x-8 mb-6"
-          >
-            {[
-              { href: "https://github.com/guilhermegranchopro/Eco-AI.ly", icon: GitHubIcon, label: "GitHub" },
-              { href: "#features", icon: () => <span className="text-2xl">🌿</span>, label: "Features" },
-              { href: "#impact", icon: () => <span className="text-2xl">📊</span>, label: "Impact" },
-            ].map((social, index) => (
-              <motion.a
-                key={social.href}
-                href={social.href}
-                className="group relative p-3 rounded-2xl bg-gradient-to-r from-gray-800/80 to-gray-700/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-sm border border-gray-600/30 hover:border-green-400/50 transition-all duration-300 text-gray-200"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + index * 0.1, duration: 0.5 }}
-                {...(social.href.startsWith('http') && { target: "_blank", rel: "noopener noreferrer" })}
-              >
-                <social.icon />
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-2xl opacity-0 group-hover:opacity-100"
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.a>
-            ))}
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.3 }}
-            className="border-t border-gray-600/40 dark:border-gray-500/40 pt-6"
-          >
-            <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} Eco AI.ly. All rights reserved.</p>
-            <motion.p 
-              className="text-xs mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500"
-              animate={{
-                backgroundPosition: ["0% center", "200% center", "0% center"],
-              }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              style={{ backgroundSize: "300% auto" }}
-            >
-              Powered by AI • Built for Sustainability • Designed for the Future
-            </motion.p>
-          </motion.div>
-        </div>
-      </motion.footer>
-      </motion.main>
-    </>
-  );
+  </motion.main>
+
+  <div className="max-w-7xl mx-auto px-4">
+    <Footer />
+  </div>
+</>
+);
 }
