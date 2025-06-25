@@ -1,6 +1,8 @@
 # GAIA: Your Green AI Assistant by Eco AI.ly
 
 <div align="center">
+  <img src="branding/eco_ai.ly/logo.png" alt="Eco AI.ly Logo" width="500"/>
+  <br/>
   <img src="branding/gaia/logo.png" alt="Gaia Logo" width="400"/>
 </div>
 
@@ -22,7 +24,21 @@
 
 ## 🌟 Overview
 
-Introducing **Gaia** your Green AI Assistant and loyal companion. This plataform aims to assist any developer or company in reducing the environmental impact when training AI models. It was co-founded by Duarte Alexandrino and Guilherme Grancho, two Imperial College London students.
+**GAIA** is the first product of **Eco AI.ly**, an innovative startup founded by Duarte Alexandrino and Guilherme Grancho, two Imperial College London students. Eco AI.ly is dedicated to revolutionizing the environmental impact of AI and technology through data-driven insights and sustainable solutions.
+
+**GAIA** (your Green AI Assistant) serves as your loyal companion in the journey toward environmental sustainability. This comprehensive platform assists developers, companies, and organizations in reducing their environmental impact when training AI models and making energy-conscious decisions.
+
+## 🏢 About Eco AI.ly
+
+**Eco AI.ly** is a forward-thinking startup dedicated to bridging the gap between artificial intelligence and environmental sustainability. Founded by two passionate Imperial College London students, Duarte Alexandrino and Guilherme Grancho, the company is committed to:
+
+- 🌱 **Environmental Innovation**: Developing cutting-edge solutions that make AI and technology more sustainable
+- 🔬 **Research Excellence**: Leveraging academic rigor and industry best practices to create impactful products  
+- 🤝 **Collaborative Impact**: Partnering with developers, companies, and organizations to drive meaningful environmental change
+- 📊 **Data-Driven Solutions**: Using real-time data and advanced analytics to inform sustainable decision-making
+- 🚀 **Scalable Technology**: Building platforms that can adapt and grow with the evolving needs of the green tech ecosystem
+
+**GAIA represents our first major product** - a comprehensive platform that transforms how organizations approach environmental responsibility in their AI and energy consumption decisions.
 
 ### 🔬 What We Do
 - **Real-time Environmental Monitoring**: Live tracking of carbon intensity, renewable energy production, and power grid analytics
@@ -46,7 +62,9 @@ Introducing **Gaia** your Green AI Assistant and loyal companion. This plataform
 - **Data**: ElectricityMaps API, Real-time Energy Data
 - **DevOps**: GitHub Actions, Docker, Cloud Deployment
 
-### Key Benefits
+### Why Choose GAIA by Eco AI.ly
+
+As the **flagship product of Eco AI.ly**, GAIA offers unparalleled advantages for organizations seeking to minimize their environmental impact:
 
 - 🔍 **Real-time Monitoring**: Live environmental data with automatic updates
 - 🤖 **AI-Powered Insights**: Machine learning predictions with high accuracy
@@ -56,6 +74,7 @@ Introducing **Gaia** your Green AI Assistant and loyal companion. This plataform
 - 🔄 **Automated Updates**: Continuous data refresh and processing
 - 📈 **Energy Arbitrage**: Opportunity detection for optimal energy decisions
 - 📑 **Professional Reporting**: Automated PDF generation with detailed analytics
+- 🚀 **Startup Innovation**: Cutting-edge solutions backed by academic research and entrepreneurial agility
 
 ## ✨ Platform Features
 
@@ -1623,13 +1642,30 @@ Gaia is committed to environmental responsibility:
 ---
 
 <div align="center">
-  
-### 🌍 Building a Sustainable Future Through AI 🌍
+
+### 🌍 Eco AI.ly: Pioneering Sustainable AI Solutions 🌍
+
+<img src="branding/eco_ai.ly/logo.png" alt="Eco AI.ly" width="300"/>
+<br/>
+<br/>
 
 <img src="https://img.shields.io/badge/Made%20with-❤️-red?style=for-the-badge" alt="Made with Love"/>
 <img src="https://img.shields.io/badge/Powered%20by-AI-blue?style=for-the-badge" alt="Powered by AI"/>
 <img src="https://img.shields.io/badge/For%20the-🌍%20Planet-green?style=for-the-badge" alt="For the Planet"/>
+<img src="https://img.shields.io/badge/Startup-Innovation-purple?style=for-the-badge" alt="Startup Innovation"/>
 
-**"Technology is best when it brings people together for a better tomorrow."**
+**GAIA is the first product of Eco AI.ly** - a forward-thinking startup dedicated to making AI and technology more environmentally sustainable.
+
+Founded by **Duarte Alexandrino** and **Guilherme Grancho**, two Imperial College London students passionate about combining cutting-edge AI with environmental responsibility.
+
+---
+
+*"Technology is best when it brings people together for a sustainable tomorrow."*
+
+**🚀 Join us in building the future of sustainable AI** 
+
+[GitHub](https://github.com/guilhermegranchopro/Eco-AI.ly) • [Live Demo](https://ecoaily.streamlit.app/) • [Contact](mailto:contact@ecoai.ly)
+
+</div>
 
 </div>
