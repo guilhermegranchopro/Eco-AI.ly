@@ -1,4 +1,4 @@
-# GAIA: Your Green AI Assistant by Eco AI.ly <img src="branding/eco_ai.ly/logo.png" alt="Eco AI.ly Logo" width="500"/>
+# GAIA: Your Green AI Assistant by Eco AI.ly <img src="branding/eco_ai.ly/logo.png" alt="Eco AI.ly Logo" width="50"/>
 
 <div align="center">
   <img src="branding/eco_ai.ly/logo.png" alt="Eco AI.ly Logo" width="500"/>
